@@ -1,12 +1,12 @@
 /* Mr. Mars Music Studio · MRH DGN — çok dilli arayüz
  * Uygulama işletim sisteminin / tarayıcının diliyle açılır (navigator.languages).
  * Desteklenmeyen dillerde İngilizce kullanılır. Kaynak metinler Türkçedir; çeviriler
- * js/lang/strings.js tablosundadır ve ekrana eklenen her metin otomatik çevrilir.
+ * mrmars-cekirdek/dil/strings.js tablosundadır ve ekrana eklenen her metin otomatik çevrilir.
  */
 window.OS = window.OS || {};
 (function (OS) {
-  const LANGS = ['tr', 'en', 'de', 'es', 'fr'];
-  OS.LANG_NAMES = { tr: 'Türkçe', en: 'English', de: 'Deutsch', es: 'Español', fr: 'Français' };
+  const LANGS = ['tr', 'en', 'de', 'es', 'fr', 'sv', 'ru'];
+  OS.LANG_NAMES = { tr: 'Türkçe', en: 'English', de: 'Deutsch', es: 'Español', fr: 'Français', sv: 'Svenska', ru: 'Русский' };
   OS.LANGS = LANGS;
 
   function detect() {
@@ -35,12 +35,15 @@ window.OS = window.OS || {};
         const k = p.trim(), key = sep === ': ' && i < a.length - 1 ? k + ':' : k;
         let x = map.get(key);
         if (x != null && sep === ': ' && i < a.length - 1) x = x.replace(/\s*:\s*$/, '');
-        if (x == null) x = map.get(k);
+        if (x == null) x = lookup(k);
         if (x != null) { changed = true; return p.replace(k, x); }
         return p;
       });
       if (changed) return parts.join(sep);
     }
+    // "♪ Davul Makinesi", "✓ Otomatik" gibi simgeyle başlayan metinler
+    const y = /^([^\p{L}\d]+)(.+)$/u.exec(t);
+    if (y && map.has(y[2])) return y[1] + map.get(y[2]);
     // "5 klip kopyalandı" gibi sayıyla başlayan metinler
     const m = /^([\d.,]+ )(.+)$/.exec(t);
     if (m && map.has(m[2])) return m[1] + map.get(m[2]);

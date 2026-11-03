@@ -39,8 +39,10 @@ veri              : dina projekt och inställningar
 
 SPRÅK
 -----
-Appen öppnas på Windows-språket: Türkçe, English, Deutsch, Español, Français (engelska för
-övriga språk). Välj manuellt under Verktyg > "Dil / Language".
+Standardspråket är engelska. Appen öppnas på webbläsarens språk om det är English, Deutsch,
+Español, Français, Svenska, Türkçe eller Русский; andra språk öppnas på engelska. Välj manuellt
+med knappen 🌐 bredvid toppmenyerna (intill Metal Creative). "Automatiskt" där går tillbaka till
+webbläsarens språk.
 
 FLIKAR
 ------
@@ -102,6 +104,48 @@ MR. MARS FÖRSTÄRKARE OCH HÖGTALARLÅDOR
 Förstärkarna är namngivna efter stil: Clean, Crunch, Lead, Hard Rock, High Gain, Heavy Metal, Tight Metal, Modern Metal
 samt basförstärkare. Högtalarlådorna efter storlek och stil: 1x12 Open, 2x12 Bright, 4x12 Modern Closed, 4x12 Vintage
 Closed, 4x12 High Power m.fl. Egen IR (.wav) laddas med "Använd IR".
+
+ANSLUTA ENHETER
+---------------
+Använd Edge eller Chrome på Windows och Mac. Anslut enheten; inget installationsprogram behövs.
+Webbläsaren frågar om behörighet första gången: välj Tillåt. Statusen "MIDI:" längst ned till
+vänster visar vad appen ser.
+
+MIDI-klaviatur
+  Känns igen automatiskt. Toner spelar det valda instrumentet direkt.
+
+DJ-kontroller
+  1. Anslut den. En banner visar Mappa / Inte nu / Fråga inte igen.
+  2. "Mappa" öppnar guiden: rör varje kontroll när du blir ombedd, hoppa över det som saknas.
+  3. Mappningen sparas som en profil för enheten och laddas av sig själv nästa gång.
+  Guiden kan öppnas senare via DJ-mixer > Kontrollercenter. Raden "Live-signal" visar om enheten
+  skickar något. Alla kontroller är inte provade på riktig hårdvara, så jog och LED kan behöva
+  justeras med "MIDI Learn".
+
+Elgitarr / bas
+  En gitarr ansluts inte via MIDI. Koppla den till Hi-Z-ingången (instrument) på ett ljudkort,
+  anslut ljudkortet via USB, välj det som in- och utgång under Verktyg > Ljudinställningar, öppna
+  sedan Amp Rack, tryck på ⏻ och tillåt mikrofonen. Ställ nivån med ljudkortets gain-ratt så att
+  signalen inte klipper.
+
+Skillnader mellan Windows och Mac
+  Drivrutin    Windows: USB-MIDI fungerar oftast utan; en kontrollers inbyggda ljudkort kan
+               kräva tillverkarens drivrutin. Mac: behövs oftast inte.
+  Andra appar  Windows: en MIDI-port används oftast av ett program i taget, så stäng andra DJ-
+               och musikprogram först. Mac: portar kan delas.
+  Mikrofon     Windows: Inställningar > Sekretess och säkerhet > Mikrofon.
+               Mac: Systeminställningar > Integritet och säkerhet > Mikrofon.
+  Webbläsare   Edge eller Chrome. Safari saknar MIDI, liksom alla webbläsare på iPhone/iPad.
+  Latens       Webbläsaren använder systemets vanliga ljudväg (ingen ASIO). Välj ett lågt värde
+               under Verktyg > Ljudinställningar; höj det om du hör knaster.
+
+Om det inte fungerar
+  "MIDI: ingen behörighet"  Tillåt MIDI i webbplatsbehörigheter (låset i adressfältet), ladda om.
+  "MIDI: ingen enhet"       Prova en annan USB-port eller kabel, stäng musikprogram, ladda om.
+  "MIDI: stöds inte"        Byt till Edge eller Chrome.
+  Ingen signal i guiden     Vissa enheter använder HID i stället för MIDI: prova "Lägg till
+                            HID-enhet (experimentellt)" i Kontrollercenter.
+  Inget gitarrljud          Kontrollera ingången i Ljudinställningar, mikrofonbehörighet och gain.
 
 MIDI OCH KONTROLLER
 -------------------

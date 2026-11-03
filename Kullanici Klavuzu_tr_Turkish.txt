@@ -50,8 +50,10 @@ veri              : sizin projeleriniz ve ayarlarınız
 
 DİL
 ---
-Uygulama Windows'un diliyle açılır: Türkçe, English, Deutsch, Español, Français
-(diğer dillerde İngilizce). Araçlar > "Dil / Language" ile elle seçilebilir.
+Varsayılan dil İngilizcedir. Tarayıcınızın dili English, Deutsch, Español, Français, Svenska,
+Türkçe veya Русский ise uygulama o dilde açılır; diğer dillerde İngilizce açılır. Elle seçmek
+için üst menülerin yanındaki 🌐 düğmesini (Metal Creative'in yanında) kullanın. Oradaki
+"Otomatik" yeniden tarayıcı diline döner.
 
 SEKMELER
 --------
@@ -168,6 +170,47 @@ PİYANO RULOSU ARAÇLARI
 ----------------------
 Ölçek vurgulama / kilitleme (majör, minör, modlar, pentatonik, blues, makamlar), akor
 damgası, arpej, strum, ızgaraya bölme, kuantize, insansılaştırma, legato.
+
+CİHAZ BAĞLAMA VE TANITMA
+------------------------
+Windows ve Mac'te Edge veya Chrome kullanın. Cihazı takın; kurulum programı yoktur. Tarayıcı ilk
+seferde izin ister: İzin ver'i seçin. Sol alttaki "MIDI:" durumu uygulamanın ne gördüğünü yazar.
+
+MIDI klavye
+  Otomatik tanınır. Notalar hemen seçili enstrümanı çalar.
+
+DJ controller
+  1. Takın. Bir bildirim çıkar: Eşle / Şimdi değil / Bir daha sorma.
+  2. "Eşle" sihirbazı açar: istenen kontrolü oynatın, cihazınızda olmayanı atlayın.
+  3. Eşleme o cihazın profili olarak kaydedilir ve bir dahaki sefere kendiliğinden yüklenir.
+  Sihirbazı sonradan DJ Mikser > Controller Merkezi'nden açabilirsiniz. Oradaki "Canlı sinyal"
+  satırı cihazdan veri gelip gelmediğini gösterir. Her controller gerçek cihazla denenmedi; jog ve
+  LED davranışı "MIDI Öğren" ile ayar isteyebilir.
+
+Elektro gitar / bas
+  Gitar MIDI ile bağlanmaz. Bir ses kartının Hi-Z (enstrüman) girişine takın, ses kartını USB ile
+  bağlayın, Araçlar > Ses ayarları'ndan giriş ve çıkış olarak seçin, sonra Amfi Rack'i açıp ⏻
+  düğmesine basın ve mikrofon iznini verin. Seviyeyi ses kartının gain düğmesinden, sinyal
+  patlamayacak şekilde ayarlayın.
+
+Windows ve Mac farkları
+  Sürücü       Windows: USB-MIDI çoğunlukla sürücüsüz çalışır; controller'ın dahili ses kartı
+               üreticinin sürücüsünü isteyebilir. Mac: çoğunlukla gerekmez.
+  Diğer prog.  Windows: bir MIDI portunu genellikle tek program kullanır; önce diğer DJ ve müzik
+               programlarını kapatın. Mac: portlar paylaşılabilir.
+  Mikrofon     Windows: Ayarlar > Gizlilik ve güvenlik > Mikrofon.
+               Mac: Sistem Ayarları > Gizlilik ve Güvenlik > Mikrofon.
+  Tarayıcı     Edge veya Chrome. Safari'de MIDI yoktur; iPhone/iPad'de hiçbir tarayıcıda yoktur.
+  Gecikme      Tarayıcı normal sistem ses yolunu kullanır (ASIO yok). Araçlar > Ses ayarları'ndan
+               düşük bir değer seçin; çıtırtı duyarsanız yükseltin.
+
+Çalışmazsa
+  "MIDI: izin yok"       Site izinlerinden (adres çubuğundaki kilit) MIDI'ye izin verip yenileyin.
+  "MIDI: cihaz yok"      Başka USB portu veya kablo deneyin, müzik programlarını kapatıp yenileyin.
+  "MIDI: desteklenmiyor" Edge veya Chrome'a geçin.
+  Sihirbazda sinyal yok  Bazı cihazlar MIDI yerine HID kullanır: Controller Merkezi'nde "HID cihazı
+                         ekle (deneysel)" seçeneğini deneyin.
+  Gitardan ses yok       Ses ayarlarındaki girişi, mikrofon iznini ve gain'i kontrol edin.
 
 MIDI VE CONTROLLER
 ------------------

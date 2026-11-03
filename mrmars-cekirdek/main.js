@@ -101,16 +101,17 @@
       { label: 'Bas gitar parçası (bas amfi hazır)', onclick: () => { const t = ui.arrange.addTrack('audio'); t.name = 'Bas Gitar'; ui.applyRig(t, 'Bas - Temiz'); ui.changed(); } },
     ],
     metal: () => ui.metal.menu(),
+    lang: langMenu,
     tools: () => [
       { label: 'Ses ayarları (giriş/çıkış, gecikme)…', onclick: audioSettings },
       { label: 'MIDI ayarları (Clock, controller)…', onclick: () => OS.midiClock.dialog() },
       { label: 'Klavye kısayolları', onclick: shortcutsHelp },
       { label: 'Depolama: kullanılmayan sesleri temizle', onclick: cleanAudio },
-      { label: 'Dil / Language', onclick: langMenu },
       ...(OS.platform.canInstall() ? [{ label: 'Ana ekrana ekle', onclick: OS.platform.install }] : []),
     ],
   };
   function wireMenus() {
+    document.querySelector('.lang-btn').textContent = '🌐 ' + OS.LANG_NAMES[OS.lang];
     document.querySelectorAll('[data-menu]').forEach(b => b.onclick = () => { const r = b.getBoundingClientRect(); U.menu(r.left, r.bottom + 2, menus[b.dataset.menu]()); });
     document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => ui.showView(b.dataset.view));
   }
@@ -295,9 +296,8 @@
   }
   function langMenu() {
     const items = [{ label: (OS.langAuto ? '✓ ' : '') + 'Otomatik (sistem dili) / Auto', onclick: () => OS.setLang('auto') }];
-    OS.LANGS.forEach(c => items.push({ label: (!OS.langAuto && OS.lang === c ? '✓ ' : '') + OS.LANG_NAMES[c], onclick: () => OS.setLang(c) }));
-    const b = document.querySelector('[data-menu="tools"]').getBoundingClientRect();
-    U.menu(b.left, b.bottom + 2, items);
+    [...OS.LANGS].sort((a, b) => OS.LANG_NAMES[a].localeCompare(OS.LANG_NAMES[b])).forEach(c => items.push({ label: (!OS.langAuto && OS.lang === c ? '✓ ' : '') + OS.LANG_NAMES[c], onclick: () => OS.setLang(c) }));
+    return items;
   }
   ui.VERSION = 'DGN.V.06';
   OS.YAPIMCI = 'MRH DGN';

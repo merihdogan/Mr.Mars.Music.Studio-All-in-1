@@ -49,8 +49,10 @@ veri              : your projects and settings
 
 LANGUAGE
 --------
-The app opens in the Windows language: Türkçe, English, Deutsch, Español, Français
-(English for other languages). Choose manually under Tools > "Dil / Language".
+The default language is English. The app opens in your browser's language when it is one of
+English, Deutsch, Español, Français, Svenska, Türkçe or Русский; any other browser language
+opens in English. To choose by hand, use the 🌐 button beside the top menus (next to Metal
+Creative). "Automatic" there returns to the browser language.
 
 TABS
 ----
@@ -161,6 +163,48 @@ PIANO ROLL TOOLS
 ----------------
 Scale highlight / lock (major, minor, modes, pentatonic, blues, maqams), chord stamp,
 arpeggiate, strum, split to grid, quantize, humanize, legato.
+
+CONNECTING DEVICES
+------------------
+Use Edge or Chrome on Windows and Mac. Plug the device in; there is no setup program. The
+browser asks for permission the first time: choose Allow. The bottom-left "MIDI:" status shows
+what the app sees.
+
+MIDI keyboard
+  Recognised automatically. Notes play the selected instrument right away.
+
+DJ controller
+  1. Plug it in. A banner offers Map / Not now / Don't ask again.
+  2. "Map" opens the wizard: move each control when asked, skip what your device lacks.
+  3. The mapping is saved as a profile for that device and loads by itself next time.
+  You can open the wizard later from DJ Mixer > Controller Center. Its "Live signal" line shows
+  whether the device is sending anything. Not every controller has been tried on real hardware,
+  so jog and LED behaviour may need adjusting with "MIDI Learn".
+
+Electric guitar / bass
+  A guitar does not connect by MIDI. Plug it into the Hi-Z (instrument) input of an audio
+  interface, connect the interface by USB, choose it as input and output under Tools > Audio
+  settings, then open Amp Rack, press ⏻ and allow the microphone. Set the level on the
+  interface's gain knob so that it does not clip.
+
+Windows and Mac differences
+  Driver       Windows: USB-MIDI usually works without one; a controller's built-in sound
+               card may need the maker's driver. Mac: usually none needed.
+  Other apps   Windows: a MIDI port usually serves one program, so close other DJ or music
+               programs first. Mac: ports can be shared.
+  Microphone   Windows: Settings > Privacy & security > Microphone.
+               Mac: System Settings > Privacy & Security > Microphone.
+  Browser      Edge or Chrome. Safari has no MIDI, and neither does any browser on iPhone/iPad.
+  Latency      Browsers use the normal system audio path (no ASIO). Use a low setting under
+               Tools > Audio settings; raise it if you hear crackling.
+
+If it does not work
+  "MIDI: no permission"  Allow MIDI in the site permissions (padlock in the address bar), reload.
+  "MIDI: no device"      Try another USB port or cable, close other music programs, reload.
+  "MIDI: not supported"  Switch to Edge or Chrome.
+  No signal in the wizard  Some devices use HID rather than MIDI: try "Add HID device
+                           (experimental)" in Controller Center.
+  No guitar sound        Check the input in Audio settings, the microphone permission and gain.
 
 MIDI AND CONTROLLERS
 --------------------

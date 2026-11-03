@@ -1,7 +1,7 @@
 /* Mr. Mars Music Studio · MRH DGN — çevrimdışı önbellek
  * Dosya listesi index.html'den okunur, yeni dosya için liste tutmak gerekmez.
  * Önbellekten hemen açılır, internet varsa arka planda güncellenir (sonraki açılışta geçerli olur). */
-const CACHE = 'mrmars-v2';
+const CACHE = 'mrmars-v3';
 const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js',
   'mrmars-gorseller/icon-128.png', 'mrmars-gorseller/icon-256.png', 'mrmars-gorseller/icon-512.png', 'mrmars-gorseller/logo-1024.png', 'mrmars-gorseller/logo-512.png'];
 
