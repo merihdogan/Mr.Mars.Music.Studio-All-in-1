@@ -19,7 +19,7 @@
     { action: 'lib.scroll', label: 'Kütüphane', what: 'Gezinme düğmesi (çevirin)', cont: true }, { action: 'shift', label: 'Genel', what: 'SHIFT' },
     ...['A', 'B', 'C', 'D'].slice(0, n).flatMap(deckSteps),
   ];
-  C.continuous = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a; return /^(vol|pitch|jog|eq\w+|filter|trim|fx\d?|res|send[AB]|scroll|loopenc)$/.test(k) || ['xfader', 'master', 'cuemix', 'cuevol', 'samplervol', 'mfx'].includes(a); };
+  C.continuous = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a; return /^(vol|pitch|jog|eq\w+|filter|trim|fx\d?|res|send[AB]|scroll|loopenc|jumpenc|jogseek)$/.test(k) || ['xfader', 'master', 'cuemix', 'cuevol', 'samplervol', 'mfx', 'xcurve'].includes(a); };
 
   // ---------------- Canlı sinyal izleme ----------------
   DJ.monitor = function (key, data) {
@@ -34,12 +34,13 @@
   const midiOuts = () => OS.midiAccess ? [...OS.midiAccess.outputs.values()] : [];
   // Hazır eşleme: cihazın bildirdiği addaki kelime dizileri özetlenip tabloda aranır
   const fnv = t => { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(16).padStart(8, '0'); };
-  C.presetFor = name => {
+  const presetIdx = name => {
     const P = DJ.PRESETS; if (!P || !name) return null;
     const w = name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
-    for (let i = 0; i < w.length; i++) for (let j = w.length; j > i; j--) { const k = P.ids[fnv(w.slice(i, j).join(''))]; if (k != null) return Object.fromEntries(P.maps[k].split(',').map(x => x.split('='))); }
+    for (let i = 0; i < w.length; i++) for (let j = w.length; j > i; j--) { const k = P.ids[fnv(w.slice(i, j).join(''))]; if (k != null) return k; }
     return null;
   };
+  C.presetFor = name => { const k = presetIdx(name); return k == null ? null : Object.fromEntries(DJ.PRESETS.maps[k].split(',').map(x => x.split('='))); };
   // Dönüşü olmayan bir düğmeye bağlanmış jog çalışamaz: dokunma olarak düzeltilir
   const repair = m => { Object.keys(m).forEach(k => { if (/\.jog$/.test(m[k]) && !/^(cc|pb|hid):/.test(k)) { const t = m[k] + 'touch'; if (Object.values(m).includes(t)) delete m[k]; else m[k] = t; } }); return m; };
   C.applyPreset = (name, keepUser) => {
@@ -49,14 +50,18 @@
     const m = Object.assign({}, p);
     Object.keys(user).forEach(k => { if (!p[k]) { const a = user[k]; if (!Object.values(p).includes(a)) m[k] = a; } });
     s.profiles[name] = m; s.map = Object.assign({}, m); s.activeProfile = name;
-    s.presetDone = s.presetDone || {}; s.presetDone[name] = true;
+    s.presetDone = s.presetDone || {}; s.presetDone[name] = DJ.PRESETS.ver;
+    s.pitchInv = (DJ.PRESETS.inv || []).includes(presetIdx(name));
     save(); return true;
   };
   C.mapChanged = () => { const s = S(); if (s.activeProfile && s.profiles && s.profiles[s.activeProfile]) s.profiles[s.activeProfile] = Object.assign({}, s.map); save(); if (C.drawMenu) C.drawMenu(); };
   // Cihaz menüsünde görünen ek komutlar
   const MODES = { hot: 'Hot Cue', loop: 'Döngü', slicer: 'Slicer', keycue: 'Key Cue', roll: 'Loop Roll', stemfx: 'Stem + FX', jump: 'Beat Jump' };
-  const EXTRA = { slip: 'Slip', quant: 'Quantize', vinyl: 'Vinyl', loopenc: 'Döngü düğmesi', loopauto: 'Döngü aç/kapa', brake: 'Fren', spin: 'Spinback', reverse: 'Ters', tap: 'TAP', keyup: 'Ton +', keydown: 'Ton −' };
+  const EXTRA = { slip: 'Slip', quant: 'Quantize', vinyl: 'Vinyl', loopenc: 'Döngü düğmesi', loopauto: 'Döngü aç/kapa', brake: 'Fren', spin: 'Spinback', reverse: 'Ters', tap: 'TAP', keyup: 'Ton +', keydown: 'Ton −', stutter: 'Stutter', tostart: 'Başa dön', keymatch: 'Key Match', jumpenc: 'Beat jump düğmesi', jogseek: 'Hızlı arama (jog)', jogtouchs: 'Jog dokunma (SHIFT)', loophalf: 'Döngü ½', loopdouble: 'Döngü ×2' };
+  const GLOBAL = { xcurve: 'Crossfader eğrisi', xenable: 'Crossfader aç/kapa', smartmix: 'Akıllı geçiş', mfx0: 'Master FX kapalı', mfx1: 'Master FX: Echo', mfx2: 'Master FX: Reverb', mfx3: 'Master FX: Flanger', mfx4: 'Master FX: Gater' };
   C.label = a => {
+    if (a === 'automix') return 'Automix';
+    if (GLOBAL[a]) return OS.t(GLOBAL[a]);
     if (a === 'lib.down') return OS.t('Kütüphane: sonraki parça');
     if (/^pad\d+$/.test(a)) return 'Sampler ' + a.slice(3);
     const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a;
@@ -75,6 +80,22 @@
   C.connected = () => { const s = S(); return s.activeProfile && (midiIns().some(i => i.name === s.activeProfile) || C.hid.some(h => h.name === s.activeProfile)) ? s.activeProfile : null; };
   // Düğme sırası: cihazda hangi kontrol varsa bölümünde sırayla
   const order = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a, seq = ['play', 'cue', 'sync', 'headcue', 'load', 'jog', 'jogtouch', 'vol', 'pitch', 'trim', 'eqhigh', 'eqmid', 'eqlow', 'filter']; const i = seq.indexOf(k); return i < 0 ? 99 : i; };
+  // Controller'ın kendi ses kartı: master 1-2, kulaklık 3-4
+  C.useDeviceAudio = async name => {
+    try {
+      const outs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audiooutput' && d.deviceId !== 'default' && d.deviceId !== 'communications');
+      const dev = outs.find(d => d.label.toLowerCase().includes(name.toLowerCase()));
+      if (!dev) { U.toast(OS.t('Cihazın ses çıkışı bulunamadı. Araçlar > Ses ayarları’ndan seçin.'), 5000); return false; }
+      const ctx = OS.engine.ctx;
+      if (!ctx.setSinkId) { U.toast(OS.t('Bu tarayıcı çıkış seçmeyi desteklemiyor.'), 5000); return false; }
+      await ctx.setSinkId(dev.deviceId);
+      OS.settings.outputId = dev.deviceId; try { localStorage.setItem('os.settings', JSON.stringify(OS.settings)); } catch (e) { }
+      const s = S(); s.cueMode = ctx.destination.maxChannelCount >= 4 ? 'quad' : 'off'; save();
+      if (DJ._i.isBuilt()) { DJ._i.applyOut(); DJ.render(); }
+      U.toast(OS.t(s.cueMode === 'quad' ? 'Cihaz ses kartı seçildi: kulaklık ayrı' : 'Cihaz ses kartı seçildi'), 4000);
+      return true;
+    } catch (e) { U.toast(e.message, 5000); return false; }
+  };
   function deviceMenu(box) {
     C.drawMenu = () => {
       if (!box.isConnected && C._menuDrawn) { C.drawMenu = null; return; }
@@ -96,6 +117,7 @@
       });
       box.appendChild(wrap);
       box.appendChild(el('div', { class: 'muted' }, OS.t('Değiştirmek için satıra tıklayın, sonra cihazda yeni kontrole dokunun.')));
+      if (name && navigator.mediaDevices) box.appendChild(el('div', { class: 'row wrap' }, el('button', { class: 'btn sm', title: OS.t('Master ve kulaklık bu cihazdan çıkar'), onclick: () => C.useDeviceAudio(name) }, OS.t('Cihazın ses kartını kullan'))));
     };
     C.drawMenu();
   }
@@ -115,7 +137,7 @@
   C.loadProfile = name => { const s = S(), m = s.profiles && s.profiles[name]; if (!m) return false; s.map = repair(Object.assign({}, m)); s.profiles[name] = Object.assign({}, s.map); s.activeProfile = name; save(); return true; };
   function autoProfile() {
     const s = S();
-    const known = midiIns().find(i => C.presetFor(i.name) && !(s.presetDone && s.presetDone[i.name]));
+    const known = midiIns().find(i => C.presetFor(i.name) && !(s.presetDone && s.presetDone[i.name] === DJ.PRESETS.ver));
     if (known) { C.applyPreset(known.name, true); if (DJ._i.isBuilt()) DJ.render(); recognised(known.name); return; }
     if (!s.profiles) return;
     const dev = midiIns().find(i => s.profiles[i.name]) || C.hid.find(h => s.profiles[h.name]);
@@ -246,7 +268,7 @@
     };
     // Kullanıcı ataması: cihazda bir kontrole dokunun, listeden istediği komutu seçin
     const assignBox = el('div', { class: 'row wrap' });
-    const ACTIONS = () => { const seen = new Set(), extra = ['A', 'B', 'C', 'D'].slice(0, S().count).flatMap(L => [...Object.keys(EXTRA), ...Object.keys(MODES).map(m => 'padm_' + m)].map(k => ({ action: L + '.' + k, label: 'Deck ' + L, what: C.label(L + '.' + k) }))); return [...STEPS(S().count), ...extra].filter(x => !seen.has(x.action) && seen.add(x.action)); };
+    const ACTIONS = () => { const seen = new Set(), extra = ['A', 'B', 'C', 'D'].slice(0, S().count).flatMap(L => [...Object.keys(EXTRA), ...Object.keys(MODES).map(m => 'padm_' + m)].map(k => ({ action: L + '.' + k, label: 'Deck ' + L, what: C.label(L + '.' + k) }))); return [...STEPS(S().count), ...extra, ...[...Object.keys(GLOBAL), 'automix'].map(k => ({ action: k, label: 'Mikser', what: C.label(k) }))].filter(x => !seen.has(x.action) && seen.add(x.action)); };
     C.drawAssign = () => {
       if (!assignBox.isConnected && C._asDrawn) { C.drawAssign = null; return; }
       C._asDrawn = true; assignBox.innerHTML = '';

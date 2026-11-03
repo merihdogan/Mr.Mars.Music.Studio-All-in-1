@@ -22,7 +22,11 @@
       U.drag(e, (dx, dy, ev) => { const n = noteAt(ev); if (n != null && n !== cur) { E.liveNoteOff(cur); cur = n; E.liveNoteOn(cur, velAt(ev)); } }, () => E.liveNoteOff(cur));
     });
     document.addEventListener('os-note', e => { e.detail.on ? pressed.add(e.detail.n) : pressed.delete(e.detail.n); draw(); });
+    // Touchpad sıkıştırması sayfayı büyütmesin; Ctrl+tekerlek kendi işini yapan yerlerde çalışmaya devam eder
+    document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
     addEventListener('resize', draw);
+    // Yerleşim değişince piyano yeniden çizilir; çizim alanı genişliği düzeni etkilemez
+    if (window.ResizeObserver) new ResizeObserver(draw).observe(cv);
     draw();
     initMidi();
   };
@@ -35,7 +39,12 @@
   }
   function draw() {
     if (!cv) return;
-    const W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight, g = cv.getContext('2d');
+    const H = cv.clientHeight, dpr = window.devicePixelRatio || 1, g = cv.getContext('2d');
+    const bw = Math.round(cv.clientWidth * dpr), bh = Math.round(H * dpr);
+    if (cv.width !== bw) cv.width = bw;
+    if (cv.height !== bh) cv.height = bh;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, cv.clientWidth, H);
     const { whites, w } = layout();
     whites.forEach((n, i) => {
       g.fillStyle = pressed.has(n) ? '#4fd1c5' : '#e8eaee'; g.fillRect(i * w, 0, w - 1, H);

@@ -223,7 +223,7 @@ input, select, button, textarea { font: inherit; color: inherit; }
 /* klavye */
 #keyboard-bar { height: 64px; display: flex; }
 #keyboard-bar .kb-side { width: 170px; padding: 4px 8px; display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--fg2); border-right: 1px solid var(--line); }
-#keyboard-bar canvas { flex: 1; display: block; cursor: pointer; }
+#keyboard-bar canvas { flex: 1 1 0; width: 0; min-width: 0; display: block; cursor: pointer; }
 
 /* menüler, modallar, toast */
 .ctx-menu { position: fixed; z-index: 1000; background: var(--bg3); border: 1px solid var(--line2); border-radius: 6px; padding: 4px; min-width: 200px; box-shadow: 0 8px 24px #000a; max-height: 80vh; overflow-y: auto; }

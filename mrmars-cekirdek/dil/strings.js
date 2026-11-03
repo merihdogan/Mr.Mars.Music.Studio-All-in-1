@@ -1,6 +1,23 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+['Beat jump düğmesi', 'Beat jump knob', 'Beat-Jump-Regler', 'Mando de beat jump', 'Bouton de beat jump', 'Beat jump-ratt', 'Ручка beat jump'],
+['Hızlı arama (jog)', 'Fast search (jog)', 'Schnellsuche (Jog)', 'Búsqueda rápida (jog)', 'Recherche rapide (jog)', 'Snabbsökning (jog)', 'Быстрый поиск (джог)'],
+['Jog dokunma (SHIFT)', 'Jog touch (SHIFT)', 'Jog-Berührung (SHIFT)', 'Toque del jog (SHIFT)', 'Toucher du jog (SHIFT)', 'Jog-beröring (SHIFT)', 'Касание джога (SHIFT)'],
+['Crossfader eğrisi', 'Crossfader curve', 'Crossfader-Kurve', 'Curva del crossfader', 'Courbe du crossfader', 'Crossfaderkurva', 'Кривая кроссфейдера'],
+['Crossfader aç/kapa', 'Crossfader on/off', 'Crossfader an/aus', 'Crossfader sí/no', 'Crossfader marche/arrêt', 'Crossfader på/av', 'Кроссфейдер вкл./выкл.'],
+['Akıllı geçiş', 'Smart transition', 'Smarter Übergang', 'Transición inteligente', 'Transition intelligente', 'Smart övergång', 'Умный переход'],
+['Master FX kapalı', 'Master FX off', 'Master-FX aus', 'FX máster apagado', 'FX master coupé', 'Master-FX av', 'Мастер-FX выкл.'],
+['Master FX: Echo', 'Master FX: Echo', 'Master-FX: Echo', 'FX máster: Echo', 'FX master : Écho', 'Master-FX: Echo', 'Мастер-FX: Эхо'],
+['Master FX: Reverb', 'Master FX: Reverb', 'Master-FX: Reverb', 'FX máster: Reverb', 'FX master : Reverb', 'Master-FX: Reverb', 'Мастер-FX: Реверб'],
+['Master FX: Flanger', 'Master FX: Flanger', 'Master-FX: Flanger', 'FX máster: Flanger', 'FX master : Flanger', 'Master-FX: Flanger', 'Мастер-FX: Флэнжер'],
+['Master FX: Gater', 'Master FX: Gater', 'Master-FX: Gater', 'FX máster: Gater', 'FX master : Gater', 'Master-FX: Gater', 'Мастер-FX: Гейтер'],
+['Cihazın ses kartını kullan', 'Use the device’s sound card', 'Soundkarte des Geräts verwenden', 'Usar la tarjeta de sonido del dispositivo', 'Utiliser la carte son de l’appareil', 'Använd enhetens ljudkort', 'Использовать звуковую карту устройства'],
+['Master ve kulaklık bu cihazdan çıkar', 'Master and headphones come from this device', 'Master und Kopfhörer kommen von diesem Gerät', 'El máster y los auriculares salen de este dispositivo', 'Master et casque sortent de cet appareil', 'Master och hörlurar kommer från enheten', 'Мастер и наушники выводятся с этого устройства'],
+['Cihazın ses çıkışı bulunamadı. Araçlar > Ses ayarları’ndan seçin.', 'The device’s sound output was not found. Choose it under Tools > Audio settings.', 'Audioausgang des Geräts nicht gefunden. Unter Werkzeuge > Audio-Einstellungen wählen.', 'No se encontró la salida de sonido. Elíjala en Herramientas > Ajustes de audio.', 'Sortie son introuvable. Choisissez-la dans Outils > Réglages audio.', 'Enhetens ljudutgång hittades inte. Välj den under Verktyg > Ljudinställningar.', 'Звуковой выход устройства не найден. Выберите его в Инструменты > Настройки звука.'],
+['Bu tarayıcı çıkış seçmeyi desteklemiyor.', 'This browser cannot choose an output.', 'Dieser Browser kann keinen Ausgang wählen.', 'Este navegador no puede elegir una salida.', 'Ce navigateur ne peut pas choisir de sortie.', 'Den här webbläsaren kan inte välja utgång.', 'Этот браузер не умеет выбирать выход.'],
+['Cihaz ses kartı seçildi: kulaklık ayrı', 'Device sound card selected: separate headphones', 'Soundkarte gewählt: Kopfhörer getrennt', 'Tarjeta seleccionada: auriculares separados', 'Carte son choisie : casque séparé', 'Ljudkort valt: separata hörlurar', 'Звуковая карта выбрана: наушники отдельно'],
+['Cihaz ses kartı seçildi', 'Device sound card selected', 'Soundkarte des Geräts gewählt', 'Tarjeta de sonido seleccionada', 'Carte son de l’appareil choisie', 'Enhetens ljudkort valt', 'Звуковая карта устройства выбрана'],
 ['Kütüphane: sonraki parça', 'Library: next track', 'Bibliothek: nächster Titel', 'Biblioteca: siguiente pista', 'Bibliothèque : titre suivant', 'Bibliotek: nästa låt', 'Библиотека: следующий трек'],
 ['Cihaz menüsü', 'Device menu', 'Gerätemenü', 'Menú del dispositivo', 'Menu de l’appareil', 'Enhetsmeny', 'Меню устройства'],
 ['Cihaz tanındı', 'Device recognised', 'Gerät erkannt', 'Dispositivo reconocido', 'Appareil reconnu', 'Enheten känns igen', 'Устройство распознано'],
