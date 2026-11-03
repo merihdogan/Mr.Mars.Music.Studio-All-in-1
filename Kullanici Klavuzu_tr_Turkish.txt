@@ -181,12 +181,14 @@ MIDI klavye
   Otomatik tanınır. Notalar hemen seçili enstrümanı çalar.
 
 DJ controller
-  1. Takın. Bir bildirim çıkar: Eşle / Şimdi değil / Bir daha sorma.
-  2. "Eşle" sihirbazı açar: istenen kontrolü oynatın, cihazınızda olmayanı atlayın.
-  3. Eşleme o cihazın profili olarak kaydedilir ve bir dahaki sefere kendiliğinden yüklenir.
-  Sihirbazı sonradan DJ Mikser > Controller Merkezi'nden açabilirsiniz. Oradaki "Canlı sinyal"
-  satırı cihazdan veri gelip gelmediğini gösterir. Her controller gerçek cihazla denenmedi; jog ve
-  LED davranışı "MIDI Öğren" ile ayar isteyebilir.
+  Yaygın modeller takılınca tanınır ve hazır eşlemesi kendiliğinden yüklenir.
+  Diğer modellerde bir bildirim çıkar: Eşle / Şimdi değil / Bir daha sorma. "Eşle" sihirbazı açar:
+  istenen kontrolü oynatın, cihazınızda olmayanı atlayın. Eşleme o cihaza kaydedilir.
+  Bir kontrolü değiştirmek için: DJ Mikser > Controller Merkezi > "Kontrol ata". Cihazda kontrole
+  dokunun ve komut seçin. "Hazır eşlemeye dön" değişikliklerinizi geri alır.
+  Jog: üstüne dokunup çevirince scratch yapar; kenarını çevirince çalarken tempoyu iter.
+  Hazır eşlemeler her cihazda denenmedi. Jog çok hızlı veya yavaşsa "Jog hassasiyeti"ni, tempo
+  faderi ters çalışıyorsa "Tempo faderi yönü"nü kullanın.
 
 Elektro gitar / bas
   Gitar MIDI ile bağlanmaz. Bir ses kartının Hi-Z (enstrüman) girişine takın, ses kartını USB ile

@@ -116,12 +116,14 @@ MIDI-klaviatur
   Känns igen automatiskt. Toner spelar det valda instrumentet direkt.
 
 DJ-kontroller
-  1. Anslut den. En banner visar Mappa / Inte nu / Fråga inte igen.
-  2. "Mappa" öppnar guiden: rör varje kontroll när du blir ombedd, hoppa över det som saknas.
-  3. Mappningen sparas som en profil för enheten och laddas av sig själv nästa gång.
-  Guiden kan öppnas senare via DJ-mixer > Kontrollercenter. Raden "Live-signal" visar om enheten
-  skickar något. Alla kontroller är inte provade på riktig hårdvara, så jog och LED kan behöva
-  justeras med "MIDI Learn".
+  Vanliga modeller känns igen när de ansluts och laddar en färdig mappning av sig själva.
+  Andra modeller: en banner visar Mappa / Inte nu / Fråga inte igen. "Mappa" öppnar guiden: rör
+  varje kontroll när du blir ombedd, hoppa över det som saknas. Mappningen sparas för enheten.
+  Ändra en kontroll: DJ-mixer > Kontrollercenter > "Tilldela en kontroll". Rör kontrollen och
+  välj kommando. "Tillbaka till färdig mappning" ångrar dina ändringar.
+  Jog: rör ovansidan och vrid för scratch. Vrid kanten för att knuffa tempot under uppspelning.
+  Färdiga mappningar är inte provade på alla enheter. Använd "Jogkänslighet" om jogen är för
+  snabb eller långsam och "Tempofaderns riktning" om tempofadern går åt fel håll.
 
 Elgitarr / bas
   En gitarr ansluts inte via MIDI. Koppla den till Hi-Z-ingången (instrument) på ett ljudkort,

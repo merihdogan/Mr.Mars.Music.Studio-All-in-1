@@ -49,7 +49,7 @@
     }
     route() {
       try { this.pre.disconnect(); } catch (e) { }
-      const ratio = (this.keylock ? 1 / this.eff : 1) * Math.pow(2, (this.keyShift || 0) / 12);
+      const ratio = (this.keylock && !this.scr ? 1 / this.eff : 1) * Math.pow(2, (this.keyShift || 0) / 12);
       const shift = Math.abs(ratio - 1) > 0.001;
       if (shift) { this.pre.connect(this.shifter.input); this.shifter.setRatio(ratio); }
       else this.pre.connect(this.trim);
@@ -81,6 +81,7 @@
     }
     async load(file) {
       const ab = await U.readAsArrayBuffer(file);
+      if (this.scr) { clearInterval(this._scrT); this.scr = null; }
       this.stop();
       if (this.video) URL.revokeObjectURL(this.video);
       this.video = /^video\//.test(file.type) || /\.(mp4|webm|m4v|mov|mkv)$/i.test(file.name) ? URL.createObjectURL(file) : null;
@@ -112,7 +113,7 @@
       DJ.renderInfo();
     }
     toggleStem(k) { const g = this.stemG[k].gain; g.value = g.value > 0.5 ? 0 : 1; }
-    get eff() { return this.rate * (1 + this.nudge); }
+    get eff() { return this.scr ? Math.abs(this.scr.v) : this.rate * (1 + this.nudge); }
     get beat() { return 60 / (this.bpm || 120); }
     position() {
       if (!this.playing) return this.pos;
@@ -145,7 +146,7 @@
     }
     pause() { if (!this.playing) return; this.pos = this.position(); this.stop(); }
     stop() { clearTimeout(this._mvT); this.mv = null; (this.srcs || []).forEach(x => { try { x.stop(); } catch (e) { } }); this.srcs = []; this.src = null; this.playing = false; }
-    toggle() { this.playing ? this.pause() : this.play(); }
+    toggle() { if (this.scr) { this.scr.was = !this.scr.was; return; } this.playing ? this.pause() : this.play(); }
     seek(t) { const was = this.playing; this.pause(); this.pos = U.clamp(t, 0, this.buffer ? this.buffer.duration : 0); if (was) this.play(); }
     rebase() { if (this.playing) { this.startPos = this.position(); this.startCtx = this.ctx.currentTime; } }
     setRate(r) { this.rebase(); this.rate = r; (this.srcs || []).forEach(x => x.playbackRate.value = this.eff); this.route(); }
@@ -158,6 +159,40 @@
       return r;
     }
     setReverse(on) { if (!this.buffer) return; const was = this.playing; if (was) this.pause(); this.rev = on; if (on) this.loop = null; if (was) this.play(); }
+    // Scratch: jog'a dokununca plak el hızını izler, ileri ve geri ses duyulur
+    scratchOn() {
+      if (!this.buffer || this.mv || this.scr) return;
+      this.rebase(); this.revBuf();
+      const was = this.playing;
+      this.scr = { v: 0, ticks: 0, was, rev0: this.rev, t: performance.now() };
+      if (was) (this.srcs || []).forEach(x => x.playbackRate.value = 0); else this.play();
+      this.route();
+      this._scrT = setInterval(() => this.scratchTick(), 20);
+    }
+    scratchTick() {
+      const s = this.scr; if (!s) return;
+      const now = performance.now(), dt = Math.max(0.001, (now - s.t) / 1000); s.t = now;
+      const normal = (settings.jogRes || 720) * 33.333 / 60; // normal hızda saniyedeki tık
+      let v = s.v * 0.7 + (s.ticks / (dt * normal)) * (settings.jogSens || 1) * 0.3;
+      s.ticks = 0;
+      if (Math.abs(v) < 0.01) v = 0;
+      v = U.clamp(v, -4, 4);
+      if (this.loop && v < 0) v = 0;
+      const wantRev = v < -0.02 ? true : v > 0.02 ? false : this.rev;
+      if (!this.playing) { s.v = v; if (v) { this.rev = wantRev; this.play(); } return; }
+      if (wantRev !== this.rev) { const p = this.position(); this.stop(); this.pos = p; this.rev = wantRev; s.v = v; this.play(); return; }
+      this.rebase(); s.v = v;
+      const t = this.ctx.currentTime;
+      (this.srcs || []).forEach(x => x.playbackRate.setTargetAtTime(Math.abs(v), t, 0.004));
+    }
+    scratchOff() {
+      const s = this.scr; if (!s) return;
+      clearInterval(this._scrT);
+      const p = this.position();
+      this.stop(); this.pos = p; this.rev = s.rev0; this.scr = null;
+      this.route();
+      if (s.was) this.play();
+    }
     // Fren: plak gibi yavaşlayarak durur
     brake(dur = 1.2) {
       if (!this.playing || this.mv) return;
@@ -433,7 +468,7 @@
       U.knob({ label: 'Kulaklık', size: 30, min: 0, max: 1.5, def: 0.8, value: settings.cueVol, fmt: v => Math.round(v * 100) + '%', onchange: v => { settings.cueVol = v; saveSettings(); applyOut(); } }),
       el('button', { class: 'btn sm' + (settings.quantize ? ' on' : ''), title: 'Cue, döngü ve beat jump vuruşa oturur', onclick: e => { settings.quantize = !settings.quantize; e.target.classList.toggle('on', settings.quantize); saveSettings(); } }, 'Quantize'),
       el('button', { class: 'btn sm' + (settings.slip ? ' on' : ''), title: 'Döngüden çıkınca parça, döngü hiç olmamış gibi kaldığı yerden devam eder', onclick: e => { settings.slip = !settings.slip; e.target.classList.toggle('on', settings.slip); saveSettings(); } }, 'Slip'),
-      el('button', { class: 'btn sm' + (settings.vinyl ? ' on' : ''), title: 'Jog’a dokununca plak durur (controller’daki jog dokunma eşlenmeli)', onclick: e => { settings.vinyl = !settings.vinyl; e.target.classList.toggle('on', settings.vinyl); saveSettings(); } }, 'Vinyl'),
+      el('button', { class: 'btn sm' + (settings.vinyl ? ' on' : ''), title: 'Jog’a dokununca plak elinizi izler: scratch (controller’daki jog dokunma eşlenmeli)', onclick: e => { settings.vinyl = !settings.vinyl; e.target.classList.toggle('on', settings.vinyl); saveSettings(); } }, 'Vinyl'),
       el('button', { class: 'btn sm' + (settings.led ? ' on' : ''), title: 'Controller’daki düğme ışıklarını (play, cue, hot cue, döngü, stem) yakar', onclick: e => { settings.led = !settings.led; e.target.classList.toggle('on', settings.led); saveSettings(); } }, 'LED'),
       el('button', { class: 'btn sm' + (settings.autoStems ? ' on' : ''), title: 'Yüklenen her parça otomatik olarak stem’lere ayrılır (birkaç saniye sürer)', onclick: e => { settings.autoStems = !settings.autoStems; e.target.classList.toggle('on', settings.autoStems); saveSettings(); } }, 'Otomatik stem'),
       el('button', { class: 'btn sm' + (DJ.shift ? ' on' : ''), title: 'Pedlerin ikinci işlevi (dokunmatik için)', onclick: e => { DJ.shift = !DJ.shift; e.target.classList.toggle('on', DJ.shift); } }, 'SHIFT'),
@@ -1278,22 +1313,30 @@
     let cur = null;
     if (a === 'xfader') cur = DJ.xfade;
     else if (d && act === 'vol') cur = d.faderVal;
-    else if (d && act === 'pitch') cur = (d.rate - 1) / d.range * 0.5 + 0.5;
+    else if (d && act === 'pitch') cur = (d.rate - 1) / d.range * (settings.pitchInv ? -0.5 : 0.5) + 0.5;
     else if (d && act === 'filter') cur = (d.filterVal || 0) * 0.5 + 0.5;
     if (cur == null) return false;
     if (Math.abs(cur - v) > (picked[a] ? 0.25 : 0.04)) { picked[a] = false; return true; }
     picked[a] = true;
     return false;
   }
+  // Öğrenme: jog ve faderler yalnız sürekli sinyalle bağlanır, jog dokunma sinyali dönüş sanılmaz.
+  // Jog'un iki bölgesi (üst yüzey / kenar) aynı eyleme bağlanabilir.
+  function learnBind(key, isCC) {
+    const p = DJ.pending, cur = settings.map[key], isJog = /\.jog$/.test(p);
+    if (DJ.ctrl.continuous(p) && !isCC) return;
+    if (cur && /\.jog$/.test(cur) && cur !== p) return;
+    Object.keys(settings.map).forEach(k => { if (settings.map[k] === p && !(isJog && /^cc:/.test(k))) delete settings.map[k]; });
+    settings.map[key] = p; DJ.ctrl.mapChanged();
+    const e = learnEls.get(p); if (e) { e.classList.remove('pending'); e.classList.add('mapped'); }
+    U.toast(p + ' ← ' + key); DJ.pending = null;
+  }
   // Dış girişler (HID): MIDI ile aynı öğrenme ve eylem yolu
   DJ.input = function (key, v, raw, press, release, isCC) {
     DJ.monitor && DJ.monitor(key, null);
     if (DJ.learn && DJ.pending) {
       if (release) return;
-      Object.keys(settings.map).forEach(k => { if (settings.map[k] === DJ.pending) delete settings.map[k]; });
-      settings.map[key] = DJ.pending; saveSettings();
-      const e = learnEls.get(DJ.pending); if (e) { e.classList.remove('pending'); e.classList.add('mapped'); }
-      U.toast(DJ.pending + ' ← ' + key); DJ.pending = null;
+      learnBind(key, isCC);
       return;
     }
     const action = settings.map[key]; if (!action || !built) return;
@@ -1312,7 +1355,7 @@
     // 14-bit CC: MSB (0-31) + LSB (32-63) çiftleri; LSB gelince ince değer üretilir
     if (cmd === 0xb0 && d1 >= 32 && d1 < 64) {
       const mk = 'cc:' + ch + ':' + (d1 - 32), act = settings.map[mk];
-      if (MSB[mk] != null && (act || (DJ.learn && DJ.pending))) {
+      if (!settings.map['cc:' + ch + ':' + d1] && MSB[mk] != null && (act || (DJ.learn && DJ.pending))) {
         if (act && built && !DJ.learn) runAction(act, (MSB[mk] * 128 + d2) / 16383, MSB[mk], false, true);
         return true;
       }
@@ -1321,18 +1364,14 @@
     DJ.monitor && DJ.monitor(midiKey(st, d1), data);
     if (cmd === 0xe0) { // pitch bend (çoğu controller'da tempo faderi), 14-bit
       const key = 'pb:' + ch, val = ((d2 << 7) | d1) / 16383;
-      if (DJ.learn && DJ.pending) { Object.keys(settings.map).forEach(k => { if (settings.map[k] === DJ.pending) delete settings.map[k]; }); settings.map[key] = DJ.pending; saveSettings(); const e = learnEls.get(DJ.pending); if (e) { e.classList.remove('pending'); e.classList.add('mapped'); } U.toast(DJ.pending + ' ← ' + key); DJ.pending = null; return true; }
+      if (DJ.learn && DJ.pending) { learnBind(key, true); return true; }
       const act = settings.map[key]; if (!act || !built) return false;
       runAction(act, val, Math.round(val * 127), false, true); return true;
     }
     const key = midiKey(st, d1);
     if (DJ.learn && DJ.pending) {
       if (cmd === 0x80 || (cmd === 0x90 && d2 === 0)) return true;
-      Object.keys(settings.map).forEach(k => { if (settings.map[k] === DJ.pending) delete settings.map[k]; });
-      settings.map[key] = DJ.pending; saveSettings();
-      const e = learnEls.get(DJ.pending); if (e) { e.classList.remove('pending'); e.classList.add('mapped'); }
-      U.toast(DJ.pending + ' ← ' + key);
-      DJ.pending = null;
+      learnBind(key, cmd === 0xb0);
       return true;
     }
     const action = settings.map[key];
@@ -1348,13 +1387,12 @@
     runAction(action, cmd === 0xb0 ? v : 1, d2, press, cmd === 0xb0);
     return true;
   }
-  // Vinyl modu: jog'a dokununca plak durur, bırakınca kaldığı yerden devam eder
+  // Vinyl modu: jog'a dokununca plak el hızını izler, bırakınca kaldığı yerden devam eder
   function jogTouch(d, on) {
     if (!d) return;
     d.touched = on;
-    if (!settings.vinyl) return;
-    if (on && d.playing) { d._resume = true; d.pause(); }
-    else if (!on && d._resume) { d._resume = false; d.play(); }
+    if (!settings.vinyl) { d.scratchOff(); return; }
+    if (on) d.scratchOn(); else d.scratchOff();
     DJ.renderInfo();
   }
   // ---------------- Controller LED geri bildirimi ----------------
@@ -1369,7 +1407,7 @@
       if (act === 'play') on = d.playing; else if (act === 'cue') on = !d.playing && Math.abs(d.pos - d.cue) < 0.02;
       else if (act === 'keylock') on = d.keylock; else if (act === 'headcue') on = d.cueOn; else if (act === 'sync') on = !!d.bpm && Math.abs(d.rate - 1) > 0.0005;
       else if (act.startsWith('hot')) on = d.hot[+act.slice(3) - 1] != null;
-      else if (act.startsWith('loop')) on = !!(d.loop && d.loop.beats === +act.slice(4));
+      else if (/^loop\d/.test(act)) on = !!(d.loop && d.loop.beats === +act.slice(4));
       else if (act.startsWith('stem_')) on = !!d.stems && d.stemG[act.slice(5)].gain.value > 0.5;
       else if (act.startsWith('kill')) on = d.kills[act.slice(4)];
       if (on == null || ledState[k] === on) return;
@@ -1421,11 +1459,17 @@
       case act === 'loophalf': if (btn) { const m0 = d.padMode; d.padMode = 'manual'; padPress(d, 2, false); d.padMode = m0; upd(); } break;
       case act === 'loopdouble': if (btn) { const m0 = d.padMode; d.padMode = 'manual'; padPress(d, 3, false); d.padMode = m0; upd(); } break;
       case act === 'loopexit': if (btn) { d.setLoop(0); upd(); } break;
+      case act === 'loopauto': if (btn) { d.setLoop(d.loop ? 0 : (d.loopSize || 4)); upd(); } break;
+      case act === 'loopenc': { const s = relDelta(raw); if (!s) break; d.loopSize = U.clamp((d.loopSize || 4) * (s > 0 ? 2 : 0.5), 1 / 32, 128); if (d.loop) d.setLoop(d.loopSize); U.toast(d.L + ': ' + d.loopSize + ' ' + OS.t('vuruş')); upd(); break; }
+      case act === 'slip': if (btn) { settings.slip = !settings.slip; saveSettings(); DJ.render(); } break;
+      case act === 'quant': if (btn) { settings.quantize = !settings.quantize; saveSettings(); DJ.render(); } break;
+      case act === 'vinyl': if (btn) { settings.vinyl = !settings.vinyl; saveSettings(); DJ.render(); } break;
+      case act.startsWith('padm_'): if (btn) { d.padMode = act.slice(5); upd(); } break;
       case act === 'fx2': d.setFxAmt(v, 1); setKnob(d.fxKnob1, v); break;
       case act === 'fx3': d.setFxAmt(v, 2); setKnob(d.fxKnob2, v); break;
       case act === 'jumpback': if (btn) d.jump(-settings.jump); break;
       case act === 'jumpfwd': if (btn) d.jump(settings.jump); break;
-      case act === 'pitch': { const x = v * 2 - 1; d.setRate(1 + x * d.range); if (d.pitchEl) d.pitchEl.value = x; upd(); break; }
+      case act === 'pitch': { const x = (v * 2 - 1) * (settings.pitchInv ? -1 : 1); d.setRate(1 + x * d.range); if (d.pitchEl) d.pitchEl.value = x; upd(); break; }
       case act === 'vol': d.setFader(v); if (d.faderEl) d.faderEl.value = v; break;
       case act === 'res': d.setRes(0.5 * Math.pow(30, v)); break;
       case act === 'sendA': d.sendA.gain.value = v; break;
@@ -1444,10 +1488,11 @@
       case act.startsWith('loop'): if (btn) { d.setLoop(+act.slice(4)); upd(); } break;
       case act === 'jog': {
         // göreli CC: 1..63 ileri, 65..127 geri (çoğu controller böyle gönderir)
-        const delta = isCC ? relDelta(raw) : 0;
-        if (d.touched && settings.vinyl) { d.seek(d.position() + delta * 0.008); break; } // vinyl: plağı elle ileri / geri sarma
-        if (d.playing) { d.setNudge(U.clamp(delta * 0.01, -0.2, 0.2)); clearTimeout(d._jt); d._jt = setTimeout(() => d.setNudge(0), 80); }
-        else d.seek(d.position() + delta * 0.01);
+        const delta = isCC ? relDelta(raw) : 0, sens = settings.jogSens || 1;
+        if (!delta) break;
+        if (d.scr) { d.scr.ticks += delta; break; } // vinyl: plak el hızını izler
+        if (d.playing) { d.setNudge(U.clamp(delta * 0.03 * sens, -0.3, 0.3)); clearTimeout(d._jt); d._jt = setTimeout(() => d.setNudge(0), 120); }
+        else d.seek(d.position() + delta * 4 * sens * 60 / (33.333 * (settings.jogRes || 720)));
         break;
       }
     }

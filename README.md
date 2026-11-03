@@ -142,12 +142,14 @@ MIDI keyboard
   Recognised automatically. Notes play the selected instrument right away.
 
 DJ controller
-  1. Plug it in. A banner offers Map / Not now / Don't ask again.
-  2. "Map" opens the wizard: move each control when asked, skip what your device lacks.
-  3. The mapping is saved as a profile for that device and loads by itself next time.
-  You can open the wizard later from DJ Mixer > Controller Center. Its "Live signal" line shows
-  whether the device is sending anything. Not every controller has been tried on real hardware,
-  so jog and LED behaviour may need adjusting with "MIDI Learn".
+  Common models are recognised when plugged in and load a ready mapping by themselves.
+  Other models: a banner offers Map / Not now / Don't ask again. "Map" opens the wizard: move
+  each control when asked and skip what your device lacks. The mapping is saved for that device.
+  To change a control: DJ Mixer > Controller Center > "Assign a control". Touch the control on
+  your device and choose a command. "Back to ready mapping" undoes your changes.
+  Jog: touch the top and turn to scratch. Turn the edge to nudge the tempo during play.
+  Ready mappings have not been tried on every device. If a jog feels too fast or slow, use
+  "Jog sensitivity"; if the tempo fader runs backwards, use "Tempo fader direction".
 
 Electric guitar / bass
   A guitar does not connect by MIDI. Plug it into the Hi-Z (instrument) input of an audio
@@ -176,8 +178,8 @@ If it does not work
 
 MIDI AND CONTROLLERS
 --------------------
-- When a new device without a profile is plugged in, the app offers to map it; "Map" opens the
-  wizard and saves the mapping to that device when finished.
+- A common model loads its ready mapping when plugged in. For any other new device the app offers
+  to map it; "Map" opens the wizard and saves the mapping to that device when finished.
 - Right-click any knob > "MIDI learn" to bind a controller knob / fader to it. In the DJ
   Mixer, "MIDI Learn (controller)" maps every deck control; the mapping can be saved to a
   file and shared.

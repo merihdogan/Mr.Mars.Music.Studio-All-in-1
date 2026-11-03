@@ -7,7 +7,7 @@
 
   // Sihirbazın sorduğu kontroller
   const deckSteps = L => [
-    ['play', 'PLAY'], ['cue', 'CUE'], ['sync', 'SYNC'], ['headcue', 'Kulaklık (PFL)'], ['vol', 'Kanal faderı', 1], ['pitch', 'Tempo faderı', 1], ['jog', 'Jog tekerleği (çevirin)', 1], ['jogtouch', 'Jog üstüne dokunma'],
+    ['play', 'PLAY'], ['cue', 'CUE'], ['sync', 'SYNC'], ['headcue', 'Kulaklık (PFL)'], ['vol', 'Kanal faderı', 1], ['pitch', 'Tempo faderı', 1], ['jog', 'Jog üst yüzeyi (dokunup çevirin)', 1], ['jog', 'Jog kenarı (çevirin)', 1], ['jogtouch', 'Jog üstüne dokunma'],
     ['eqhigh', 'EQ Tiz', 1], ['eqmid', 'EQ Orta', 1], ['eqlow', 'EQ Bas', 1], ['filter', 'Filtre', 1], ['trim', 'Gain / Trim', 1], ['fx', 'FX 1 düğmesi', 1], ['fx2', 'FX 2 düğmesi', 1], ['fx3', 'FX 3 düğmesi', 1],
     ['hot1', 'Ped 1'], ['hot2', 'Ped 2'], ['hot3', 'Ped 3'], ['hot4', 'Ped 4'], ['hot5', 'Ped 5'], ['hot6', 'Ped 6'], ['hot7', 'Ped 7'], ['hot8', 'Ped 8'],
     ['padnext', 'Sonraki ped sayfası'], ['padprev', 'Önceki ped sayfası'], ['loopin', 'Döngü başı (IN)'], ['loopout', 'Döngü sonu (OUT)'], ['loophalf', 'Döngü ½'], ['loopdouble', 'Döngü ×2'], ['loopexit', 'Döngüden çık'],
@@ -19,10 +19,11 @@
     { action: 'lib.scroll', label: 'Kütüphane', what: 'Gezinme düğmesi (çevirin)', cont: true }, { action: 'shift', label: 'Genel', what: 'SHIFT' },
     ...['A', 'B', 'C', 'D'].slice(0, n).flatMap(deckSteps),
   ];
-  C.continuous = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a; return /^(vol|pitch|jog|eq\w+|filter|trim|fx\d?|res|send[AB]|scroll)$/.test(k) || ['xfader', 'master', 'cuemix', 'cuevol', 'samplervol', 'mfx'].includes(a); };
+  C.continuous = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a; return /^(vol|pitch|jog|eq\w+|filter|trim|fx\d?|res|send[AB]|scroll|loopenc)$/.test(k) || ['xfader', 'master', 'cuemix', 'cuevol', 'samplervol', 'mfx'].includes(a); };
 
   // ---------------- Canlı sinyal izleme ----------------
   DJ.monitor = function (key, data) {
+    C.last = key; if (C.drawAssign) C.drawAssign();
     C.log.unshift({ key, hex: data ? [...data].map(x => x.toString(16).padStart(2, '0')).join(' ') : '', action: S().map[key] || '' });
     if (C.log.length > 12) C.log.length = 12;
     if (C.drawLog) C.drawLog();
@@ -31,10 +32,34 @@
   // ---------------- Cihaz profilleri: cihaz takılınca kendi eşlemesi yüklenir ----------------
   const midiIns = () => OS.midiAccess ? [...OS.midiAccess.inputs.values()] : [];
   const midiOuts = () => OS.midiAccess ? [...OS.midiAccess.outputs.values()] : [];
+  // Hazır eşleme: cihazın bildirdiği addaki kelime dizileri özetlenip tabloda aranır
+  const fnv = t => { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(16).padStart(8, '0'); };
+  C.presetFor = name => {
+    const P = DJ.PRESETS; if (!P || !name) return null;
+    const w = name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    for (let i = 0; i < w.length; i++) for (let j = w.length; j > i; j--) { const k = P.ids[fnv(w.slice(i, j).join(''))]; if (k != null) return Object.fromEntries(P.maps[k].split(',').map(x => x.split('='))); }
+    return null;
+  };
+  // Dönüşü olmayan bir düğmeye bağlanmış jog çalışamaz: dokunma olarak düzeltilir
+  const repair = m => { Object.keys(m).forEach(k => { if (/\.jog$/.test(m[k]) && !/^(cc|pb|hid):/.test(k)) { const t = m[k] + 'touch'; if (Object.values(m).includes(t)) delete m[k]; else m[k] = t; } }); return m; };
+  C.applyPreset = (name, keepUser) => {
+    const s = S(), p = C.presetFor(name); if (!p) return false;
+    s.profiles = s.profiles || {};
+    const user = keepUser && s.profiles[name] ? repair(Object.assign({}, s.profiles[name])) : {};
+    const m = Object.assign({}, p);
+    Object.keys(user).forEach(k => { if (!p[k]) { const a = user[k]; if (!Object.values(p).includes(a)) m[k] = a; } });
+    s.profiles[name] = m; s.map = Object.assign({}, m); s.activeProfile = name;
+    s.presetDone = s.presetDone || {}; s.presetDone[name] = true;
+    save(); return true;
+  };
+  C.mapChanged = () => { const s = S(); if (s.activeProfile && s.profiles && s.profiles[s.activeProfile]) s.profiles[s.activeProfile] = Object.assign({}, s.map); save(); };
   C.saveProfile = name => { const s = S(); s.profiles = s.profiles || {}; s.profiles[name] = Object.assign({}, s.map); save(); U.toast(OS.t('Profil kaydedildi') + ': ' + name); };
-  C.loadProfile = name => { const s = S(), m = s.profiles && s.profiles[name]; if (!m) return false; s.map = Object.assign({}, m); s.activeProfile = name; save(); return true; };
+  C.loadProfile = name => { const s = S(), m = s.profiles && s.profiles[name]; if (!m) return false; s.map = repair(Object.assign({}, m)); s.profiles[name] = Object.assign({}, s.map); s.activeProfile = name; save(); return true; };
   function autoProfile() {
-    const s = S(); if (!s.profiles) return;
+    const s = S();
+    const known = midiIns().find(i => C.presetFor(i.name) && !(s.presetDone && s.presetDone[i.name]));
+    if (known) { C.applyPreset(known.name, true); U.toast(OS.t('Cihaz tanındı, hazır eşleme yüklendi') + ': ' + known.name, 5000); if (DJ._i.isBuilt()) DJ.render(); return; }
+    if (!s.profiles) return;
     const dev = midiIns().find(i => s.profiles[i.name]) || C.hid.find(h => s.profiles[h.name]);
     if (dev && s.activeProfile !== dev.name) { C.loadProfile(dev.name); U.toast(OS.t('Controller profili yüklendi') + ': ' + dev.name); }
   }
@@ -148,7 +173,8 @@
       C._drawn = true; devices.innerHTML = '';
       const row = (name, kind, out) => el('div', { class: 'lib-row q-row' }, el('span', { class: 'mono' }, kind), el('span', { class: 'ln' }, name), el('span', { class: 'muted' }, out ? OS.t('Işık çıkışı var') : ''),
         el('button', { class: 'btn sm', onclick: () => C.saveProfile(name) }, 'Profil kaydet'),
-        (s.profiles && s.profiles[name]) ? el('button', { class: 'btn sm', onclick: () => { C.loadProfile(name); U.toast(OS.t('Profil yüklendi')); } }, 'Profili yükle') : null);
+        (s.profiles && s.profiles[name]) ? el('button', { class: 'btn sm', onclick: () => { C.loadProfile(name); U.toast(OS.t('Profil yüklendi')); } }, 'Profili yükle') : null,
+        C.presetFor(name) ? el('button', { class: 'btn sm', title: OS.t('Kendi değişikliklerinizi silip cihazın hazır eşlemesine döner'), onclick: () => { C.applyPreset(name, false); U.toast(OS.t('Hazır eşleme yüklendi')); C.drawAssign && C.drawAssign(); DJ.render(); } }, 'Hazır eşlemeye dön') : null);
       midiIns().forEach(i => devices.appendChild(row(i.name, 'MIDI', midiOuts().some(o => o.name === i.name))));
       C.hid.forEach(h => devices.appendChild(row(h.name, 'HID')));
       if (!midiIns().length && !C.hid.length) devices.appendChild(el('div', { class: 'muted' }, OS.t(OS.midiAccess ? 'Bağlı controller yok. USB’yi takın; liste kendiliğinden yenilenir.' : !navigator.requestMIDIAccess ? 'Bu tarayıcı MIDI desteklemiyor. iPhone ve iPad’de hiçbir tarayıcıda yoktur; Mac’te Safari’de de yoktur.' : 'MIDI izni verilmedi veya tarayıcı desteklemiyor.')));
@@ -160,6 +186,19 @@
       if (!C.log.length) logBox.appendChild(el('div', { class: 'muted' }, OS.t('Controller’da bir kontrole dokunun; sinyal burada görünür.')));
       C.log.forEach(l => logBox.appendChild(el('div', null, l.key + (l.hex ? '  [' + l.hex + ']' : '') + (l.action ? '  → ' + l.action : ''))));
     };
+    // Kullanıcı ataması: cihazda bir kontrole dokunun, listeden istediği komutu seçin
+    const assignBox = el('div', { class: 'row wrap' });
+    const ACTIONS = () => { const seen = new Set(); return STEPS(S().count).filter(x => !seen.has(x.action) && seen.add(x.action)); };
+    C.drawAssign = () => {
+      if (!assignBox.isConnected && C._asDrawn) { C.drawAssign = null; return; }
+      C._asDrawn = true; assignBox.innerHTML = '';
+      if (!C.last) { assignBox.appendChild(el('span', { class: 'muted' }, OS.t('Cihazda değiştirmek istediğiniz kontrole dokunun.'))); return; }
+      const cur = S().map[C.last] || '';
+      const sel = el('select', { onchange: e => { const m = S().map; if (e.target.value) m[C.last] = e.target.value; else delete m[C.last]; C.mapChanged(); DJ.render(); if (C.drawLog) C.drawLog(); } },
+        el('option', { value: '' }, OS.t('Atama yok')), ACTIONS().map(a => el('option', { value: a.action, selected: a.action === cur }, OS.t(a.label) + ' · ' + OS.t(a.what))),
+        cur && !ACTIONS().some(a => a.action === cur) ? el('option', { value: cur, selected: true }, cur) : null);
+      assignBox.append(el('span', { class: 'mono' }, C.last), sel);
+    };
     const body = el('div', { class: 'ctrl-center' },
       el('b', null, OS.t('Bağlı cihazlar')), devices,
       el('div', { class: 'row wrap' },
@@ -169,14 +208,17 @@
       el('b', null, OS.t('Ayarlar')),
       el('div', { class: 'form-grid' },
         OS.t('Jog / enkoder biçimi'), el('select', { onchange: e => { s.jogMode = e.target.value; save(); } }, [['auto', 'Otomatik'], ['twos', 'İkiye tümleyen (1…63 / 127…65)'], ['offset', 'Merkez 64 (63 / 65)'], ['sign', 'İşaret biti (1…63 / 65…127)']].map(([v, l]) => el('option', { value: v, selected: v === (s.jogMode || 'auto') }, l))),
+        OS.t('Jog hassasiyeti'), el('input', { type: 'range', min: 0.25, max: 4, step: 0.05, value: s.jogSens || 1, oninput: e => { s.jogSens = +e.target.value; save(); } }),
+        OS.t('Tempo faderi yönü'), el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: !!s.pitchInv, onchange: e => { s.pitchInv = e.target.checked; save(); } }), OS.t('Ters çevir')),
         OS.t('Yumuşak devralma'), el('label', { class: 'field', title: OS.t('Fader ekrandaki değere ulaşana kadar ses sıçramaz') }, el('input', { type: 'checkbox', checked: !!s.soft, onchange: e => { s.soft = e.target.checked; save(); } }), OS.t('Fader ve tempo için açık'))),
+      el('b', null, OS.t('Kontrol ata')), assignBox,
       el('b', null, OS.t('Canlı sinyal')), logBox,
       el('b', null, OS.t('Bilgisayar klavyesi')),
       el('div', { class: 'form-grid' }, DJ.KEY_HELP.flatMap(([k, d]) => [el('span', { class: 'mono' }, k), OS.t(d)])),
-      el('p', { class: 'muted' }, 'USB’den standart MIDI gönderen controller’lar sürücü veya lisans istemeden çalışır; her kontrol sihirbazla bir kez eşlenir. Bazı modeller önce üreticinin sürücüsünü veya bir MIDI moduna geçirilmeyi ister. Yalnızca kendi HID protokolünü kullanan modellerde deneysel HID yolu dener; ışıklar ve yüksek çözünürlüklü jog bu yolda çalışmaz.'));
-    C.log.length = 0; C._drawn = false; C._logDrawn = false;
+      el('p', { class: 'muted' }, 'USB’den standart MIDI gönderen controller’lar sürücü veya lisans istemeden çalışır. Yaygın modeller takılınca tanınır ve hazır eşlemesi yüklenir; diğerleri sihirbazla bir kez eşlenir. Hazır eşlemeler her cihazda denenmedi; çalışmayan kontrolü yukarıdan değiştirebilirsiniz. Bazı modeller önce üreticinin sürücüsünü veya bir MIDI moduna geçirilmeyi ister. Yalnızca kendi HID protokolünü kullanan modellerde deneysel HID yolu dener; ışıklar ve yüksek çözünürlüklü jog bu yolda çalışmaz.'));
+    C.log.length = 0; C._drawn = false; C._logDrawn = false; C._asDrawn = false; C.last = null;
     const m = U.modal(OS.t('Controller Merkezi'), body, [{ label: 'Kapat', onclick: () => { DJ.learn = false; DJ.pending = null; } }]);
-    C.drawDevices(); C.drawLog();
+    C.drawDevices(); C.drawLog(); C.drawAssign();
     if (forDevice) startWizard(forDevice);
     return m;
   };
