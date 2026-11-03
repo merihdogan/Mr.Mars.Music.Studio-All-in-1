@@ -284,7 +284,7 @@
         el('select', { onchange: e => { A.time = +e.target.value; saveSettings(); sa.dev.retime(); } }, [[0.25, '1/16'], [0.5, '1/8'], [0.75, '3/16 (dub)'], [1, '1/4'], [1.5, '3/8']].map(([v, l]) => el('option', { value: v, selected: v === A.time }, l))),
         U.knob({ label: 'Geri Besleme', size: 28, min: 0, max: 0.9, def: 0.55, value: A.fb, fmt: v => Math.round(v * 100) + '%', onchange: v => { A.fb = v; saveSettings(); sa.dev.retime(); } }),
         U.knob({ label: 'Dönüş', size: 28, min: 0, max: 1.5, def: 0.8, value: A.ret, fmt: v => Math.round(v * 100) + '%', onchange: v => { A.ret = v; sa.ret.gain.value = v; saveSettings(); } })),
-      el('div', { class: 'row' }, el('b', null, 'Send B ·'),
+      el('div', { class: 'row' }, el('b', null, 'Send B'),
         el('select', { onchange: e => { B.type = e.target.value; saveSettings(); sb.build(); } }, [['shimmer', 'Lush Shimmer Reverb'], ['spring', 'Spring Reverb'], ['hall', 'Hall Reverb']].map(([v, l]) => el('option', { value: v, selected: v === B.type }, l))),
         bandSel(B, sb),
         U.knob({ label: 'Dönüş', size: 28, min: 0, max: 1.5, def: 0.8, value: B.ret, fmt: v => Math.round(v * 100) + '%', onchange: v => { B.ret = v; sb.ret.gain.value = v; saveSettings(); } })));
@@ -810,7 +810,7 @@
     return el('div', { class: 'dj-mixer' + (decks.length === 4 ? ' tall' : '') },
       el('div', { class: 'chs' }, decks.map(ch), micStrip()),
       sendUI(),
-      el('div', { class: 'row' }, 'A', xf, 'B'), curve,
+      el('div', { class: 'row xf-row' }, 'A', xf, 'B'), curve,
       el('div', { class: 'row', style: 'justify-content:center' },
         el('label', { class: 'field' }, 'EQ', el('select', { onchange: e => { settings.eqBands = +e.target.value; saveSettings(); DJ.decks.forEach(x => x.applyEqMode()); DJ.render(); } }, [[3, '3 bant'], [4, '4 bant izolatör']].map(([v, l]) => el('option', { value: v, selected: v === settings.eqBands }, l)))),
         el('label', { class: 'field' }, 'Fader', el('select', { onchange: e => { settings.faderCurve = e.target.value; saveSettings(); DJ.decks.forEach(x => x.setFader(x.faderVal)); } }, [['linear', 'Doğrusal'], ['rotary', 'Döner (logaritmik)'], ['fast', 'Hızlı kesme']].map(([v, l]) => el('option', { value: v, selected: v === settings.faderCurve }, l))))),

@@ -180,7 +180,7 @@ input, select, button, textarea { font: inherit; color: inherit; }
 
 /* DJ */
 #view-dj { overflow: auto; padding: 10px; gap: 10px; }
-.dj-wrap { display: grid; grid-template-columns: 1fr 210px 1fr; gap: 10px; }
+.dj-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 290px minmax(0, 1fr); gap: 10px; }
 .deck { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .deck .dtitle { display: flex; gap: 8px; align-items: center; }
 .deck .dname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
@@ -194,7 +194,8 @@ input, select, button, textarea { font: inherit; color: inherit; }
 .deck .hot button { height: 30px; }
 .deck .hot button.set { background: #6d3fd1; border-color: #9a74f0; }
 .deck .pitch { display: flex; align-items: center; gap: 6px; }
-.deck .pitch input { flex: 1; }
+.deck .pitch input { flex: 1; min-width: 0; }
+.deck .pitch select { flex: none; }
 .jog { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #333 0 30%, #1a1a1a 31% 100%); border: 3px solid #444; position: relative; cursor: grab; flex: none; }
 .jog .mark { position: absolute; left: 50%; top: 6px; width: 4px; height: 18px; margin-left: -2px; background: var(--acc); border-radius: 2px; transform-origin: 2px 54px; }
 .dj-mixer { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; align-items: center; }
@@ -205,6 +206,11 @@ input, select, button, textarea { font: inherit; color: inherit; }
 .dj-mixer .fadebox { display: flex; gap: 8px; height: 130px; }
 .dj-mixer canvas { width: 10px; height: 100%; background: #0b0d10; border-radius: 2px; }
 .xfader { width: 180px; }
+.xf-row { width: 100%; flex-wrap: nowrap; }
+.xf-row .xfader { flex: 1 1 0; width: auto; min-width: 0; }
+.dj-mixer .fx-slot select { max-width: 130px; }
+.dj-mixer .mic-ch .field { white-space: nowrap; }
+.dj-mixer .mic-ch .field input { width: auto; }
 
 /* eklenti yöneticisi */
 #view-plugins { overflow: auto; padding: 14px; gap: 12px; }
@@ -269,7 +275,7 @@ input, select, button, textarea { font: inherit; color: inherit; }
 
 /* DJ ekleri */
 .dj-bar { border-radius: 8px; border: 1px solid var(--line); }
-.dj-wrap.four { grid-template-columns: 1fr 260px 1fr; grid-template-rows: auto auto; }
+.dj-wrap.four { grid-template-columns: minmax(0, 1fr) 340px minmax(0, 1fr); grid-template-rows: auto auto; }
 .dj-wrap.four .dj-mixer { grid-row: 1 / 3; grid-column: 2; }
 .dj-mixer.tall .chs { gap: 4px; }
 .dj-mixer.tall .ch .knob { width: 44px; }
@@ -327,8 +333,9 @@ input, select, button, textarea { font: inherit; color: inherit; }
 .stems .stem-btn:not(.on) { opacity: .45; text-decoration: line-through; }
 .dj-lib { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
 .lib-list { max-height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 2px; }
-.lib-row { display: grid; grid-template-columns: 1fr 60px 50px 50px repeat(4, auto) auto; gap: 6px; align-items: center; padding: 3px 6px; border-radius: 4px; background: var(--bg); }
-.lib-row .ln { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-row { display: flex; gap: 6px; align-items: center; padding: 3px 6px; border-radius: 4px; background: var(--bg); }
+.lib-row > .mono { flex: none; width: 52px; }
+.lib-row .ln { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #view-session { overflow: auto; }
 .ses-grid { display: grid; gap: 4px; padding: 10px; align-items: stretch; }
 .ses-head { font-weight: 700; padding: 4px 6px; border-top: 3px solid var(--line2); background: var(--bg2); border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -489,6 +496,7 @@ input, select, button, textarea { font: inherit; color: inherit; }
 .fx-slots { flex-wrap: wrap; }
 .fx-slot { display: flex; align-items: center; gap: 4px; }
 .fx-slot select { max-width: 92px; }
+.deck .fx-slot .knob { width: 48px; }
 .pads { flex-direction: column; align-items: stretch; }
 .pad-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .pad-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
@@ -552,6 +560,7 @@ html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent
   .ctrl-center { width: 100%; }
   .float-win { left: 0 !important; top: 0 !important; width: 100vw !important; height: 100dvh !important; border-radius: 0; }
   .lib-row { flex-wrap: wrap; }
+  .lib-row .ln { flex-basis: 100%; }
 }
 
 .ctrl-banner { position: fixed; right: 16px; bottom: 80px; z-index: 900; max-width: min(460px, calc(100vw - 32px)); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--acc); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.45); }
