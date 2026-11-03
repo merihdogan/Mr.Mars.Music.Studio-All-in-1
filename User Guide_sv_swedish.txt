@@ -105,6 +105,7 @@ Closed, 4x12 High Power m.fl. Egen IR (.wav) laddas med "Använd IR".
 
 MIDI OCH KONTROLLER
 -------------------
+När en ny enhet utan profil ansluts föreslår appen att mappa den.
 Högerklicka på en ratt > "MIDI learn". I DJ-mixern mappar "MIDI Learn (controller)" alla
 deck-kontroller. 14-bitars faders, pitch-bend-tempofaders, jog-beröring, knappbelysning
 (LED) samt MIDI Clock in och ut (Verktyg > "MIDI settings") stöds.

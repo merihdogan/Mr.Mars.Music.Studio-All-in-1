@@ -164,6 +164,8 @@ arpeggiate, strum, split to grid, quantize, humanize, legato.
 
 MIDI AND CONTROLLERS
 --------------------
+- When a new device without a profile is plugged in, the app offers to map it; "Map" opens the
+  wizard and saves the mapping to that device when finished.
 - Right-click any knob > "MIDI learn" to bind a controller knob / fader to it. In the DJ
   Mixer, "MIDI Learn (controller)" maps every deck control; the mapping can be saved to a
   file and shared.

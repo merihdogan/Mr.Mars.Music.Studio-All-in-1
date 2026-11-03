@@ -171,6 +171,8 @@ damgası, arpej, strum, ızgaraya bölme, kuantize, insansılaştırma, legato.
 
 MIDI VE CONTROLLER
 ------------------
+- Profili olmayan yeni bir cihaz takılınca uygulama eşlemeyi önerir; "Eşle" sihirbazı açar ve
+  bitince eşlemeyi o cihaza kaydeder.
 - Herhangi bir düğmeye sağ tık > "MIDI öğren": MIDI controller'ın düğme / fader'ı o
   parametreye bağlanır. DJ Mikser'de "MIDI Öğren (controller)" ile tüm deck kontrolleri
   eşlenir; eşleme dosyaya kaydedilip paylaşılabilir.

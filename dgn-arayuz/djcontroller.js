@@ -38,9 +38,29 @@
     const dev = midiIns().find(i => s.profiles[i.name]) || C.hid.find(h => s.profiles[h.name]);
     if (dev && s.activeProfile !== dev.name) { C.loadProfile(dev.name); U.toast(OS.t('Controller profili yüklendi') + ': ' + dev.name); }
   }
+  // Profili olmayan yeni cihaz takılınca eşleme önerilir; sanal portlar için sorulmaz
+  const VIRTUAL = /through|loopback|loopmidi|virtual|microsoft|\biac\b/i;
+  const asked = new Set();
+  let banner = null, checkT = null;
+  C.checkNew = function () {
+    const s = S();
+    if (banner || C.wizardOn || document.querySelector('.ctrl-center')) return;
+    const names = midiIns().map(i => i.name).concat(C.hid.map(h => h.name));
+    const name = names.find(n => n && !VIRTUAL.test(n) && !asked.has(n) && !(s.profiles && s.profiles[n]) && !(s.noAsk || []).includes(n));
+    if (!name) return;
+    asked.add(name);
+    const close = () => { if (banner) { banner.remove(); banner = null; setTimeout(C.checkNew, 300); } };
+    banner = el('div', { class: 'ctrl-banner' },
+      el('div', null, el('b', null, name), el('div', { class: 'muted' }, OS.t('Yeni cihaz bağlandı. DJ controller ise düğmelerini bir kez eşleyelim.'))),
+      el('button', { class: 'btn sm primary', onclick: () => { close(); OS.ui.showView('dj'); setTimeout(() => C.open(name), 100); } }, OS.t('Eşle')),
+      el('button', { class: 'btn sm', onclick: close }, OS.t('Şimdi değil')),
+      el('button', { class: 'btn sm', onclick: () => { s.noAsk = (s.noAsk || []).concat(name); save(); close(); } }, OS.t('Bir daha sorma')));
+    document.body.appendChild(banner);
+  };
+  const devicesChanged = () => { autoProfile(); if (C.drawDevices) C.drawDevices(); clearTimeout(checkT); checkT = setTimeout(C.checkNew, 800); };
   let bound = null;
   setInterval(() => {
-    if (OS.midiAccess && OS.midiAccess !== bound) { bound = OS.midiAccess; bound.addEventListener('statechange', () => { autoProfile(); if (C.drawDevices) C.drawDevices(); }); autoProfile(); }
+    if (OS.midiAccess && OS.midiAccess !== bound) { bound = OS.midiAccess; bound.addEventListener('statechange', devicesChanged); devicesChanged(); }
   }, 1000);
 
   // ---------------- Genel HID: düğmeler bit, faderler bayt olarak öğrenilir ----------------
@@ -82,18 +102,19 @@
     try {
       const list = await navigator.hid.requestDevice({ filters: [] });
       for (const dev of list) { if (!dev.opened) await dev.open(); attachHid(dev); }
-      autoProfile(); if (C.drawDevices) C.drawDevices();
+      devicesChanged();
     } catch (e) { U.toast(OS.t('HID cihazı açılamadı') + ': ' + e.message); }
   };
   if (navigator.hid) {
-    navigator.hid.getDevices().then(async list => { for (const dev of list) { try { if (!dev.opened) await dev.open(); attachHid(dev); } catch (e) { } } }).catch(() => { });
+    navigator.hid.getDevices().then(async list => { for (const dev of list) { try { if (!dev.opened) await dev.open(); attachHid(dev); } catch (e) { } } devicesChanged(); }).catch(() => { });
     navigator.hid.addEventListener('disconnect', e => { C.hid = C.hid.filter(h => h.dev !== e.device); if (C.drawDevices) C.drawDevices(); });
   }
 
   // ---------------- Sihirbaz ----------------
   function wizard(body, onDone) {
     const steps = STEPS(S().count); let i = 0, timer = null;
-    const finish = () => { clearInterval(timer); DJ.learn = false; DJ.pending = null; onDone(); };
+    C.wizardOn = true;
+    const finish = () => { clearInterval(timer); DJ.learn = false; DJ.pending = null; C.wizardOn = false; onDone(); };
     const title = el('div', { class: 'wiz-title' }), prog = el('div', { class: 'muted' });
     const show = () => {
       if (i >= steps.length) { finish(); return; }
@@ -112,8 +133,16 @@
   }
 
   // ---------------- Pencere ----------------
-  C.open = function () {
+  C.open = function (forDevice) {
     const s = S(), devices = el('div', { class: 'ctrl-list' }), logBox = el('div', { class: 'ctrl-log mono' }), wizBox = el('div', { class: 'ctrl-wiz' });
+    // takılan cihazdan başlatılınca eşleme bitişte o cihazın profiline kaydedilir
+    const startWizard = dev => wizard(wizBox, () => {
+      if (dev && Object.keys(S().map).length) { C.saveProfile(dev); S().activeProfile = dev; save(); }
+      wizBox.innerHTML = '';
+      if (wizBox.isConnected) wizBox.appendChild(el('div', { class: 'muted' }, OS.t(dev ? 'Eşleme tamamlandı ve bu cihaza kaydedildi.' : 'Eşleme tamamlandı. Yukarıdan “Profil kaydet” ile cihaza kaydedin.')));
+      if (C.drawDevices) C.drawDevices();
+      DJ.render();
+    });
     C.drawDevices = () => {
       if (!devices.isConnected && C._drawn) { C.drawDevices = null; return; }
       C._drawn = true; devices.innerHTML = '';
@@ -134,7 +163,7 @@
     const body = el('div', { class: 'ctrl-center' },
       el('b', null, OS.t('Bağlı cihazlar')), devices,
       el('div', { class: 'row wrap' },
-        el('button', { class: 'btn sm primary', onclick: () => wizard(wizBox, () => { wizBox.innerHTML = ''; wizBox.appendChild(el('div', { class: 'muted' }, OS.t('Eşleme tamamlandı. Yukarıdan “Profil kaydet” ile cihaza kaydedin.'))); DJ.render(); }) }, 'Eşleme sihirbazını başlat'),
+        el('button', { class: 'btn sm primary', onclick: () => startWizard() }, 'Eşleme sihirbazını başlat'),
         C.hidSupported() ? el('button', { class: 'btn sm', title: OS.t('MIDI modu olmayan controller için. Cihaz seçildikten sonra 2 saniye dokunmayın.'), onclick: C.addHid }, 'HID cihazı ekle (deneysel)') : null),
       wizBox,
       el('b', null, OS.t('Ayarlar')),
@@ -148,6 +177,7 @@
     C.log.length = 0; C._drawn = false; C._logDrawn = false;
     const m = U.modal(OS.t('Controller Merkezi'), body, [{ label: 'Kapat', onclick: () => { DJ.learn = false; DJ.pending = null; } }]);
     C.drawDevices(); C.drawLog();
+    if (forDevice) startWizard(forDevice);
     return m;
   };
 })(window.OS);

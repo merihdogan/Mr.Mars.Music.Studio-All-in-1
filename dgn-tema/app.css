@@ -553,3 +553,6 @@ html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent
   .float-win { left: 0 !important; top: 0 !important; width: 100vw !important; height: 100dvh !important; border-radius: 0; }
   .lib-row { flex-wrap: wrap; }
 }
+
+.ctrl-banner { position: fixed; right: 16px; bottom: 80px; z-index: 900; max-width: min(460px, calc(100vw - 32px)); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--acc); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.45); }
+.ctrl-banner > div { flex: 1 1 100%; }

@@ -1,6 +1,11 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+['Yeni cihaz bağlandı. DJ controller ise düğmelerini bir kez eşleyelim.', 'New device connected. If it is a DJ controller, let’s map its controls once.', 'Neues Gerät verbunden. Ist es ein DJ-Controller, ordnen wir seine Bedienelemente einmal zu.', 'Nuevo dispositivo conectado. Si es un controlador DJ, asignemos sus controles una vez.', 'Nouvel appareil connecté. Si c’est un contrôleur DJ, affectons ses commandes une fois.'],
+['Eşle', 'Map', 'Zuordnen', 'Asignar', 'Affecter'],
+['Şimdi değil', 'Not now', 'Nicht jetzt', 'Ahora no', 'Pas maintenant'],
+['Bir daha sorma', 'Don’t ask again', 'Nicht mehr fragen', 'No volver a preguntar', 'Ne plus demander'],
+['Eşleme tamamlandı ve bu cihaza kaydedildi.', 'Mapping finished and saved to this device.', 'Zuordnung fertig und für dieses Gerät gespeichert.', 'Asignación terminada y guardada para este dispositivo.', 'Affectation terminée et enregistrée pour cet appareil.'],
 ['Temiz', 'Clean', 'Clean', 'Limpio', 'Clair'],
 ['Crunch', 'Crunch', 'Crunch', 'Crunch', 'Crunch'],
 ['Lead', 'Lead', 'Lead', 'Lead', 'Lead'],
