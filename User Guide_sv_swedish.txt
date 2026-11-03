@@ -1,0 +1,134 @@
+MR. MARS MUSIC STUDIO ALL IN 1 — DGN.V.06 · MRH DGN
+Bärbar musikproduktionsmiljö utan installation och utan internet
+================================================================
+
+START
+-----
+- Dubbelklicka på "Mr Mars Music Studio.cmd". Ingen installation och inget internet behövs.
+  Appen öppnar Microsoft Edge eller Google Chrome i ett eget fönster med egen profil.
+- "Masaustu Kisayolu Olustur.cmd" skapar en genväg "Mr. Mars Music Studio" med logotyp på
+  skrivbordet och i Start-menyn. Kör den en gång efter att mappen flyttats till en ny dator.
+
+MAC, ANDROID, IPHONE, IPAD
+--------------------------
+Mac: dubbelklicka på "Mr Mars Music Studio.command" (Chrome eller Edge krävs). Om macOS blockerar:
+  högerklicka > Öppna. Vid behörighetsfel, kör en gång i Terminal:
+  chmod +x "Mr Mars Music Studio.command"
+Android, iPhone, iPad: öppnas inte från en mapp, appen måste ligga på en webbadress (https). Öppna
+  adressen en gång online och lägg till på hemskärmen; därefter fungerar den även offline.
+Pekskärm: tryck och dra, långt tryck = högerklick, dubbeltryck nollställer en ratt.
+Begränsningar: MIDI-kontroller fungerar på Mac (Chrome / Edge) och Android (Chrome, USB OTG). På
+  iPhone och iPad saknar alla webbläsare Web MIDI. Telefoner har mindre kraft: minska kedjor vid knaster.
+
+USB / ANNAN DATOR
+-----------------
+Kopiera hela mappen "Mr Mars Music Studio All in 1" till ett USB-minne. Projekt,
+inspelningar, inställningar och plugins ligger i mappen "veri".
+Säkerhetskopia: Arkiv > "Exportera projektfil (.mrmars)" skapar en komplett projektfil
+med ljud. Äldre .orbit-projektfiler kan också öppnas.
+
+MAPPSTRUKTUR
+------------
+mrmars-cekirdek   : ljudmotor, projekt, automation, DSP, stämning, MIDI, översättningar
+mrh-cihazlar      : instrument, effekter, förstärkare / högtalarlådor / pedaler, metal-enheter
+dgn-arayuz        : flikar, fönster, DJ, Metal Creative, pluginhanterare
+dgn-tema          : gränssnittstema
+mrmars-gorseller  : logotyp och ikoner
+mrmars-eklentiler : plugins du lägger till
+veri              : dina projekt och inställningar
+
+SPRÅK
+-----
+Appen öppnas på Windows-språket: Türkçe, English, Deutsch, Español, Français (engelska för
+övriga språk). Välj manuellt under Verktyg > "Dil / Language".
+
+FLIKAR
+------
+Varje flik kan öppnas i ett eget fönster (⧉ på fliknamnet, dubbelklick eller högerklick).
+Paneler har en egen ⧉. När fönstret stängs återgår innehållet till sin plats.
+
+Arrangemang    : ljud- och MIDI-spår, inspelning (tagningar), klippredigering, loop,
+                 metronom, piano roll, import, automationsspår, mixdown och stem-WAV.
+                 Högerklick på ljudklipp: dela i stems, anpassa till tempo, tonhöjd.
+Session        : rutnät spår × scen, kvantiserad klippstart.
+Pattern Rack   : stegsekvenser (16/32/64 steg, accent, swing), skrivs till arrangemanget.
+Mixer          : effektplatser, sends, panorering, fader, mätare, master.
+Mini Tools     : XY-synth, XY-effekter, MIDI-verktyg (transponering, skala, ackord,
+                 arpeggiator), looper, 4x4-pads.
+Re-Play        : gör om en musikfil till noter och spelar den med valt instrument
+                 (44 instrument); export av noter, XML, MIDI, tabulatur och riff.
+Amp Rack       : live gitarr / bas: stämapparat, pedaler, förstärkare, högtalarlåda (2
+                 mikrofoner, egen IR), signaldelning, DI, modulatorer, liveförval.
+DJ-mixer       : 2 eller 4 decks; BPM och tonart, SYNC, KEY LOCK, hot cues, loopar,
+                 padlägen, stems, effekter, 3-bands EQ eller 4-bands isolator, crossfader-
+                 kurvor, send FX A / FX B, sampler, mikrofon, Automix, bibliotek.
+                 Biblioteksimport / -export: DJ Library XML, DJ Collection NML, M3U / M3U8.
+East·West·Afro : mikrotonal stämning (turkiska makamer 53 koma, arabiska makamer,
+                 afrikanska skalor, stämningsfil (.scl)), polyrytmisk sequencer (14 förval),
+                 världsslagverk, drone / atmosfär, Tension-makro och DROP.
+Metal Creative : se nedan.
+Plugins        : installerade enheter, laddning av externa plugins, mall, API.
+
+DJ-MIXERN I DETALJ
+------------------
+- Deck: broms, spinback, baklänges, TAP för BPM, flytta beatgrid, 3 FX-platser per deck, Master FX.
+- Padsidor: Hot Cue 1-8 och 9-16, Loop Roll, Slicer, Beat Jump, loopar (1/32-128), Cue Loop,
+  Key Cue, stems, Stem + FX, manuell och sparad loop, Remix-punkter, Scratch (8 mönster).
+- Sampler: banker, 16 pads, lägena On/Off, Stutter, Hold, Loop, Unmute, inspelning 4-32 slag.
+- Bibliotek: ID3-taggar och omslag, betyg, förlyssning, filter för passande tonarter.
+- Inspelning WAV eller WebM. Video: deckvideo, omslag, visualiserare, kamera, bildspel, utfönster.
+- Controller Center: MIDI / HID-enheter, signalmonitor, mappningsguide, profiler, jog-format,
+  mjuk övertagning, SHIFT. Ingen licens eller tidsgräns. Kontrollern måste skicka standard-MIDI
+  via USB; inga färdiga märkesmappningar; HID är experimentellt.
+- Saknas: sändning (kräver internet), tidskodsvinyl (DVS), DMX, externa ljudplugins.
+
+METAL CREATIVE (flik + toppmeny)
+--------------------------------
+- MRH Riff Factory: 8 stilar × 9 stämningar × 8 delar, 40 riff per kombination. Varje
+  del är 2 takter: gitarr, bas, trummor, synth och industri-FX tillsammans; baskaggen
+  följer gitarrens chugs.
+- DI-paket (.zip): dubbelspelade DI-gitarr-WAV, bas-DI-WAV, valfritt förstärkt gitarr och MIDI.
+- DGN Song Workshop: färdiga låtformer, "slumpad låt", skrivs till projektet som
+  "MC ·"-spår, MIDI-export.
+- Instrument: Metal Guitar DI (7/8 strängar, palm mute, ned / växel / auto, dubbelspelning),
+  Metal Bass (5 strängar, 4 ljud), Metal Drum Kit, Industrial Destruction FX (90 ljud).
+  Anslag ≤ 100 = palm mute, högre = öppen sträng.
+- DI Booster (före förstärkaren): Body, Deep Octave, String Shine, Saw Distortion, Metal
+  Ring, Squash. Drum Fist: Hit, Grit, 3-bands transient, Boom 100 Hz, Air 8 kHz, Mix.
+- Mr. Mars metal-tonarkiv, MRH synth-förval, mixmall för metal.
+
+MR. MARS FÖRSTÄRKARE OCH HÖGTALARLÅDOR
+--------------------------------------
+Förstärkarna är namngivna efter stil: Clean, Crunch, Lead, Hard Rock, High Gain, Heavy Metal, Tight Metal, Modern Metal
+samt basförstärkare. Högtalarlådorna efter storlek och stil: 1x12 Open, 2x12 Bright, 4x12 Modern Closed, 4x12 Vintage
+Closed, 4x12 High Power m.fl. Egen IR (.wav) laddas med "Använd IR".
+
+MIDI OCH KONTROLLER
+-------------------
+Högerklicka på en ratt > "MIDI learn". I DJ-mixern mappar "MIDI Learn (controller)" alla
+deck-kontroller. 14-bitars faders, pitch-bend-tempofaders, jog-beröring, knappbelysning
+(LED) samt MIDI Clock in och ut (Verktyg > "MIDI settings") stöds.
+
+PLUGINS
+-------
+Fliken Plugins > "Ladda plugin (.js)", eller lägg filen i "mrmars-eklentiler" och lägg till
+namnet i mrmars-eklentiler\index.js. Plugins registreras med MrMars.register({ ... }).
+
+EXPORT
+------
+Arkiv > Mixdown / Export: WAV (16 / 24 bit, 32 bit float), stems, MIDI, noter (XML +
+SVG), tabulatur och riff (TXT).
+
+LJUDINSTÄLLNINGAR
+-----------------
+Verktyg > Ljud: enheter, samplingsfrekvens, latensläge (standard "Balanserad"). Om ljudet
+knastrar, välj "Säker" och minska antalet förstärkarkedjor som körs samtidigt.
+
+BEGRÄNSNINGAR
+-------------
+- Appen körs på webbläsarens ljudmotor: externa ljudplugins och särskilda drivrutiner används inte
+  direkt; den byggs ut med sitt eget pluginsystem.
+- Stem-separering och ljud-till-noter är ungefärliga.
+- Metal Creative-riffen genereras med regler, de är inte inspelningar; redigera dem som MIDI.
+
+Mr. Mars Music Studio All in 1 — MRH DGN

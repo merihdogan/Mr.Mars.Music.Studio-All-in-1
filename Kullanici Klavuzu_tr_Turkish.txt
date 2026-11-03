@@ -1,0 +1,218 @@
+MR. MARS MUSIC STUDIO ALL IN 1 — DGN.V.06 · MRH DGN
+Taşınabilir, kurulumsuz, internetsiz müzik yapım ortamı
+================================================================
+
+BAŞLATMA
+--------
+- "Mr Mars Music Studio.cmd" dosyasına çift tıklayın. Kurulum ve internet gerekmez.
+  Uygulama, bilgisayardaki Microsoft Edge veya Google Chrome'u kendi penceresinde ve
+  kendi ayrı profiliyle açar.
+- "Masaustu Kisayolu Olustur.cmd": masaüstüne ve Başlat menüsüne logolu
+  "Mr. Mars Music Studio" kısayolu ekler. Klasörü yeni bir bilgisayara taşıdığınızda
+  bir kez çalıştırın.
+
+MAC, ANDROID, IPHONE, IPAD
+--------------------------
+Mac: "Mr Mars Music Studio.command" dosyasına çift tıklayın (Chrome veya Edge gerekir). İlk
+  açılışta macOS engellerse sağ tık > Aç. "İzin yok" derse Terminal'de bir kez:
+  chmod +x "Mr Mars Music Studio.command"
+Android ve iPhone / iPad: klasörden açılmaz, uygulama bir web adresine (https) konmalıdır. Adresi
+  bir kez internetle açın, sonra ana ekrana ekleyin: Android'de Araçlar > "Ana ekrana ekle",
+  iPhone / iPad'de Safari > Paylaş > "Ana Ekrana Ekle". Bundan sonra internetsiz de açılır.
+  Projeler o cihazın tarayıcısında durur; taşımak için .mrmars dosyasına aktarın.
+Dokunmatik: düğmeyi basılı tutup sürükleyin, uzun basmak sağ tıktır, çift dokunma düğmeyi
+  sıfırlar. Dar ekranda ☰ (panel) ve 🎹 (klavye) düğmeleri panelleri açar. DJ Mikser'deki SHIFT
+  pedlerin ikinci işlevini açar.
+Sınırlar:
+- MIDI controller: Mac'te Chrome / Edge ve Android'de Chrome (USB OTG ile) çalışır. iPhone ve
+  iPad'de hiçbir tarayıcıda Web MIDI yoktur; DJ controller bağlanamaz. HID yalnız Chrome / Edge.
+- Telefon ve tablette işlemci ve bellek azdır: birkaç amfi zinciri, stem ayırma ve uzun parçalar
+  zorlayabilir; ses cızırdarsa zincir sayısını azaltın. iPhone'da sessiz düğmesi sesi kesebilir.
+- Ayrı kulaklık çıkışı için 4 kanallı ses kartı mobilde çoğunlukla görünmez; "Bölünmüş" modu kullanın.
+- FLAC, OGG gibi biçimleri bazı cihazlar çözemez. Klasör seçimi iOS'ta dosya seçimi olarak çalışır.
+
+USB / BAŞKA BİLGİSAYAR
+----------------------
+Tüm "Mr Mars Music Studio All in 1" klasörünü USB belleğe kopyalayın. Projeler, ses
+kayıtları, ayarlar ve yüklediğiniz eklentiler klasörün içindeki "veri" dizininde durur.
+Yedek / paylaşım: Dosya > "Proje dosyasına aktar (.mrmars)" ses kayıtları dahil tek
+dosyalık tam proje üretir. Eski sürümlerin .orbit proje dosyaları da açılır.
+
+KLASÖR YAPISI
+-------------
+mrmars-cekirdek   : ses motoru, proje, otomasyon, DSP, akort, MIDI, çeviriler (dil)
+mrh-cihazlar      : enstrümanlar, efektler, amfi / kabin / pedallar, metal cihazları
+dgn-arayuz        : sekmeler, pencereler, DJ, Metal Creative, eklenti yöneticisi
+dgn-tema          : arayüz teması
+mrmars-gorseller  : logo ve ikonlar
+mrmars-eklentiler : dışarıdan eklenen eklentiler
+veri              : sizin projeleriniz ve ayarlarınız
+
+DİL
+---
+Uygulama Windows'un diliyle açılır: Türkçe, English, Deutsch, Español, Français
+(diğer dillerde İngilizce). Araçlar > "Dil / Language" ile elle seçilebilir.
+
+SEKMELER
+--------
+Her sekme ayrı bir pencerede açılabilir: sekme adının üzerindeki ⧉, çift tık veya
+sağ tık > "Ayrı pencerede aç". Panellerin sağ üstündeki ⧉ ile alt paneller de ayrılır.
+Pencere kapatılınca içerik eski yerine döner; konumlar hatırlanır.
+
+Aranjman    : Ses ve MIDI parçaları, kayıt (take / comping), klip düzenleme (taşı, kırp,
+              böl, çoğalt, ters çevir, normalize, fade), döngü, metronom, piyano rulosu,
+              ses / MIDI içe aktarma, otomasyon şeritleri, mixdown ve stem WAV çıkışı.
+              Ses klibine sağ tık: stem'lere ayır (vokal / davul / bas / melodi),
+              tempoya uydur (perde korunur), perde kaydır.
+Session     : Parça × sahne klip ızgarası; klipler nicelemeyle başlar, sahneler tek tuşla.
+Desen Rafı  : Adım sıralayıcı: 16/32/64 adım, vurgu / hayalet nota, swing, rastgele,
+              desenleri aranjmana MIDI klip olarak yazma.
+Mikser      : Efekt yuvaları, send (FX kanalı), pan, fader, seviye göstergesi, master.
+Mini Araçlar: XY synth pedi, XY efekt pedi (filtre, delay, reverb, flanger, phaser,
+              bit ezici, perde, gater, beat repeat), MIDI araçları (transpoze, ölçek,
+              akor, arpej, velocity eğrisi), 2 kanallı looper, 4x4 ped (note repeat).
+Yeniden Çal : Müzik dosyasını (MP3, WAV, OGG, FLAC, M4A, MP4 / WebM veya MIDI) notaya
+              çevirir ve seçtiğiniz çalgıyla (44 çalgı: gitarlar, bağlama, cura, ud,
+              kanun, ney, klarnet, zurna, kemençe, yaylılar, piyano, synth...) yeniden
+              çalar. Çıktılar: nota (yazdır / PDF / SVG), XML, MIDI, gitar ve bas
+              tabı, Do-Re-Mi listesi, tekrar eden riff'ler.
+Amfi Rack   : Canlı gitar / bas: akort cihazı, pedal tahtası, amfi kafası, kabin (2
+              mikrofon, kendi IR dosyanız), tek / 2'li / 3'lü bölücü veya stereo
+              yönlendirme, DI yolu, modülatörler (LFO / zarf / adım), canlı ön ayar
+              modu, MIDI Program Change, TAP tempo, rig'i ses parçasına aktarma.
+DJ Mikser   : 2 veya 4 deck; BPM ve ton algılama, beat grid, SYNC, KEY LOCK, tempo,
+              jog, nudge, CUE, 8 hot cue, döngüler, ped modları (Hot Cue, Loop Roll,
+              Slicer, Beat Jump, Key Cue, Stem...), stem tuşları, deck efektleri,
+              3 bant veya 4 bant izolatör EQ + kill, rezonanslı filtre, crossfader
+              eğrileri, FX A / FX B gönderme efektleri, kulaklık cue, sampler,
+              mikrofon (talkover), Automix, kütüphane, çalma listeleri, set kaydı.
+              Kütüphane içe / dışa aktarma: DJ Kütüphanesi XML, DJ Koleksiyonu NML, M3U / M3U8
+              (BPM, ton, beat grid, hot cue, listeler).
+Doğu·Batı·Afro: Mikrotonal akort (Türk makamları 53 koma, Arap makamları, Afrika
+              dizileri, akort dosyası (.scl)), poliritmik usul / Afro-groove sıralayıcı (14 hazır
+              kalıp), Dünya Perküsyonu enstrümanı, canlı drone / atmosfer, Tension
+              makrosu ve DROP.
+Metal Creative: Aşağıda ayrı bölümde.
+Eklentiler  : Yüklü cihazlar, dışarıdan eklenti yükleme, şablon, API belgesi.
+
+DJ MİKSER AYRINTILARI
+---------------------
+- Deck: Fren, Spinback, Ters çalma, TAP ile BPM, beat grid kaydırma ve "1. vuruş" ataması,
+  deck başına zincirlenebilir 3 FX yuvası, ayrıca Master FX.
+- Ped sayfaları: Hot Cue 1-8 ve 9-16, Loop Roll (Shift: 3/4), Slicer, Beat Jump, Döngü, Döngü+
+  (1/32-128), Cue Loop, Key Cue, Stem, Stem + FX, Manuel Döngü, Kayıtlı Döngü, Remix Noktaları
+  (bölüm başları otomatik bulunur), Scratch (8 hazır kalıp).
+- Sampler: sınırsız banka, bankada 16 ped; Aç/Kapa, Stutter, Basılı tut, Döngü, Unmute
+  tetikleme; çıkış master veya bir deck; master'dan ya da deck'ten 4/8/16/32 vuruş pede kayıt.
+- Kütüphane: ID3 etiketleri ve kapak otomatik okunur, parça bilgisi düzenleme, puan, kulaklıktan
+  ön dinleme, seçili deck'in tonuyla uyumlu parçaları süzme.
+- Set kaydı: WAV veya WebM (Opus). Video Motoru: decke yüklenen video, kapak, görselleştirici,
+  kamera, slayt; Fade / Wipe / Zoom geçişi; Akıllı / Crossfader'a bağlı / Elle video crossfader;
+  ikinci ekran için çıkış penceresi.
+- Controller Merkezi: bağlı MIDI / HID cihazlar, canlı sinyal izleme, adım adım eşleme sihirbazı,
+  cihaza göre otomatik yüklenen profiller, jog biçimi seçimi, yumuşak devralma, SHIFT katmanı.
+  Bu özelliklerde lisans veya süre sınırı yoktur. Uyum şartı: controller USB'den standart MIDI
+  göndermelidir; her kontrol bir kez eşlenir. Hazır marka eşlemesi yoktur. Kendi HID protokolünü
+  kullanan modeller için deneysel HID yolu vardır (ışık ve yüksek çözünürlüklü jog çalışmaz).
+- Klavye: 1-8 Deck A pedleri, Q-I Deck B pedleri, Z / X cue, C / V sync, ← / → crossfader.
+- Olmayanlar: yayın (internet gerektirir), plak zaman kodu (DVS), ışık kontrolü (DMX), harici ses eklentileri.
+
+METAL CREATIVE (sekme + üst menü)
+---------------------------------
+- MRH Riff Fabrikası: 8 stil (Modern Metal, Metalcore, Deathcore, Slam, Nu Metal,
+  Djent, Thrash, Breakdowns) × 9 akort (Drop E 8 tel … Standart E) × 8 bölüm tipi
+  (Ana Riff, Verse, Nakarat, Breakdown, Lead / Solo, Temiz Bölüm, Geçiş, Giriş); her
+  kombinasyonda 40 riff parçası. Her parça 2 ölçü: gitar + bas + davul + synth +
+  endüstriyel FX birlikte üretilir; kick gitarın chug'larını izler. ▶ ile dinlenir,
+  "⇣ Proje" ile çalma imlecine yazılır.
+- DI paketi (.zip): listedeki 20 / 40 parçanın çift kayıt DI gitar WAV'ı, bas DI WAV'ı,
+  istenirse amfili gitar WAV'ı ve gitar / bas / davul / synth MIDI dosyaları.
+- DGN Şarkı Kurucu: hazır şarkı yapıları, rastgele şarkı, bölüm sırası / tekrar /
+  riff numarası; "Projeye yaz" ile "MC ·" parçaları (Gitar L / R, Bas, Davul, Lead,
+  Temiz Gitar, Synth, Endüstriyel FX) kurulur, tempo ve döngü ayarlanır. Şarkı MIDI
+  (.zip) olarak da indirilebilir.
+- Enstrümanlar: Metal Gitar DI (7/8 tel; palm mute, aşağı / alternatif / otomatik
+  pena, sıkılık, dinamik, tel bırakma sesi, çift kayıt), Metal Bas (5 tel; DI /
+  Amfi 1 / Amfi 2 / Temiz), Metal Davul Kiti (china, stack, splash, ride çanı, iki
+  kick), Endüstriyel Yıkım FX (90 ses; Vuruş, Alt Bas, Stereo, Oda, Renk, Parçala).
+  Kural: gitar / bas notalarında vuruş gücü 100 ve altı = palm mute, üstü = açık tel.
+- DI Güçlendirici (amfiden önce): Gövde, Derin Oktav, Tel Parlatıcı, Testere
+  Distorsiyonu (Drive / Level / Bas / Orta / Tiz / Karışım), Metal Halka, Sıkıştır.
+- Davul Yumruğu: Vuruş, Kırçıl, 3 bant Transient (atak / kuyruk), Gümbür 100 Hz,
+  Parıltı 8 kHz, Karışım.
+- Mr. Mars Metal Ton Arşivi: yüksek kazançlı amfi × kabin tonları + Deathcore, Thrash,
+  Djent, Nu Metal, İsveç Death Metal ve bas paketleri; seçili parçaya veya yeni gitar
+  parçasına uygulanır.
+- MRH metal synth ön ayarları (Dijital Mini Synth'te "MC ›" adıyla da listelenir).
+- Metal mix şablonu: davul, çift gitar, bas, synth, FX, vokal zinciri, reverb / delay
+  dönüşleri, master EQ + glue kompresör + limiter (isteğe bağlı örnek şarkı ile).
+
+MR. MARS AMFİ VE KABİN SERİSİ
+-----------------------------
+Amfiler tarzına göre adlandırılmıştır. Temiz: Temiz, Parlak Temiz, Temiz Reverb, Temiz Jazz. Crunch: Crunch, Klasik
+Crunch, Parlak Crunch, Vintage Combo, Sıcak Combo, Yumuşak Overdrive. Lead: Lead, Akıcı Lead, Hard Rock.
+Metal: Yüksek Kazanç, Modern Hi-Gain, Ağır Metal, Sıkı Metal, Modern Metal. Bas: Bas Tüp, Bas Modern, Bas Klasik,
+Bas Hi-Fi, Bas Overdrive.
+Kabinler boyut ve tarzla adlandırılır: 1x10 Küçük, 1x12 Açık, 1x12 Açık Combo, 1x12 Sıcak, 2x12 Klasik, 2x12 Parlak,
+2x12 Açık Vintage, 2x12 Stereo Temiz, 4x12 Modern Kapalı, 4x12 Vintage Kapalı, 4x12 Yüksek Güç, 4x12 Büyük Gövde,
+4x12 Sıkı, 4x10 Sıcak Combo ve bas kabinleri. Kendi kabin IR dosyanızı (.wav) "IR Kullan" ile yükleyebilirsiniz.
+
+OTOMASYON
+---------
+Parça başlığındaki "A" düğmesi otomasyon şeritlerini açar: Ses, Pan veya parçadaki
+herhangi bir cihaz parametresi. Boş yere tıklayın: nokta ekler; sürükleyin: taşır;
+çift / sağ tık: siler. R (Oku) eğriyi çalar, W (Yaz) çalarken hareketlerinizi yazar.
+Otomasyon mixdown ve stem dışa aktarmaya da uygulanır.
+
+PİYANO RULOSU ARAÇLARI
+----------------------
+Ölçek vurgulama / kilitleme (majör, minör, modlar, pentatonik, blues, makamlar), akor
+damgası, arpej, strum, ızgaraya bölme, kuantize, insansılaştırma, legato.
+
+MIDI VE CONTROLLER
+------------------
+- Herhangi bir düğmeye sağ tık > "MIDI öğren": MIDI controller'ın düğme / fader'ı o
+  parametreye bağlanır. DJ Mikser'de "MIDI Öğren (controller)" ile tüm deck kontrolleri
+  eşlenir; eşleme dosyaya kaydedilip paylaşılabilir.
+- 14-bit fader, pitch-bend tempo faderi, jog dokunma (Vinyl modu) ve controller düğme
+  ışıkları (LED) desteklenir.
+- Araçlar > "MIDI ayarları": MIDI Clock gönderme ve harici MIDI Clock / Start / Stop izleme.
+
+EKLENTİ EKLEME (GENİŞLETME)
+---------------------------
+1) Eklentiler sekmesi > "Eklenti Yükle (.js)" ile dosyayı seçin, ya da
+2) .js dosyasını "mrmars-eklentiler" klasörüne koyup adını mrmars-eklentiler\index.js
+   listesine ekleyin.
+Eklentiler MrMars.register({ ... }) ile kayıt olur. "Eklenti şablonunu indir" ve
+"API Belgesi" düğmelerine bakın; "rotary-hoparlor.js" ve "telefon-efekti.js" örnektir.
+
+DIŞA AKTARMA
+------------
+Dosya > Mixdown / Dışa Aktar: WAV (16/24/32 bit), parça parça stem WAV, her MIDI parçası
+için MIDI, nota (XML + yazdırılabilir SVG) ve tab + riff + nota listesi (TXT).
+
+SES AYARLARI
+------------
+Araçlar > Ses ayarları: giriş / çıkış aygıtı, örnekleme hızı, gecikme modu (En düşük /
+Düşük / Dengeli / Güvenli; varsayılan Dengeli), kayıt gecikme telafisi, ses motorunu
+sıfırla. Ses kesilip cızırdıyorsa gecikme modunu "Güvenli" yapın ve aynı anda açık
+amfi zinciri sayısını azaltın.
+
+KISAYOLLAR
+----------
+Boşluk: çal / durdur   R: kayıt   L: döngü   M: metronom   S: böl   Del: sil
+Ctrl+Z / Ctrl+Y: geri al / yinele   Ctrl+C / V / D: kopyala / yapıştır / çoğalt   Ctrl+S: kaydet
+Ctrl + fare tekerleği: yakınlaştır   Cetvelde sürükle: döngü bölgesi
+"Klavyeyle çal" açıkken A W S E D F T G Y H U J K: notalar, Z / X: oktav
+
+BİLİNEN SINIRLAR
+----------------
+- Uygulama tarayıcı ses motorunda çalışır: harici ses eklentileri ve özel ses kartı
+  sürücüleri doğrudan kullanılmaz; genişletme kendi eklenti sistemiyle yapılır.
+- Stem ayırma ve sesten notaya çevirme sinyal işlemeyle yapılır; sonuçlar yaklaşıktır.
+- Metal Creative riffleri kayıtlı performans değil, kurallı üretimdir; MIDI olarak
+  düzenlenebilir.
+- Gerçek sidechain yoktur; "Pompa" efekti tempoya kilitli ducking yapar.
+- Master kanal ve Amfi Rack için otomasyon yoktur.
+
+Mr. Mars Music Studio All in 1 — MRH DGN
