@@ -142,7 +142,9 @@ MIDI keyboard
   Recognised automatically. Notes play the selected instrument right away.
 
 DJ controller
-  Common models are recognised when plugged in and load a ready mapping by themselves.
+  Common models are recognised when plugged in and load a ready mapping by themselves. A banner
+  opens the Device menu, which lists your device's own controls; the one you touch lights up, and
+  clicking a row lets you change it.
   Other models: a banner offers Map / Not now / Don't ask again. "Map" opens the wizard: move
   each control when asked and skip what your device lacks. The mapping is saved for that device.
   To change a control: DJ Mixer > Controller Center > "Assign a control". Touch the control on

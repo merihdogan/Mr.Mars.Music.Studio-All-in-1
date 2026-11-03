@@ -181,7 +181,8 @@ MIDI klavye
   Otomatik tanınır. Notalar hemen seçili enstrümanı çalar.
 
 DJ controller
-  Yaygın modeller takılınca tanınır ve hazır eşlemesi kendiliğinden yüklenir.
+  Yaygın modeller takılınca tanınır ve hazır eşlemesi kendiliğinden yüklenir. Çıkan bildirimden Cihaz
+  menüsü açılır: cihazınızın kendi kontrolleri listelenir, dokunduğunuz parlar, satıra tıklayınca değişir.
   Diğer modellerde bir bildirim çıkar: Eşle / Şimdi değil / Bir daha sorma. "Eşle" sihirbazı açar:
   istenen kontrolü oynatın, cihazınızda olmayanı atlayın. Eşleme o cihaza kaydedilir.
   Bir kontrolü değiştirmek için: DJ Mikser > Controller Merkezi > "Kontrol ata". Cihazda kontrole

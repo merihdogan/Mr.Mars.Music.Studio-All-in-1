@@ -565,3 +565,14 @@ html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent
 
 .ctrl-banner { position: fixed; right: 16px; bottom: 80px; z-index: 900; max-width: min(460px, calc(100vw - 32px)); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--acc); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.45); }
 .ctrl-banner > div { flex: 1 1 100%; }
+.dev-menu { display: flex; flex-direction: column; gap: 6px; }
+.dev-head { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.dev-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; max-height: 300px; overflow: auto; }
+.dev-col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dev-col h4 { margin: 0 0 2px; font-size: 12px; color: var(--acc); position: sticky; top: 0; background: var(--bg2); }
+.dev-row { display: flex; justify-content: space-between; gap: 6px; width: 100%; padding: 2px 6px; font-size: 12px; text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; color: var(--fg); cursor: pointer; }
+.dev-row:hover { border-color: var(--acc); }
+.dev-row > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev-row.hit { background: var(--acc); color: #06130f; }
+.dev-row.pending { border-color: #ff9a3c; color: #ff9a3c; }
+.dev-chip { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

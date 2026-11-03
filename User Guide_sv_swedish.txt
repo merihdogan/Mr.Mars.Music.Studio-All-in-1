@@ -116,7 +116,8 @@ MIDI-klaviatur
   Känns igen automatiskt. Toner spelar det valda instrumentet direkt.
 
 DJ-kontroller
-  Vanliga modeller känns igen när de ansluts och laddar en färdig mappning av sig själva.
+  Vanliga modeller känns igen när de ansluts och laddar en färdig mappning av sig själva. Bannern
+  öppnar Enhetsmenyn med enhetens egna kontroller; den du rör lyser, klicka på en rad för att ändra.
   Andra modeller: en banner visar Mappa / Inte nu / Fråga inte igen. "Mappa" öppnar guiden: rör
   varje kontroll när du blir ombedd, hoppa över det som saknas. Mappningen sparas för enheten.
   Ändra en kontroll: DJ-mixer > Kontrollercenter > "Tilldela en kontroll". Rör kontrollen och

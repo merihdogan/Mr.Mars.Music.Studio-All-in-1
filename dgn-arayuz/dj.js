@@ -475,6 +475,7 @@
       el('span', { class: 'spacer' }),
       el('button', { class: 'btn sm' + (DJ.learn ? ' on' : ''), onclick: () => { DJ.learn = !DJ.learn; DJ.pending = null; DJ.render(); } }, DJ.learn ? '● MIDI Öğrenme açık (bitir)' : 'MIDI Öğren (controller)'),
       el('button', { class: 'btn sm', onclick: midiMenu }, 'Eşleme ▾'),
+      DJ.ctrl && DJ.ctrl.connected() ? el('button', { class: 'btn sm dev-chip', title: OS.t('Cihaz menüsü'), onclick: () => DJ.ctrl.open() }, '🎛 ' + DJ.ctrl.connected()) : null,
       el('button', { class: 'btn sm primary', onclick: () => DJ.ctrl.open() }, 'Controller Merkezi'));
     root.appendChild(top);
     if (DJ.learn) root.appendChild(el('div', { class: 'learn-hint' }, 'MIDI öğrenme: önce ekranda bir kontrole tıklayın (yanıp söner), sonra controller’ınızda ilgili düğmeye / knob’a / fader’a dokunun. Tüm markaların MIDI controller’ları bu yolla eşlenebilir.'));
@@ -1330,6 +1331,7 @@
     settings.map[key] = p; DJ.ctrl.mapChanged();
     const e = learnEls.get(p); if (e) { e.classList.remove('pending'); e.classList.add('mapped'); }
     U.toast(p + ' ← ' + key); DJ.pending = null;
+    if (DJ.ctrl.menuLearn) { DJ.ctrl.menuLearn = false; DJ.learn = false; DJ.ctrl.drawMenu && DJ.ctrl.drawMenu(); }
   }
   // Dış girişler (HID): MIDI ile aynı öğrenme ve eylem yolu
   DJ.input = function (key, v, raw, press, release, isCC) {

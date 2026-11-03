@@ -1,6 +1,18 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+['Kütüphane: sonraki parça', 'Library: next track', 'Bibliothek: nächster Titel', 'Biblioteca: siguiente pista', 'Bibliothèque : titre suivant', 'Bibliotek: nästa låt', 'Библиотека: следующий трек'],
+['Cihaz menüsü', 'Device menu', 'Gerätemenü', 'Menú del dispositivo', 'Menu de l’appareil', 'Enhetsmeny', 'Меню устройства'],
+['Cihaz tanındı', 'Device recognised', 'Gerät erkannt', 'Dispositivo reconocido', 'Appareil reconnu', 'Enheten känns igen', 'Устройство распознано'],
+['kontrol', 'controls', 'Bedienelemente', 'controles', 'commandes', 'kontroller', 'элементов'],
+['Kayıtlı eşleme', 'Saved mapping', 'Gespeicherte Zuordnung', 'Asignación guardada', 'Affectation enregistrée', 'Sparad mappning', 'Сохранённые назначения'],
+['Dokunduğunuz kontrol burada parlar.', 'The control you touch lights up here.', 'Das berührte Bedienelement leuchtet hier auf.', 'El control que toque se ilumina aquí.', 'La commande touchée s’allume ici.', 'Kontrollen du rör lyser upp här.', 'Элемент, которого вы коснулись, подсвечивается здесь.'],
+['Dokunun', 'Touch', 'Berühren', 'Toque', 'Touchez', 'Rör', 'Коснитесь'],
+['Değiştirmek için satıra tıklayın, sonra cihazda yeni kontrole dokunun.', 'To change one, click its row and touch the new control on your device.', 'Zum Ändern die Zeile anklicken und das neue Bedienelement berühren.', 'Para cambiar, haga clic en la fila y toque el nuevo control.', 'Pour changer, cliquez sur la ligne puis touchez la nouvelle commande.', 'Klicka på raden och rör den nya kontrollen för att ändra.', 'Чтобы изменить, щёлкните строку и коснитесь нового элемента.'],
+['Bu cihaz için henüz eşleme yok. Sihirbazla bir kez eşleyin.', 'No mapping for this device yet. Map it once with the wizard.', 'Noch keine Zuordnung für dieses Gerät. Einmal mit dem Assistenten zuordnen.', 'Aún no hay asignación para este dispositivo. Asígnelo una vez con el asistente.', 'Pas encore d’affectation pour cet appareil. Affectez-le une fois avec l’assistant.', 'Ingen mappning för enheten ännu. Mappa den en gång med guiden.', 'Для этого устройства ещё нет назначений. Назначьте их один раз мастером.'],
+['Ped modu', 'Pad mode', 'Pad-Modus', 'Modo de pad', 'Mode des pads', 'Padläge', 'Режим пэдов'],
+['Jog tekerleği', 'Jog wheel', 'Jog-Rad', 'Rueda jog', 'Molette jog', 'Jogratt', 'Джог'],
+['Döngü düğmesi', 'Loop knob', 'Loop-Regler', 'Mando de loop', 'Bouton de boucle', 'Loopratt', 'Ручка лупа'],
 ['Jog üst yüzeyi (dokunup çevirin)', 'Jog top (touch and turn)', 'Jog-Oberseite (berühren und drehen)', 'Parte superior del jog (tocar y girar)', 'Dessus du jog (toucher et tourner)', 'Jogens ovansida (rör och vrid)', 'Верх джога (коснитесь и вращайте)'],
 ['Jog kenarı (çevirin)', 'Jog edge (turn)', 'Jog-Rand (drehen)', 'Borde del jog (girar)', 'Bord du jog (tourner)', 'Jogens kant (vrid)', 'Край джога (вращайте)'],
 ['Cihaz tanındı, hazır eşleme yüklendi', 'Device recognised, ready mapping loaded', 'Gerät erkannt, fertige Zuordnung geladen', 'Dispositivo reconocido, asignación lista cargada', 'Appareil reconnu, affectation prête chargée', 'Enheten känns igen, färdig mappning laddad', 'Устройство распознано, готовые назначения загружены'],

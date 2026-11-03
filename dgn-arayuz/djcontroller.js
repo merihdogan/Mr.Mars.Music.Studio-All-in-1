@@ -23,7 +23,7 @@
 
   // ---------------- Canlı sinyal izleme ----------------
   DJ.monitor = function (key, data) {
-    C.last = key; if (C.drawAssign) C.drawAssign();
+    C.last = key; if (C.drawAssign) C.drawAssign(); C.flash(key);
     C.log.unshift({ key, hex: data ? [...data].map(x => x.toString(16).padStart(2, '0')).join(' ') : '', action: S().map[key] || '' });
     if (C.log.length > 12) C.log.length = 12;
     if (C.drawLog) C.drawLog();
@@ -52,16 +52,74 @@
     s.presetDone = s.presetDone || {}; s.presetDone[name] = true;
     save(); return true;
   };
-  C.mapChanged = () => { const s = S(); if (s.activeProfile && s.profiles && s.profiles[s.activeProfile]) s.profiles[s.activeProfile] = Object.assign({}, s.map); save(); };
+  C.mapChanged = () => { const s = S(); if (s.activeProfile && s.profiles && s.profiles[s.activeProfile]) s.profiles[s.activeProfile] = Object.assign({}, s.map); save(); if (C.drawMenu) C.drawMenu(); };
+  // Cihaz menüsünde görünen ek komutlar
+  const MODES = { hot: 'Hot Cue', loop: 'Döngü', slicer: 'Slicer', keycue: 'Key Cue', roll: 'Loop Roll', stemfx: 'Stem + FX', jump: 'Beat Jump' };
+  const EXTRA = { slip: 'Slip', quant: 'Quantize', vinyl: 'Vinyl', loopenc: 'Döngü düğmesi', loopauto: 'Döngü aç/kapa', brake: 'Fren', spin: 'Spinback', reverse: 'Ters', tap: 'TAP', keyup: 'Ton +', keydown: 'Ton −' };
+  C.label = a => {
+    if (a === 'lib.down') return OS.t('Kütüphane: sonraki parça');
+    if (/^pad\d+$/.test(a)) return 'Sampler ' + a.slice(3);
+    const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a;
+    if (k === 'jog') return OS.t('Jog tekerleği');
+    if (k.startsWith('padm_')) return OS.t('Ped modu') + ': ' + OS.t(MODES[k.slice(5)] || k.slice(5));
+    if (EXTRA[k]) return OS.t(EXTRA[k]);
+    const st = STEPS(4).find(x => x.action === a);
+    return st ? OS.t(st.what) : a;
+  };
+  // Bağlı cihazın kendi kontrolleri: eşlemede olanlar bölüm bölüm listelenir
+  C.groups = () => {
+    const map = S().map, by = {};
+    Object.keys(map).forEach(k => { const a = map[k], g = /^[ABCD]\./.test(a) ? 'Deck ' + a[0] : /^pad/.test(a) ? 'Sampler' : 'Mikser'; ((by[g] = by[g] || {})[a] = by[g][a] || []).push(k); });
+    return ['Mikser', 'Deck A', 'Deck B', 'Deck C', 'Deck D', 'Sampler'].filter(g => by[g]).map(g => [g, by[g]]);
+  };
+  C.connected = () => { const s = S(); return s.activeProfile && (midiIns().some(i => i.name === s.activeProfile) || C.hid.some(h => h.name === s.activeProfile)) ? s.activeProfile : null; };
+  // Düğme sırası: cihazda hangi kontrol varsa bölümünde sırayla
+  const order = a => { const k = a.includes('.') ? a.slice(a.indexOf('.') + 1) : a, seq = ['play', 'cue', 'sync', 'headcue', 'load', 'jog', 'jogtouch', 'vol', 'pitch', 'trim', 'eqhigh', 'eqmid', 'eqlow', 'filter']; const i = seq.indexOf(k); return i < 0 ? 99 : i; };
+  function deviceMenu(box) {
+    C.drawMenu = () => {
+      if (!box.isConnected && C._menuDrawn) { C.drawMenu = null; return; }
+      C._menuDrawn = true; box.innerHTML = '';
+      const name = C.connected(), n = Object.keys(S().map).length;
+      if (!n) { box.appendChild(el('div', { class: 'muted' }, OS.t('Bu cihaz için henüz eşleme yok. Sihirbazla bir kez eşleyin.'))); return; }
+      const count = Object.keys(C.groups().reduce((o, [g]) => (g.startsWith('Deck') ? (o[g] = 1, o) : o), {})).length;
+      box.appendChild(el('div', { class: 'dev-head' }, el('b', null, name || OS.t('Kayıtlı eşleme')), el('span', { class: 'muted' }, new Set(Object.values(S().map)).size + ' ' + OS.t('kontrol') + ' · ' + count + ' deck'), el('span', { class: 'muted' }, OS.t('Dokunduğunuz kontrol burada parlar.'))));
+      const wrap = el('div', { class: 'dev-groups' });
+      C.groups().forEach(([g, acts]) => {
+        const col = el('div', { class: 'dev-col' }, el('h4', null, OS.t(g)));
+        Object.keys(acts).sort((a, b) => order(a) - order(b) || a.localeCompare(b, undefined, { numeric: true })).forEach(a => {
+          const pending = DJ.learn && DJ.pending === a;
+          const row = el('button', { class: 'dev-row' + (pending ? ' pending' : ''), title: acts[a].join(', '), onclick: () => { DJ.learn = true; DJ.pending = a; C.menuLearn = true; C.drawMenu(); } }, el('span', null, C.label(a)), el('span', { class: 'mono muted' }, pending ? OS.t('Dokunun') : acts[a].length > 1 ? acts[a].length + '×' : ''));
+          row.dataset.keys = '|' + acts[a].join('|') + '|';
+          col.appendChild(row);
+        });
+        wrap.appendChild(col);
+      });
+      box.appendChild(wrap);
+      box.appendChild(el('div', { class: 'muted' }, OS.t('Değiştirmek için satıra tıklayın, sonra cihazda yeni kontrole dokunun.')));
+    };
+    C.drawMenu();
+  }
+  // Donanımda dokunulan kontrol menüde parlar
+  C.flash = key => { document.querySelectorAll('.dev-row').forEach(r => { if (r.dataset.keys.includes('|' + key + '|')) { r.classList.add('hit'); clearTimeout(r._t); r._t = setTimeout(() => r.classList.remove('hit'), 300); } }); };
+  function recognised(name) {
+    if (banner || !C.groups) return;
+    const n = new Set(Object.values(S().map)).size, done = () => { if (banner) { banner.remove(); banner = null; setTimeout(C.checkNew, 300); } };
+    banner = el('div', { class: 'ctrl-banner' },
+      el('div', null, el('b', null, name), el('div', { class: 'muted' }, OS.t('Cihaz tanındı') + ' · ' + n + ' ' + OS.t('kontrol'))),
+      el('button', { class: 'btn sm primary', onclick: () => { done(); OS.ui.showView('dj'); setTimeout(() => C.open(), 100); } }, OS.t('Cihaz menüsü')),
+      el('button', { class: 'btn sm', onclick: done }, OS.t('Tamam')));
+    document.body.appendChild(banner);
+    const b = banner; setTimeout(() => { if (banner === b) done(); }, 12000);
+  }
   C.saveProfile = name => { const s = S(); s.profiles = s.profiles || {}; s.profiles[name] = Object.assign({}, s.map); save(); U.toast(OS.t('Profil kaydedildi') + ': ' + name); };
   C.loadProfile = name => { const s = S(), m = s.profiles && s.profiles[name]; if (!m) return false; s.map = repair(Object.assign({}, m)); s.profiles[name] = Object.assign({}, s.map); s.activeProfile = name; save(); return true; };
   function autoProfile() {
     const s = S();
     const known = midiIns().find(i => C.presetFor(i.name) && !(s.presetDone && s.presetDone[i.name]));
-    if (known) { C.applyPreset(known.name, true); U.toast(OS.t('Cihaz tanındı, hazır eşleme yüklendi') + ': ' + known.name, 5000); if (DJ._i.isBuilt()) DJ.render(); return; }
+    if (known) { C.applyPreset(known.name, true); if (DJ._i.isBuilt()) DJ.render(); recognised(known.name); return; }
     if (!s.profiles) return;
     const dev = midiIns().find(i => s.profiles[i.name]) || C.hid.find(h => s.profiles[h.name]);
-    if (dev && s.activeProfile !== dev.name) { C.loadProfile(dev.name); U.toast(OS.t('Controller profili yüklendi') + ': ' + dev.name); }
+    if (dev && s.activeProfile !== dev.name) { C.loadProfile(dev.name); U.toast(OS.t('Controller profili yüklendi') + ': ' + dev.name); if (DJ._i.isBuilt()) DJ.render(); }
   }
   // Profili olmayan yeni cihaz takılınca eşleme önerilir; sanal portlar için sorulmaz
   const VIRTUAL = /through|loopback|loopmidi|virtual|microsoft|\biac\b/i;
@@ -188,7 +246,7 @@
     };
     // Kullanıcı ataması: cihazda bir kontrole dokunun, listeden istediği komutu seçin
     const assignBox = el('div', { class: 'row wrap' });
-    const ACTIONS = () => { const seen = new Set(); return STEPS(S().count).filter(x => !seen.has(x.action) && seen.add(x.action)); };
+    const ACTIONS = () => { const seen = new Set(), extra = ['A', 'B', 'C', 'D'].slice(0, S().count).flatMap(L => [...Object.keys(EXTRA), ...Object.keys(MODES).map(m => 'padm_' + m)].map(k => ({ action: L + '.' + k, label: 'Deck ' + L, what: C.label(L + '.' + k) }))); return [...STEPS(S().count), ...extra].filter(x => !seen.has(x.action) && seen.add(x.action)); };
     C.drawAssign = () => {
       if (!assignBox.isConnected && C._asDrawn) { C.drawAssign = null; return; }
       C._asDrawn = true; assignBox.innerHTML = '';
@@ -199,8 +257,10 @@
         cur && !ACTIONS().some(a => a.action === cur) ? el('option', { value: cur, selected: true }, cur) : null);
       assignBox.append(el('span', { class: 'mono' }, C.last), sel);
     };
+    const menuBox = el('div', { class: 'dev-menu' });
     const body = el('div', { class: 'ctrl-center' },
       el('b', null, OS.t('Bağlı cihazlar')), devices,
+      el('b', null, OS.t('Cihaz menüsü')), menuBox,
       el('div', { class: 'row wrap' },
         el('button', { class: 'btn sm primary', onclick: () => startWizard() }, 'Eşleme sihirbazını başlat'),
         C.hidSupported() ? el('button', { class: 'btn sm', title: OS.t('MIDI modu olmayan controller için. Cihaz seçildikten sonra 2 saniye dokunmayın.'), onclick: C.addHid }, 'HID cihazı ekle (deneysel)') : null),
@@ -217,8 +277,8 @@
       el('div', { class: 'form-grid' }, DJ.KEY_HELP.flatMap(([k, d]) => [el('span', { class: 'mono' }, k), OS.t(d)])),
       el('p', { class: 'muted' }, 'USB’den standart MIDI gönderen controller’lar sürücü veya lisans istemeden çalışır. Yaygın modeller takılınca tanınır ve hazır eşlemesi yüklenir; diğerleri sihirbazla bir kez eşlenir. Hazır eşlemeler her cihazda denenmedi; çalışmayan kontrolü yukarıdan değiştirebilirsiniz. Bazı modeller önce üreticinin sürücüsünü veya bir MIDI moduna geçirilmeyi ister. Yalnızca kendi HID protokolünü kullanan modellerde deneysel HID yolu dener; ışıklar ve yüksek çözünürlüklü jog bu yolda çalışmaz.'));
     C.log.length = 0; C._drawn = false; C._logDrawn = false; C._asDrawn = false; C.last = null;
-    const m = U.modal(OS.t('Controller Merkezi'), body, [{ label: 'Kapat', onclick: () => { DJ.learn = false; DJ.pending = null; } }]);
-    C.drawDevices(); C.drawLog(); C.drawAssign();
+    const m = U.modal(OS.t('Controller Merkezi'), body, [{ label: 'Kapat', onclick: () => { DJ.learn = false; DJ.pending = null; C.menuLearn = false; } }]);
+    C.drawDevices(); C.drawLog(); C.drawAssign(); C._menuDrawn = false; deviceMenu(menuBox);
     if (forDevice) startWizard(forDevice);
     return m;
   };
