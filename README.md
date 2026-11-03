@@ -6,6 +6,8 @@ Today, it has evolved into a universally compatible ecosystem—empowering artis
 While versatile enough to create any genre through DJ tools and MIDI controllers, at its core, it is a unique Euro-Turk innovation that fuses Northern European and Eastern cultures, synthesizing traditional instruments with modern musical disciplines.  
 Its plugin expandability and seamless integration with industry-standard DJ equipment elevate Mr.Mars Studio into a truly global league.
 
+**User Manual:** [PDF](User%20Manual_en_english.pdf) · [Web page](https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1/User%20Manual_en_english.html). In the app, press ❓ Manual beside the top menus.
+
 ================================================================
 
 

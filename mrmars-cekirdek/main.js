@@ -301,6 +301,7 @@
   }
   ui.VERSION = 'DGN.V.06';
   OS.YAPIMCI = 'MRH DGN';
+  ui.openManual = () => window.open(encodeURI('User Manual_en_english.html'), '_blank');
   function about() {
     const feat = ['Aranjman, Session ve Desen Rafı', 'Mikser, otomasyon ve 49+ efekt / enstrüman', 'Amfi Rack: amfi, kabin, pedal, bölücü yolları', 'DJ Mikser: 4 deck, stem, Automix', 'Yeniden Çal: sesi notaya çevir, nota / tab / riff', 'Mini Araçlar: XY ped, arpej, looper'];
     const box = el('div', { class: 'about' },
@@ -315,6 +316,7 @@
           el('div', null, el('span', null, 'Dil'), el('b', null, OS.LANG_NAMES[OS.lang])),
           el('div', null, el('span', null, 'Veri klasörü'), el('b', null, 'veri\\profil'))),
         el('p', { class: 'muted' }, 'Projeler ve ayarlar uygulama klasöründeki “veri” dizininde saklanır; klasörü USB’ye kopyalayıp başka bilgisayarda kurulumsuz çalıştırabilirsiniz.'),
+        el('button', { class: 'btn sm', onclick: ui.openManual }, 'Kullanım kılavuzu (İngilizce)'),
         el('p', { class: 'muted' }, '© 2026 Mr. Mars Music Studio')));
     U.modal('Hakkında', box);
   }
@@ -393,6 +395,7 @@
     addEventListener('pointerdown', wake); addEventListener('keydown', wake);
 
     $('about-btn').onclick = about;
+    $('manual-btn').onclick = ui.openManual;
     splash('Eklentiler yükleniyor…', 0.45);
     await ui.plugins.loadFolder();
     await ui.plugins.loadStored();

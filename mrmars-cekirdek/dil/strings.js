@@ -1,6 +1,8 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+['Kılavuz', 'Manual', 'Handbuch', 'Manual', 'Manuel', 'Manual', 'Руководство'],
+['Kullanım kılavuzu (İngilizce)', 'User manual', 'Benutzerhandbuch (Englisch)', 'Manual de usuario (inglés)', 'Manuel d’utilisation (anglais)', 'Användarhandbok (engelska)', 'Руководство пользователя (на английском)'],
 ['Piyano', 'Piano', 'Klavier', 'Piano', 'Piano', 'Piano', 'Фортепиано'],
 ['Analog Poli Pad', 'Analog Poly Pad', 'Analog-Poly-Pad', 'Pad analógico polifónico', 'Pad analogique polyphonique', 'Analog polypad', 'Аналоговый полипэд'],
 ['90’lar House Org Bas', '90s House Organ Bass', '90er-House-Orgelbass', 'Bajo de órgano house de los 90', 'Basse orgue house années 90', '90-tals house-orgelbas', 'Органный бас хауса 90-х'],
