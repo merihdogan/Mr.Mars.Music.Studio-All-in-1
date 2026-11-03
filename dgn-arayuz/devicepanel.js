@@ -195,7 +195,7 @@
       return;
     }
     const resync = () => { OS.engine.syncTrack(t); OS.store.markDirty(); ui.emit('os-devices'); };
-    const name = el('input', { class: 'inp', value: t.name, style: 'flex:1', onchange: () => { OS.history.push(); t.name = name.value; ui.changed(); } });
+    const name = el('input', { class: 'inp', value: OS.t(t.name), style: 'flex:1', onchange: () => { OS.history.push(); t.name = name.value; ui.changed(); } });
     const color = el('input', { type: 'color', value: t.color, style: 'width:34px;height:26px;padding:0;border:none;background:none', onchange: () => { t.color = color.value; ui.changed(); } });
     const typeLabel = { audio: 'Ses Parçası', instrument: 'Enstrüman Parçası', fx: 'FX Kanalı' }[t.type];
     box.appendChild(sec(typeLabel, el('div', { class: 'row' }, color, name)));

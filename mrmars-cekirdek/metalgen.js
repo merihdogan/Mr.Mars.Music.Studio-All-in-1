@@ -14,7 +14,7 @@
   };
   G.TYPES = {
     riff: 'Ana Riff', verse: 'Verse', chorus: 'Nakarat', breakdown: 'Breakdown', lead: 'Lead / Solo',
-    clean: 'Temiz Bölüm', transition: 'Geçiş', intro: 'Giriş',
+    clean: 'Temiz Bölüm', transition: 'Geçiş', intro: 'İntro',
   };
   // Stil tanımları: tempo, önerilen akortlar, dizi, ritim hücreleri, davul karakteri
   const PHRY = [0, 1, 3, 5, 7, 8, 10], HMIN = [0, 2, 3, 5, 7, 8, 11], LOCR = [0, 1, 3, 5, 6, 8, 10], AEOL = [0, 2, 3, 5, 7, 8, 10];

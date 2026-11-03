@@ -23,6 +23,7 @@ window.OS = window.OS || {};
   const map = new Map();
   if (idx > 0) (window.OS_STRINGS || []).forEach(r => { if (r[idx] != null && !map.has(r[0])) map.set(r[0], r[idx]); });
 
+  const translated = new Set([...map.values()].filter(v => !map.has(v)));
   const SEPS = [' › ', ' • ', ': '];
   function lookup(t) {
     let r = map.get(t);
@@ -55,7 +56,7 @@ window.OS = window.OS || {};
   OS.t = function (s) {
     if (idx <= 0 || !s || typeof s !== 'string') return s;
     const t = s.trim();
-    if (!t) return s;
+    if (!t || translated.has(t)) return s;
     const r = lookup(t);
     return r == null ? s : s.replace(t, r);
   };

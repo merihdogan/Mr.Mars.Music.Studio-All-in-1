@@ -250,7 +250,7 @@
     const inSel = el('select', null, el('option', { value: '' }, 'Varsayılan'), ins.map(d => el('option', { value: d.deviceId, selected: d.deviceId === OS.settings.inputId }, d.label || 'Giriş')));
     const outSel = el('select', null, el('option', { value: '' }, 'Varsayılan'), outs.map(d => el('option', { value: d.deviceId, selected: d.deviceId === OS.settings.outputId }, d.label || 'Çıkış')));
     const autoLat = Math.round(((E.ctx.baseLatency || 0) + (E.ctx.outputLatency || 0)) * 1000);
-    const lat = el('input', { class: 'inp', type: 'number', min: 0, max: 1000, placeholder: 'Otomatik (' + autoLat + ')', value: OS.settings.latencyMs != null ? OS.settings.latencyMs : '', style: 'width:120px' });
+    const lat = el('input', { class: 'inp', type: 'number', min: 0, max: 1000, placeholder: OS.t('Otomatik') + ' (' + autoLat + ')', value: OS.settings.latencyMs != null ? OS.settings.latencyMs : '', style: 'width:120px' });
     const latMode = el('select', null, [['low', 'En düşük (~3 ms, güçlü bilgisayar)'], ['interactive', 'Düşük (önerilen)'], ['balanced', 'Dengeli'], ['safe', 'Güvenli (çıtırtı olursa)']].map(([v, l]) => el('option', { value: v, selected: (OS.settings.latencyMode || 'interactive') === v }, l)));
     const srSel = el('select', null, [['', 'Ses kartı varsayılanı'], ['44100', '44.1 kHz'], ['48000', '48 kHz'], ['88200', '88.2 kHz'], ['96000', '96 kHz']].map(([v, l]) => el('option', { value: v, selected: String(OS.settings.sampleRate || '') === v }, l)));
     const relBg = el('input', { type: 'checkbox', checked: !!OS.settings.releaseBg });
