@@ -42,7 +42,7 @@ SPRÅK
 -----
 Standardspråket är engelska. Appen öppnas på webbläsarens språk om det är English, Deutsch,
 Español, Français, Svenska, Türkçe eller Русский; andra språk öppnas på engelska. Välj manuellt
-med knappen 🌐 bredvid toppmenyerna (intill Metal Creative). "Automatiskt" där går tillbaka till
+med knappen 🌐 bredvid toppmenyerna. "Automatiskt" där går tillbaka till
 webbläsarens språk.
 
 FLIKAR
@@ -105,6 +105,13 @@ MR. MARS FÖRSTÄRKARE OCH HÖGTALARLÅDOR
 Förstärkarna är namngivna efter stil: Clean, Crunch, Lead, Hard Rock, High Gain, Heavy Metal, Tight Metal, Modern Metal
 samt basförstärkare. Högtalarlådorna efter storlek och stil: 1x12 Open, 2x12 Bright, 4x12 Modern Closed, 4x12 Vintage
 Closed, 4x12 High Power m.fl. Egen IR (.wav) laddas med "Använd IR".
+
+DJ-ÖVERGÅNGAR OCH SÄKERHET
+--------------------------
+- Övergångsrecept (Basbyte, Fade, Echo Out, Filtersvep, Reverb Out, Tape Stop, Kapa) används av både Smart
+  övergång och Automix.
+- "Starta på slaget": PLAY väntar på den spelande deckens nästa slag. "Utjämna nivåer": jämnar ut ljudnivån.
+- LIM lyser när begränsaren arbetar. "Senaste 30 min" laddar ned mixen utan inspelning.
 
 ANSLUTA ENHETER
 ---------------

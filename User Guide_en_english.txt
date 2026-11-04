@@ -52,8 +52,7 @@ LANGUAGE
 --------
 The default language is English. The app opens in your browser's language when it is one of
 English, Deutsch, Español, Français, Svenska, Türkçe or Русский; any other browser language
-opens in English. To choose by hand, use the 🌐 button beside the top menus (next to Metal
-Creative). "Automatic" there returns to the browser language.
+opens in English. To choose by hand, use the 🌐 button beside the top menus. "Automatic" there returns to the browser language.
 
 TABS
 ----
@@ -117,8 +116,8 @@ DJ MIXER DETAILS
 - Keyboard: 1-8 Deck A pads, Q-I Deck B pads, Z / X cue, C / V sync, ← / → crossfader.
 - Not included: broadcasting (needs internet), timecode vinyl (DVS), light control (DMX), external audio plugins.
 
-METAL CREATIVE (tab + top menu)
--------------------------------
+METAL CREATIVE
+--------------
 - MRH Riff Factory: 8 styles (Modern Metal, Metalcore, Deathcore, Slam, Nu Metal, Djent,
   Thrash, Breakdowns) × 9 tunings (Drop E 8-string … Standard E) × 8 section types (Main
   Riff, Verse, Chorus, Breakdown, Lead / Solo, Clean Section, Transition, Intro); 40 riff
@@ -164,6 +163,13 @@ PIANO ROLL TOOLS
 ----------------
 Scale highlight / lock (major, minor, modes, pentatonic, blues, maqams), chord stamp,
 arpeggiate, strum, split to grid, quantize, humanize, legato.
+
+DJ TRANSITIONS AND SAFETY
+-------------------------
+- Transition recipes (Bass Swap, Fade, Echo Out, Filter Sweep, Reverb Out, Tape Stop, Cut) drive both
+  Smart transition and Automix.
+- "Start on beat": PLAY waits for the playing deck's next beat. "Match levels": evens out loudness.
+- LIM lights when the safety limiter works. "Last 30 min" downloads the recent mix without recording.
 
 CONNECTING DEVICES
 ------------------

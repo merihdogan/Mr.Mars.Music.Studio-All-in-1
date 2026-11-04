@@ -56,7 +56,7 @@
   };
   C.mapChanged = () => { const s = S(); if (s.activeProfile && s.profiles && s.profiles[s.activeProfile]) s.profiles[s.activeProfile] = Object.assign({}, s.map); save(); if (C.drawMenu) C.drawMenu(); };
   // Cihaz menüsünde görünen ek komutlar
-  const MODES = { hot: 'Hot Cue', loop: 'Döngü', slicer: 'Slicer', keycue: 'Key Cue', roll: 'Loop Roll', stemfx: 'Stem + FX', jump: 'Beat Jump' };
+  const MODES = { hot: 'Hot Cue', loop2: 'Döngü+ (1/32-128)', slicer: 'Slicer', keycue: 'Key Cue', roll: 'Loop Roll', stemfx: 'Stem + FX', jump: 'Beat Jump' };
   const EXTRA = { slip: 'Slip', quant: 'Quantize', vinyl: 'Vinyl', loopenc: 'Döngü düğmesi', loopauto: 'Döngü aç/kapa', brake: 'Fren', spin: 'Spinback', reverse: 'Ters', tap: 'TAP', keyup: 'Ton +', keydown: 'Ton −', stutter: 'Stutter', tostart: 'Başa dön', keymatch: 'Key Match', jumpenc: 'Beat jump düğmesi', jogseek: 'Hızlı arama (jog)', jogtouchs: 'Jog dokunma (SHIFT)', loophalf: 'Döngü ½', loopdouble: 'Döngü ×2' };
   const GLOBAL = { xcurve: 'Crossfader eğrisi', xenable: 'Crossfader aç/kapa', smartmix: 'Akıllı geçiş', mfx0: 'Master FX kapalı', mfx1: 'Master FX: Echo', mfx2: 'Master FX: Reverb', mfx3: 'Master FX: Flanger', mfx4: 'Master FX: Gater' };
   C.label = a => {
@@ -285,6 +285,8 @@
       el('b', null, OS.t('Cihaz menüsü')), menuBox,
       el('div', { class: 'row wrap' },
         el('button', { class: 'btn sm primary', onclick: () => startWizard() }, 'Eşleme sihirbazını başlat'),
+        el('button', { class: 'btn sm', title: OS.t('Ekranda bir kontrole tıklayın, sonra cihazda ilgili kontrole dokunun'), onclick: () => { document.querySelectorAll('.modal-back').forEach(x => x.remove()); DJ.learn = true; DJ.pending = null; DJ.render(); } }, 'MIDI Öğren (controller)'),
+        el('button', { class: 'btn sm', onclick: e => DJ._i.midiMenu(e) }, 'Eşleme ▾'),
         C.hidSupported() ? el('button', { class: 'btn sm', title: OS.t('MIDI modu olmayan controller için. Cihaz seçildikten sonra 2 saniye dokunmayın.'), onclick: C.addHid }, 'HID cihazı ekle (deneysel)') : null),
       wizBox,
       el('b', null, OS.t('Ayarlar')),

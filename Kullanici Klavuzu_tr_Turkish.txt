@@ -53,7 +53,7 @@ DİL
 ---
 Varsayılan dil İngilizcedir. Tarayıcınızın dili English, Deutsch, Español, Français, Svenska,
 Türkçe veya Русский ise uygulama o dilde açılır; diğer dillerde İngilizce açılır. Elle seçmek
-için üst menülerin yanındaki 🌐 düğmesini (Metal Creative'in yanında) kullanın. Oradaki
+için üst menülerin yanındaki 🌐 düğmesini kullanın. Oradaki
 "Otomatik" yeniden tarayıcı diline döner.
 
 SEKMELER
@@ -120,7 +120,7 @@ DJ MİKSER AYRINTILARI
 - Klavye: 1-8 Deck A pedleri, Q-I Deck B pedleri, Z / X cue, C / V sync, ← / → crossfader.
 - Olmayanlar: yayın (internet gerektirir), plak zaman kodu (DVS), ışık kontrolü (DMX), harici ses eklentileri.
 
-METAL CREATIVE (sekme + üst menü)
+METAL CREATIVE
 ---------------------------------
 - MRH Riff Fabrikası: 8 stil (Modern Metal, Metalcore, Deathcore, Slam, Nu Metal,
   Djent, Thrash, Breakdowns) × 9 akort (Drop E 8 tel … Standart E) × 8 bölüm tipi
@@ -171,6 +171,13 @@ PİYANO RULOSU ARAÇLARI
 ----------------------
 Ölçek vurgulama / kilitleme (majör, minör, modlar, pentatonik, blues, makamlar), akor
 damgası, arpej, strum, ızgaraya bölme, kuantize, insansılaştırma, legato.
+
+DJ GEÇİŞLERİ VE GÜVENLİK
+------------------------
+- Geçiş tarifleri (Bas Takası, Düz geçiş, Echo Out, Filtre Süpürme, Reverb Out, Tape Stop, Kesme) hem Akıllı
+  geçişte hem Automix'te kullanılır.
+- "Vuruşa başlat": PLAY, çalan deckin bir sonraki vuruşunu bekler. "Seviye eşitle": parça seviyelerini yaklaştırır.
+- LIM, ses sınırlayıcı çalışınca yanar. "Son 30 dk", kayda basmadan son miksi indirir.
 
 CİHAZ BAĞLAMA VE TANITMA
 ------------------------

@@ -26,7 +26,7 @@
       this.fxIn = ctx.createGain(); this.fader = ctx.createGain(); this.xf = ctx.createGain(); this.cueTap = ctx.createGain(); this.cueTap.gain.value = 0;
       this.an = ctx.createAnalyser(); this.an.fftSize = 1024;
       this.shifter.output.connect(this.trim);
-      this.trim.connect(this.low); this.low.connect(this.mid); this.mid.connect(this.lomid); this.lomid.connect(this.himid); this.himid.connect(this.high); this.high.connect(this.hp); this.hp.connect(this.lp); this.lp.connect(this.fxIn);
+      this.lg = ctx.createGain(); this.trim.connect(this.lg); this.lg.connect(this.low); this.low.connect(this.mid); this.mid.connect(this.lomid); this.lomid.connect(this.himid); this.himid.connect(this.high); this.high.connect(this.hp); this.hp.connect(this.lp); this.lp.connect(this.fxIn);
       this.fader.connect(this.xf); this.fader.connect(this.an); this.xf.connect(master);
       this.lp.connect(this.cueTap); this.cueTap.connect(cueBus); // kulaklık: fader öncesi
       this.eqVals = { low: 0, mid: 0, high: 0, lomid: 0, himid: 0 }; this.kills = { low: false, mid: false, high: false, lomid: false, himid: false };
@@ -100,6 +100,7 @@
         this.bands = bandPeaks(this.buffer, this.pps);
         this.endPos = trailingEnd(this.buffer);
         this.overview = U.peaks(this.buffer, 800);
+        this.loud = measureLevel(this.buffer); this.applyLevel();
         DJ.renderInfo();
         setTimeout(() => { this.key = U.detectKey(this.buffer); DJ.renderInfo(); if (file.libId) DJ.lib.update(file.libId, { bpm: this.bpm, key: this.key, dur: this.buffer.duration }); if (settings.autoStems) this.makeStems(); }, 30);
       }, 20);
@@ -120,6 +121,7 @@
     get beat() { return 60 / (this.bpm || 120); }
     position() {
       if (!this.playing) return this.pos;
+      if (this.ctx.currentTime < this.startCtx) return this.startPos;
       if (this.mv) return U.clamp(this.mv.f(Math.min(1, (this.ctx.currentTime - this.mv.t) / this.mv.dur)), 0, this.buffer ? this.buffer.duration : 0);
       let p = this.startPos + (this.ctx.currentTime - this.startCtx) * this.eff * (this.rev ? -1 : 1);
       if (p < 0) p = 0;
@@ -127,13 +129,14 @@
       return Math.min(p, this.buffer ? this.buffer.duration : 0);
     }
     snap(t) { return settings.quantize && this.bpm ? this.grid + Math.round((t - this.grid) / this.beat) * this.beat : t; }
-    play() {
+    play(delay = 0) {
       if (!this.buffer || this.playing) return;
       E.resume();
+      if (DJ.mem) DJ.mem.start();
       // stem'ler hazırsa 4 kanal birlikte, değilse tek kaynak çalar
       if (this.loop) this.rev = false;
       const bufs = this.rev ? [[this.revBuf(), this.pre]] : this.stems ? STEMS.map(k => [this.stems[k], this.stemG[k]]) : [[this.buffer, this.pre]];
-      const when = this.ctx.currentTime + 0.005, fade = this.pre.gain;
+      const when = this.ctx.currentTime + 0.005 + delay, fade = this.pre.gain;
       fade.setValueAtTime(0, when); fade.linearRampToValueAtTime(1, when + 0.004);
       this.srcs = bufs.map(([b, dest]) => {
         const x = this.ctx.createBufferSource();
@@ -156,7 +159,15 @@
       (this.srcs || []).forEach(x => { try { x.stop(t + 0.004); } catch (e) { } });
       this.srcs = []; this.src = null; this.playing = false;
     }
-    toggle() { if (this.scr) { this.scr.was = !this.scr.was; return; } if (this._cueHold) { this._cueHold = false; return; } this.playing ? this.pause() : this.play(); }
+    toggle() { if (this.scr) { this.scr.was = !this.scr.was; return; } if (this._cueHold) { this._cueHold = false; return; } this.playing ? this.pause() : this.playOnBeat(); }
+    // Vuruşa başlat: çalan diğer deck varsa bu deck onun bir sonraki vuruşunda, kendi vuruşundan girer
+    playOnBeat() {
+      const o = settings.beatStart && this.bpm && DJ.decks.find(x => x !== this && x.playing && x.bpm && !x.scr);
+      if (!o) { this.play(); return; }
+      const ph = (((o.position() - o.grid) / o.beat) % 1 + 1) % 1;
+      this.pos = this.grid + Math.round((this.pos - this.grid) / this.beat) * this.beat;
+      this.play((1 - ph) * o.beat / o.eff);
+    }
     seek(t) { const was = this.playing; this.pause(); this.pos = U.clamp(t, 0, this.buffer ? this.buffer.duration : 0); if (was) this.play(); }
     rebase() { if (this.playing) { this.startPos = this.position(); this.startCtx = this.ctx.currentTime; } }
     setRate(r) { this.rebase(); this.rate = r; (this.srcs || []).forEach(x => x.playbackRate.value = this.eff); this.route(); }
@@ -256,11 +267,11 @@
     }
     cueUp() { if (this._cueHold) { this._cueHold = false; this.pause(); this.pos = this.cue; } }
     jump(beats) { if (this.buffer) this.seek(this.position() + beats * this.beat); }
+    // other'ın bu deck'e uyması için gereken hız: yarım / çift tempoya en yakın olan
+    fitRate(other) { const target = this.bpm * this.eff; return [0.5, 1, 2].map(k => target * k / other.bpm).reduce((a, b) => Math.abs(b - 1) < Math.abs(a - 1) ? b : a); }
     sync(other) {
       if (!this.bpm || !other.bpm) { U.toast('BPM henüz hesaplanmadı'); return false; }
-      const target = other.bpm * other.eff;
-      const fit = [0.5, 1, 2].map(k => target * k / this.bpm).reduce((a, b) => Math.abs(b - 1) < Math.abs(a - 1) ? b : a);
-      this.setRate(fit);
+      this.setRate(other.fitRate(this));
       if (other.playing && this.playing) {
         // faz hizalama: iki decki aynı vuruş kesirine getir
         const ph = x => (((x.position() - x.grid) / x.beat) % 1 + 1) % 1;
@@ -302,14 +313,29 @@
       this.lp.frequency.value = v < 0 ? 20000 * Math.pow(0.01, -v) : 22000;
       this.hp.frequency.value = v > 0 ? 10 * Math.pow(800, v) : 10;
     }
+    applyLevel() { this.lg.gain.value = settings.levelMatch && this.loud != null ? U.dbToGain(U.clamp(-14 - this.loud, -12, 12)) : 1; }
     setCue(on) { this.cueOn = on; this.cueTap.gain.value = on ? 1 : 0; }
+  }
+
+  // Parçanın algılanan seviyesi: sessiz bölümler hariç kısa blokların ortalaması (dB)
+  function measureLevel(buf) {
+    const ch = [...Array(buf.numberOfChannels).keys()].map(i => buf.getChannelData(i)), block = Math.floor(buf.sampleRate * 0.4), blocks = [];
+    for (let s = 0; s + block <= buf.length; s += block) { let e = 0, n = 0; for (let i = s; i < s + block; i += 8) for (const c of ch) { e += c[i] * c[i]; n++; } blocks.push(e / Math.max(1, n)); }
+    const above = v => blocks.filter(x => x > v), avg = a => a.reduce((p, c) => p + c, 0) / Math.max(1, a.length), g1 = above(1e-7);
+    if (!g1.length) return null;
+    const g2 = above(avg(g1) * 0.1);
+    return 10 * Math.log10(avg(g2.length ? g2 : g1));
   }
 
   // ---------------- Grafik ve çıkışlar ----------------
   function build() {
     if (built) return;
     const ctx = E.init();
-    master = ctx.createGain(); masterOut = ctx.createGain(); master.an = ctx.createAnalyser(); DJ.mfx = { id: '', amt: 0.5, dev: null }; master.connect(masterOut); masterOut.connect(master.an);
+    master = ctx.createGain(); masterOut = ctx.createGain(); master.an = ctx.createAnalyser(); DJ.mfx = { id: '', amt: 0.5, dev: null }; DJ.limIn = ctx.createAnalyser(); DJ.limIn.fftSize = 1024; master.limit = ctx.createGain(); master.limit.gain.value = 0.25;
+    const shaper = ctx.createWaveShaper(), n = 8193, cv = new Float32Array(n);
+    for (let i = 0; i < n; i++) { const x = (i / (n - 1) * 2 - 1) * 4, m = Math.abs(x), knee = 0.89; cv[i] = Math.sign(x) * (m <= knee ? m : knee + (1 - knee) * Math.tanh((m - knee) / (1 - knee))); }
+    shaper.curve = cv; master.limit.connect(shaper); shaper.connect(masterOut); master.limit.connect(DJ.limIn);
+    master.connect(master.limit); masterOut.connect(master.an);
     cueBus = ctx.createGain();
     DJ.cueMaster = ctx.createGain(); masterOut.connect(DJ.cueMaster); DJ.cueMaster.connect(cueBus);
     DJ.sends = { a: makeSend(ctx, 'a'), b: makeSend(ctx, 'b') };
@@ -366,8 +392,8 @@
     try { master.disconnect(); } catch (e) { }
     if (m.dev) { m.dev.dispose(); m.dev = null; }
     m.id = id;
-    if (id) { m.dev = new OS.Device(E.ctx, id); if (id === 'fx.delay') m.dev.setParam('fb', 0.45); master.connect(m.dev.in); m.dev.out.connect(masterOut); setMasterFxAmt(m.amt); }
-    else master.connect(masterOut);
+    if (id) { m.dev = new OS.Device(E.ctx, id); if (id === 'fx.delay') m.dev.setParam('fb', 0.45); master.connect(m.dev.in); m.dev.out.connect(master.limit); setMasterFxAmt(m.amt); }
+    else master.connect(master.limit);
   }
   function setMasterFxAmt(v) {
     const m = DJ.mfx; m.amt = v; const f = FX.find(x => x[0] === m.id);
@@ -507,14 +533,14 @@
       el('button', { class: 'btn sm' + (settings.vinyl ? ' on' : ''), title: 'Jog’a dokununca plak elinizi izler: scratch (controller’daki jog dokunma eşlenmeli)', onclick: e => { settings.vinyl = !settings.vinyl; e.target.classList.toggle('on', settings.vinyl); saveSettings(); } }, 'Vinyl'),
       el('button', { class: 'btn sm' + (settings.led ? ' on' : ''), title: 'Controller’daki düğme ışıklarını (play, cue, hot cue, döngü, stem) yakar', onclick: e => { settings.led = !settings.led; e.target.classList.toggle('on', settings.led); saveSettings(); } }, 'LED'),
       el('button', { class: 'btn sm' + (settings.autoStems ? ' on' : ''), title: 'Yüklenen her parça otomatik olarak stem’lere ayrılır (birkaç saniye sürer)', onclick: e => { settings.autoStems = !settings.autoStems; e.target.classList.toggle('on', settings.autoStems); saveSettings(); } }, 'Otomatik stem'),
+      el('button', { class: 'btn sm' + (settings.beatStart ? ' on' : ''), title: 'PLAY, çalan deckin bir sonraki vuruşunda ve kendi vuruşundan başlar', onclick: e => { settings.beatStart = !settings.beatStart; e.target.classList.toggle('on', settings.beatStart); saveSettings(); } }, 'Vuruşa başlat'),
+      el('button', { class: 'btn sm' + (settings.levelMatch ? ' on' : ''), title: 'Parçaların ses seviyesini birbirine yaklaştırır', onclick: e => { settings.levelMatch = !settings.levelMatch; e.target.classList.toggle('on', settings.levelMatch); saveSettings(); DJ.decks.forEach(d => d.applyLevel()); } }, 'Seviye eşitle'),
       el('button', { class: 'btn sm' + (DJ.shift ? ' on' : ''), title: 'Pedlerin ikinci işlevi (dokunmatik için)', onclick: e => { DJ.shift = !DJ.shift; e.target.classList.toggle('on', DJ.shift); } }, 'SHIFT'),
       el('span', { class: 'spacer' }),
-      el('button', { class: 'btn sm' + (DJ.learn ? ' on' : ''), onclick: () => { DJ.learn = !DJ.learn; DJ.pending = null; DJ.render(); } }, DJ.learn ? '● MIDI Öğrenme açık (bitir)' : 'MIDI Öğren (controller)'),
-      el('button', { class: 'btn sm', onclick: midiMenu }, 'Eşleme ▾'),
       DJ.ctrl && DJ.ctrl.connected() ? el('button', { class: 'btn sm dev-chip', title: OS.t('Cihaz menüsü'), onclick: () => DJ.ctrl.open() }, '🎛 ' + DJ.ctrl.connected()) : null,
       el('button', { class: 'btn sm primary', onclick: () => DJ.ctrl.open() }, 'Controller Merkezi'));
     root.appendChild(top);
-    if (DJ.learn) root.appendChild(el('div', { class: 'learn-hint' }, 'MIDI öğrenme: önce ekranda bir kontrole tıklayın (yanıp söner), sonra controller’ınızda ilgili düğmeye / knob’a / fader’a dokunun. Tüm markaların MIDI controller’ları bu yolla eşlenebilir.'));
+    if (DJ.learn) root.appendChild(el('div', { class: 'learn-hint' }, el('button', { class: 'btn sm primary', style: 'margin-right:8px', onclick: () => { DJ.learn = false; DJ.pending = null; DJ.render(); } }, 'Bitir'), 'MIDI öğrenme: önce ekranda bir kontrole tıklayın (yanıp söner), sonra controller’ınızda ilgili düğmeye / knob’a / fader’a dokunun. Tüm markaların MIDI controller’ları bu yolla eşlenebilir.'));
     const mix = mixerUI(decks);
     const wrap = el('div', { class: 'dj-wrap' + (n === 4 ? ' four' : '') });
     if (n === 2) wrap.append(deckUI(decks[0]), mix, deckUI(decks[1]));
@@ -648,7 +674,7 @@
     return box;
   }
   // ---------------- Ped modları ----------------
-  const PAD_MODES = [['hot', 'Hot Cue'], ['roll', 'Loop Roll'], ['slicer', 'Slicer'], ['jump', 'Beat Jump'], ['loop', 'Döngü'], ['cueloop', 'Cue Loop'], ['keycue', 'Key Cue'], ['stems', 'Stem'], ['manual', 'Manuel Döngü'], ['hot2', 'Hot Cue 9-16'], ['loop2', 'Döngü+ (1/32-128)'], ['saved', 'Kayıtlı Döngü'], ['remix', 'Remix Noktaları'], ['scratch', 'Scratch'], ['stemfx', 'Stem + FX']];
+  const PAD_MODES = [['hot', 'Hot Cue'], ['roll', 'Loop Roll'], ['slicer', 'Slicer'], ['jump', 'Beat Jump'], ['cueloop', 'Cue Loop'], ['keycue', 'Key Cue'], ['stems', 'Stem'], ['manual', 'Manuel Döngü'], ['hot2', 'Hot Cue 9-16'], ['loop2', 'Döngü+ (1/32-128)'], ['saved', 'Kayıtlı Döngü'], ['remix', 'Remix Noktaları'], ['scratch', 'Scratch'], ['stemfx', 'Stem + FX']];
   const ROLLS = [1 / 16, 1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], JUMPS = [-16, -8, -4, -1, 1, 4, 8, 16], LOOPS = [0.25, 0.5, 1, 2, 4, 8, 16, 32], KEYS = [-3, -2, -1, 0, 1, 2, 3, 4];
   const STEM_PADS = [['vocals'], ['drums'], ['bass'], ['melody'], ['only', 'vocals'], ['only', 'melody'], ['only', 'drums'], ['all']];
   const LOOPS2 = [1 / 32, 1 / 16, 1 / 8, 3 / 4, 1.5, 3, 64, 128];
@@ -889,11 +915,13 @@
       el('div', { class: 'row', style: 'justify-content:center' },
         el('button', { class: 'btn sm', title: 'B’yi A’nın temposuna eşitler, ölçü başında başlatır ve bas takaslı geçiş yapar', onclick: () => autoMix(0, 1) }, 'Akıllı geçiş A→B'),
         el('button', { class: 'btn sm', onclick: () => autoMix(1, 0) }, 'B→A'),
+        el('select', { title: OS.t('Geçiş tarifi'), onchange: e => { settings.xRecipe = e.target.value; saveSettings(); } }, Object.keys(DJ.TRANS).map(id => el('option', { value: id, selected: id === (settings.xRecipe || 'bass') }, OS.t(DJ.TRANS[id].name)))),
         el('select', { onchange: e => { settings.xBeats = +e.target.value; saveSettings(); } }, [8, 16, 32, 64].map(n => el('option', { value: n, selected: n === settings.xBeats }, n + ' ' + OS.t('vuruş'))))),
       el('div', { class: 'row', style: 'justify-content:center' }, mk,
         el('div', { class: 'fx-slot' }, el('select', { title: OS.t('Master efekti'), onchange: e => setMasterFx(e.target.value) }, FX.map(([id, l]) => el('option', { value: id, selected: id === DJ.mfx.id }, id ? l : OS.t('Master FX yok')))),
           learnable(U.knob({ label: 'M.FX', size: 28, min: 0, max: 1, def: 0.5, value: DJ.mfx.amt, fmt: v => Math.round(v * 100) + '%', onchange: setMasterFxAmt }), 'mfx'))),
-      el('div', { class: 'row', style: 'justify-content:center' }, recB,
+      el('div', { class: 'row', style: 'justify-content:center' }, (DJ.limEl = el('span', { class: 'lim-led', title: OS.t('Ses sınırlayıcı çalışıyor; seviyeyi kısın') }, 'LIM')),
+        el('button', { class: 'btn sm', title: OS.t('Kayıt düğmesine basmadan önceki son 30 dakikayı indirir'), onclick: () => DJ.mem.save() }, '⏪ ' + OS.t('Son 30 dk')), recB,
         el('select', { title: OS.t('Kayıt biçimi'), onchange: e => { settings.recFmt = e.target.value; saveSettings(); } }, [['wav', 'WAV'], ['webm', 'Sıkıştırılmış (WebM / M4A)']].map(([v, l]) => el('option', { value: v, selected: v === (settings.recFmt || 'wav') }, l)))));
   }
 
@@ -964,32 +992,80 @@
 
   // ---------------- Akıllı geçiş (otomatik tempo eşleme + bas takaslı crossfade) ----------------
   let mixTimer = null;
-  function autoMix(fromI, toI) {
-    const a = DJ.decks[fromI], b = DJ.decks[toI];
+  // Geçiş tarifleri: her parametre, geçiş ilerlemesine (0..1) bağlı nokta listesidir
+  const TRANS = {
+    bass: { name: 'Bas Takası', x: [[0, 0], [0.25, 0.5], [0.75, 0.5], [1, 1]], lowA: [[0, 1], [0.47, 1], [0.5, 0], [1, 0]], lowB: [[0, 0], [0.5, 0], [0.501, 1], [1, 1]] },
+    fade: { name: 'Düz geçiş (fade)', x: [[0, 0], [1, 1]] },
+    echo: { name: 'Echo Out', startB: 0.5, sendA: [[0, 0], [0.5, 1], [1, 1]], x: [[0, 0], [0.5, 0], [0.75, 1], [1, 1]] },
+    filter: { name: 'Filtre Süpürme', filA: [[0, 0], [0.75, 0.9], [1, 0.9]], filB: [[0, -0.85], [0.5, -0.4], [1, 0]], x: [[0, 0], [0.5, 0.5], [1, 1]] },
+    reverb: { name: 'Reverb Out', startB: 0.5, sendB: [[0, 0], [0.5, 1], [1, 1]], x: [[0, 0], [0.5, 0], [0.75, 1], [1, 1]] },
+    tape: { name: 'Tape Stop', startB: 0.6, tapeAt: 0.3, x: [[0, 0], [0.6, 0], [0.62, 1], [1, 1]] },
+    cut: { name: 'Kesme (arka arkaya)', cut: true },
+  };
+  const curveAt = (pts, k) => { for (let i = 1; i < pts.length; i++) if (k <= pts[i][0]) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; return y0 + (y1 - y0) * (k - x0) / Math.max(1e-6, x1 - x0); } return pts[pts.length - 1][1]; };
+  let mixEnd = null;
+  function autoMix(fromI, toI, opts = {}) {
+    const a = DJ.decks[fromI], b = DJ.decks[toI], rec = TRANS[opts.recipe || settings.xRecipe] || TRANS.bass, beats = opts.beats || settings.xBeats;
     if (!a.buffer || !b.buffer) { U.toast(OS.t('İki decke de parça yükleyin')); return; }
     if (!a.playing) { U.toast(OS.t('Geçiş yapılacak deck çalmıyor')); return; }
-    if (!a.bpm || !b.bpm) { U.toast(OS.t('BPM henüz hesaplanmadı')); return; }
-    clearInterval(mixTimer);
-    b.setRate((a.bpm * a.eff) / b.bpm);
-    // b'yi bir sonraki ölçü başında, kendi ilk ölçü başından başlat
-    const phase = (((a.position() - a.grid) / a.beat) % 4 + 4) % 4, wait = (4 - phase) * a.beat / a.eff;
+    if (!opts.auto && (!a.bpm || !b.bpm)) { U.toast(OS.t('BPM henüz hesaplanmadı')); return; }
+    clearInterval(mixTimer); clearTimeout(DJ._mixWait); if (mixEnd) mixEnd();
+    if (a.bpm && b.bpm) { const fit = a.fitRate(b); if (!opts.auto || Math.abs(fit - 1) < 0.08) b.setRate(fit); }
+    a.xAssign = fromI % 2 === 0 ? 'A' : 'B'; b.xAssign = toI % 2 === 0 ? 'A' : 'B';
+    const dir = toI > fromI ? 1 : -1, setX = v => { DJ.xfade = U.clamp(v, 0, 1); applyX(); if (DJ.xfEl) DJ.xfEl.value = DJ.xfade; };
     b.pause(); b.pos = b.cue || b.grid;
-    setTimeout(() => {
-      b.play();
-      const dur = settings.xBeats * a.beat / a.eff * 1000, t0 = performance.now(), dir = toI > fromI ? 1 : -1, x0 = DJ.xfade;
-      a.xAssign = fromI % 2 === 0 ? 'A' : 'B'; b.xAssign = toI % 2 === 0 ? 'A' : 'B';
-      const lowA = a.eqVals.low, lowB = b.eqVals.low;
-      b.setEQ('low', -26);
-      mixTimer = setInterval(() => {
+    if (rec.cut) { b.play(); a.pause(); setX(dir > 0 ? 1 : 0); DJ.renderInfo(); return; }
+    // b, a'nın bir sonraki ölçü başında girer
+    const phase = (((a.position() - a.grid) / a.beat) % 4 + 4) % 4, wait = (4 - phase) * a.beat / a.eff;
+    DJ._mixWait = setTimeout(() => {
+      const dur = beats * a.beat / a.eff * 1000, t0 = performance.now(), x0 = DJ.xfade, keep = { lowA: a.eqVals.low, lowB: b.eqVals.low, filA: a.filterVal || 0, filB: b.filterVal || 0, sA: a.sendA.gain.value, sB: a.sendB.gain.value };
+      let bOn = false, taped = false;
+      const set = (d, band, on, db) => d.setEQ(band, on >= 0.5 ? db : -26);
+      const tick = () => {
         const k = Math.min(1, (performance.now() - t0) / dur);
-        DJ.xfade = U.clamp(dir > 0 ? x0 + (1 - x0) * k : x0 * (1 - k), 0, 1); applyX(); if (DJ.xfEl) DJ.xfEl.value = DJ.xfade;
-        if (k >= 0.5) { a.setEQ('low', -26); b.setEQ('low', lowB); }
-        if (k >= 1) { clearInterval(mixTimer); a.pause(); a.setEQ('low', lowA); DJ.renderInfo(); }
-      }, 30);
-      DJ.renderInfo();
+        if (!bOn && k >= (rec.startB || 0)) { bOn = true; b.play(); DJ.renderInfo(); }
+        const f = curveAt(rec.x, k); setX(dir > 0 ? x0 + (1 - x0) * f : x0 * (1 - f));
+        if (rec.lowA) set(a, 'low', curveAt(rec.lowA, k), keep.lowA);
+        if (rec.lowB) set(b, 'low', curveAt(rec.lowB, k), keep.lowB);
+        if (rec.filA) { a.setFilter(curveAt(rec.filA, k)); setKnob(a.filterKnob, a.filterVal); }
+        if (rec.filB) { b.setFilter(curveAt(rec.filB, k)); setKnob(b.filterKnob, b.filterVal); }
+        if (rec.sendA) a.sendA.gain.value = curveAt(rec.sendA, k);
+        if (rec.sendB) a.sendB.gain.value = curveAt(rec.sendB, k);
+        if (rec.tapeAt && !taped && k >= rec.tapeAt) { taped = true; a.brake((rec.startB - rec.tapeAt) * dur / 1000); }
+        if (k >= 1) { clearInterval(mixTimer); a.pause(); mixEnd(); DJ.renderInfo(); }
+      };
+      mixEnd = () => {
+        mixEnd = null; clearInterval(mixTimer);
+        a.setEQ('low', keep.lowA); b.setEQ('low', keep.lowB);
+        if (rec.filA) { a.setFilter(keep.filA); setKnob(a.filterKnob, keep.filA); }
+        if (rec.filB) { b.setFilter(keep.filB); setKnob(b.filterKnob, keep.filB); }
+        if (rec.sendA) a.sendA.gain.value = keep.sA;
+        if (rec.sendB) a.sendB.gain.value = keep.sB;
+      };
+      if (rec.lowB) b.setEQ('low', -26);
+      if (rec.filB) b.setFilter(curveAt(rec.filB, 0));
+      mixTimer = setInterval(tick, 30); tick();
     }, Math.max(0, wait * 1000 - 5));
     U.toast(OS.t('Geçiş bir sonraki ölçüde başlıyor'));
   }
+  DJ.TRANS = TRANS;
+
+  // Set belleği: kayıt düğmesine basılmasa da son dakikalar saklanır
+  const MEM_MIN = 30;
+  const MEM = DJ.mem = { chunks: [], mr: null, type: 'audio/webm', slice: 5000 };
+  MEM.start = () => {
+    if (MEM.mr || !window.MediaRecorder || !MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) return;
+    const dest = E.ctx.createMediaStreamDestination(); masterOut.connect(dest); MEM.dest = dest;
+    MEM.mr = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 128000 });
+    MEM.mr.ondataavailable = e => { if (!e.data.size) return; MEM.chunks.push(e.data); MEM.trim(); };
+    MEM.mr.start(MEM.slice);
+  };
+  MEM.trim = () => { const max = Math.ceil(MEM_MIN * 60000 / MEM.slice); while (MEM.chunks.length > max) MEM.chunks.splice(1, 1); }; // ilk parça dosya başlığını taşır
+  MEM.save = () => {
+    if (!MEM.mr) { U.toast(OS.t('Henüz kaydedilecek bir şey yok')); return; }
+    const finish = () => { MEM.mr.removeEventListener('dataavailable', finish); U.download(new Blob(MEM.chunks, { type: MEM.type }), 'dj-set-bellek-' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.webm'); };
+    MEM.mr.addEventListener('dataavailable', finish); MEM.mr.requestData();
+  };
 
   // ---------------- Müzik kütüphanesi (taşınabilir profilde saklanır) ----------------
   DJ.lib = {
@@ -1106,7 +1182,7 @@
       const bpmLo = el('input', { class: 'inp', type: 'number', placeholder: 'BPM min', style: 'width:76px', value: this.bpmLo || '', oninput: e => { this.bpmLo = +e.target.value || 0; this.refresh(); } });
       const bpmHi = el('input', { class: 'inp', type: 'number', placeholder: 'BPM max', style: 'width:76px', value: this.bpmHi || '', oninput: e => { this.bpmHi = +e.target.value || 0; this.refresh(); } });
       box.append(el('div', { class: 'row' }, el('b', null, OS.t('Kütüphane')), listSel, harm, bpmLo, bpmHi, search,
-        el('select', { onchange: e => { this.sort = e.target.value; this.refresh(); } }, [['name', 'Ada göre'], ['artist', 'Sanatçıya göre'], ['bpm', 'BPM’e göre'], ['key', 'Tona göre'], ['rating', 'Puana göre'], ['added', 'Eklenme']].map(([v, l]) => el('option', { value: v, selected: v === this.sort }, l))),
+        el('select', { onchange: e => { this.sort = e.target.value; this.refresh(); } }, [['name', 'Ada göre'], ['fit', 'Uyuma göre'], ['artist', 'Sanatçıya göre'], ['bpm', 'BPM’e göre'], ['key', 'Tona göre'], ['rating', 'Puana göre'], ['added', 'Eklenme']].map(([v, l]) => el('option', { value: v, selected: v === this.sort }, l))),
         el('button', { class: 'btn sm', onclick: async () => { const fs = await U.pickFiles('audio/*,video/*', true); if (fs.length) this.add(fs); } }, '+ Parça ekle'),
         el('button', { class: 'btn sm', title: OS.t('DJ Kütüphanesi XML, DJ Koleksiyonu NML veya M3U çalma listesi; BPM, ton, beat grid, hot cue ve listeler aktarılır'), onclick: () => this.importForeign() }, 'İçe aktar (XML / NML / M3U)…'),
         el('button', { class: 'btn sm', onclick: e => U.menu(e.clientX, e.clientY, [{ label: 'DJ Kütüphanesi XML (BPM, ton, hot cue, listeler)', onclick: () => this.exportDjXml() }, { label: 'M3U8 (tüm kütüphane)', onclick: () => this.exportM3U() }, ...(this.list ? [{ label: 'M3U8 (' + this.list + ')', onclick: () => this.exportM3U(this.list) }] : [])]) }, 'Dışa aktar ▾'),
@@ -1116,8 +1192,10 @@
         list.innerHTML = '';
         const q = this.q.toLowerCase();
         const hd = this.harm && DJ.decks[LETTERS.indexOf(this.harm)], hk = hd && hd.shownKey;
+        const ref = DJ.decks.find(d => d.playing && d.bpm) || DJ.decks[0];
+        const fitOf = it => (ref.shownKey && it.key && keysFit(it.key, ref.shownKey) ? 0 : 20) + (it.bpm && ref.bpm ? Math.min(...[0.5, 1, 2].map(k => Math.abs(it.bpm * k / (ref.bpm * ref.eff) - 1))) * 100 : 15);
         const rows = this.rows = this.items.filter(it => (!q || [it.name, it.artist, it.album, it.genre, it.key, Math.round(it.bpm)].join(' ').toLowerCase().includes(q)) && (!hk || keysFit(it.key, hk)) && (!this.list || (it.lists || []).includes(this.list)) && (!this.bpmLo || it.bpm >= this.bpmLo) && (!this.bpmHi || (it.bpm && it.bpm <= this.bpmHi)))
-          .sort((a, b) => this.sort === 'bpm' ? a.bpm - b.bpm : this.sort === 'key' ? (a.key || '').localeCompare(b.key || '') : this.sort === 'added' ? b.added - a.added : this.sort === 'rating' ? (b.rating || 0) - (a.rating || 0) : this.sort === 'artist' ? (a.artist || '').localeCompare(b.artist || '', 'tr') : a.name.localeCompare(b.name, 'tr'));
+          .sort((a, b) => this.sort === 'fit' ? fitOf(a) - fitOf(b) : this.sort === 'bpm' ? a.bpm - b.bpm : this.sort === 'key' ? (a.key || '').localeCompare(b.key || '') : this.sort === 'added' ? b.added - a.added : this.sort === 'rating' ? (b.rating || 0) - (a.rating || 0) : this.sort === 'artist' ? (a.artist || '').localeCompare(b.artist || '', 'tr') : a.name.localeCompare(b.name, 'tr'));
         if (!rows.length) list.appendChild(el('div', { class: 'muted', style: 'padding:6px' }, OS.t('Kütüphane boş. “+ Parça ekle” ile müzik ekleyin.')));
         rows.forEach(it => list.appendChild(el('div', { class: 'lib-row' + (it.id === this.sel ? ' sel' : ''), onclick: () => { this.sel = it.id; this.refresh(); } },
           it.cover ? el('img', { class: 'lib-cover', src: it.cover, alt: '' }) : null,
@@ -1168,7 +1246,7 @@
   }
 
   // ---------------- Automix (kuyruk ile otomatik DJ) ----------------
-  const AM = DJ.auto = { queue: [], on: false, type: 'smart', beats: 16, beatmatch: true, repeat: false, removePlayed: true, cur: 0, busy: false };
+  const AM = DJ.auto = { queue: [], on: false, type: 'bass', beats: 16, beatmatch: true, repeat: false, removePlayed: true, cur: 0, busy: false };
   AM.add = id => { AM.queue.push(id); AM.refresh && AM.refresh(); U.toast(OS.t('Kuyruğa eklendi')); };
   AM.start = async function () {
     if (!AM.queue.length) { U.toast(OS.t('Önce kuyruğa parça ekleyin')); return; }
@@ -1192,13 +1270,7 @@
     if (AM.removePlayed) AM.queue.shift(); else AM.queue.push(AM.queue.shift());
     AM.refresh();
     await DJ.lib.toDeck(id, next.idx); await waitReady(next);
-    if (AM.type === 'cut') { next.pause(); next.pos = next.grid || 0; next.play(); cur.pause(); DJ.xfade = next.idx ? 1 : 0; applyX(); }
-    else if (AM.type === 'smart' && AM.beatmatch && Math.abs(next.bpm / cur.bpm - 1) < 0.08) { settings.xBeats = AM.beats; autoMix(cur.idx, next.idx); }
-    else { // düz geçiş: tempoya dokunmadan crossfade
-      next.pause(); next.pos = next.grid || 0; next.play();
-      const t0 = performance.now(), dur = fadeSec * 1000, x0 = DJ.xfade, dir = next.idx ? 1 : -1;
-      const iv = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / dur); DJ.xfade = U.clamp(dir > 0 ? x0 + (1 - x0) * k : x0 * (1 - k), 0, 1); applyX(); if (DJ.xfEl) DJ.xfEl.value = DJ.xfade; if (k >= 1) { clearInterval(iv); cur.pause(); DJ.renderInfo(); } }, 30);
-    }
+    autoMix(cur.idx, next.idx, { recipe: AM.type, beats: AM.beats, auto: true });
     setTimeout(() => { AM.busy = false; }, fadeSec * 1000 + 2000);
     DJ.renderInfo();
   }, 400);
@@ -1208,7 +1280,7 @@
       box.innerHTML = '';
       box.append(el('div', { class: 'row' }, el('b', null, 'Automix'),
         el('button', { class: 'btn sm ' + (AM.on ? 'on' : 'primary'), onclick: () => AM.on ? AM.stop() : AM.start() }, AM.on ? '■ ' + OS.t('Durdur') : '▶ ' + OS.t('Başlat')),
-        el('select', { onchange: e => AM.type = e.target.value }, [['smart', 'Akıllı (tempo eşleme)'], ['fade', 'Düz geçiş (fade)'], ['cut', 'Kesme (arka arkaya)']].map(([v, l]) => el('option', { value: v, selected: v === AM.type }, l))),
+        el('select', { title: OS.t('Geçiş tarifi'), onchange: e => AM.type = e.target.value }, Object.keys(DJ.TRANS).map(v => [v, DJ.TRANS[v].name]).map(([v, l]) => el('option', { value: v, selected: v === AM.type }, l))),
         el('select', { onchange: e => AM.beats = +e.target.value }, [8, 16, 32].map(n => el('option', { value: n, selected: n === AM.beats }, n + ' ' + OS.t('vuruş')))),
         el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: AM.repeat, onchange: e => AM.repeat = e.target.checked }), 'Tekrarla'),
         el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: AM.removePlayed, onchange: e => AM.removePlayed = e.target.checked }), 'Çalınanı listeden çıkar'),
@@ -1565,6 +1637,7 @@
   const mb = new Float32Array(1024);
   function frame() {
     if (root.classList.contains('active')) {
+      if (DJ.limEl && DJ.limIn) { DJ.limIn.getFloatTimeDomainData(mb); let pk = 0; for (let i = 0; i < mb.length; i++) { const a = Math.abs(mb[i]); if (a > pk) pk = a; } if (pk * 4 > 0.89) DJ.limT = performance.now(); DJ.limEl.classList.toggle('on', performance.now() - (DJ.limT || -1e9) < 300); }
       DJ.decks.slice(0, settings.count).forEach(d => {
         d.draw && d.draw();
         if (d.meterCv && d.meterCv.isConnected) {
@@ -1594,5 +1667,5 @@
   };
   addEventListener('keyup', e => { const kp = KEY_PADS[e.code]; if (kp && built && ui.view === 'dj') { padRelease(DJ.decks[kp[0]], kp[1]); DJ.renderInfo(); } });
   // Controller Merkezi ve video katmanı için iç erişim
-  DJ._i = { settings, saveSettings, relDelta, applyOut, getMasterOut: () => masterOut, getMaster: () => master, isBuilt: () => built, build };
+  DJ._i = { settings, saveSettings, relDelta, applyOut, midiMenu, getMasterOut: () => masterOut, getMaster: () => master, isBuilt: () => built, build };
 })(window.OS);

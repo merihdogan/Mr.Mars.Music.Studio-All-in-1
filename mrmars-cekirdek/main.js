@@ -100,7 +100,6 @@
       { label: 'Gitar parçası (amfi + kabin hazır)', onclick: () => { const t = ui.arrange.addTrack('audio'); t.name = 'Gitar'; ui.applyRig(t, 'Blues Crunch'); ui.changed(); } },
       { label: 'Bas gitar parçası (bas amfi hazır)', onclick: () => { const t = ui.arrange.addTrack('audio'); t.name = 'Bas Gitar'; ui.applyRig(t, 'Bas - Temiz'); ui.changed(); } },
     ],
-    metal: () => ui.metal.menu(),
     lang: langMenu,
     tools: () => [
       { label: 'Ses ayarları (giriş/çıkış, gecikme)…', onclick: audioSettings },

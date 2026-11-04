@@ -327,28 +327,6 @@
     U.toast(OS.t(pl.name) + ' → ' + t.name);
   };
 
-  // Üst menü
-  MC.menu = () => [
-    { header: 'Metal Creative' },
-    { label: 'Metal Creative sekmesini aç', onclick: () => ui.showView('metal') },
-    '-',
-    { label: 'Rastgele metal şarkı üret ve projeye yaz', onclick: () => { S.song = G.randomSong(S.style, S.tuning, S.form); save(); MC.writeSong(S.song); } },
-    { label: 'Metal mix şablonu (boş)', onclick: () => MC.mixTemplate(false) },
-    { label: 'Metal mix şablonu + örnek şarkı', onclick: () => MC.mixTemplate(true) },
-    '-',
-    { label: 'Parça ekle: Metal Gitar DI (çift kayıt)', onclick: () => { MC.addTrack('gtrL'); MC.addTrack('gtrR'); } },
-    { label: 'Parça ekle: Metal Bas (5 tel)', onclick: () => MC.addTrack('bass') },
-    { label: 'Parça ekle: Metal Davul Kiti', onclick: () => MC.addTrack('drums') },
-    { label: 'Parça ekle: Endüstriyel Yıkım FX', onclick: () => MC.addTrack('fx') },
-    '-',
-    { label: 'Seçili parçaya: DI Güçlendirici', onclick: () => MC.insertFx('fx.dienhance', 'Modern Chug') },
-    { label: 'Seçili parçaya: Davul Yumruğu', onclick: () => MC.insertFx('fx.drumpunch', 'Davul Grubu (paralel)') },
-    { label: 'Seçili parçaya: Metal ton (arşivden)…', onclick: () => ui.showView('metal') },
-  ];
-
-  // =====================================================================
-  // Sekme arayüzü
-  // =====================================================================
   MC.init = function () { root = document.getElementById('view-metal'); };
   MC.render = function () {
     if (!root) return;

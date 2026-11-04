@@ -42,17 +42,9 @@
     const tb = document.getElementById('arr-toolbar');
     const snapSel = el('select', { onchange: () => { A.snap = +snapSel.value; } }, SNAPS.map(([v, l]) => el('option', { value: v, selected: +v === A.snap }, l)));
     tb.append(
-      el('button', { class: 'btn sm', onclick: () => A.addTrack('audio') }, '+ Ses Parçası'),
-      el('button', { class: 'btn sm', onclick: e => ui.pluginMenu(e.clientX, e.clientY, 'instrument', id => A.addTrack('instrument', id)) }, '+ Enstrüman'),
-      el('button', { class: 'btn sm', onclick: () => A.addTrack('fx') }, '+ FX Kanalı'),
-      el('div', { class: 'sep' }),
-      el('button', { class: 'btn sm', onclick: () => A.importAudio() }, 'Ses Dosyası İçe Aktar…'),
-      el('button', { class: 'btn sm', title: 'İmleçte böl (S)', onclick: () => A.splitAtPlayhead() }, '✂ Böl'),
       el('div', { class: 'sep' }),
       el('label', null, 'Izgara', snapSel),
       el('label', null, 'Yakınlaştır', A.zoomInp = el('input', { type: 'range', min: 4, max: 200, value: 28, oninput: e => { P().zoom = +e.target.value; A.render(); } })),
-      el('span', { class: 'spacer' }),
-      el('button', { class: 'btn sm primary', onclick: () => ui.exportDialog() }, 'Mixdown / Dışa Aktar'),
     );
   }
 

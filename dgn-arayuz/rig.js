@@ -173,8 +173,7 @@
         el('button', { class: 'btn sm' + (st.live ? ' on' : ''), onclick: () => { st.live = !st.live; save(); RG.render(); } }, 'Canlı mod')),
       el('div', { class: 'row' },
         el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: st.cabLink, onchange: e => { st.cabLink = e.target.checked; save(); } }), 'Kabin bağlantısı (amfi değişince uygun kabin)'),
-        el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: st.cabBypass, onchange: e => { st.cabBypass = OS.cabBypass = e.target.checked; save(); RG.g.all().filter(d => d.pluginId === 'gtr.cab').forEach(d => d.setParam('model', d.values.model)); } }), 'Tüm kabinleri devre dışı bırak (harici IR / kabin kullanıyorsanız)'),
-        el('button', { class: 'btn sm', title: 'Proje temposunu tıklayarak belirle (delay ve modülatörler bu tempoyu kullanır)', onclick: tap }, 'TAP ' + Math.round(OS.transport.bpm) + ' BPM')),
+        el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: st.cabBypass, onchange: e => { st.cabBypass = OS.cabBypass = e.target.checked; save(); RG.g.all().filter(d => d.pluginId === 'gtr.cab').forEach(d => d.setParam('model', d.values.model)); } }), 'Tüm kabinleri devre dışı bırak (harici IR / kabin kullanıyorsanız)')),
     );
     if (st.live) { root.appendChild(liveUI()); return; }
     const n = NPATH[st.mode];
@@ -292,10 +291,6 @@
     U.toast(OS.t('Rig parçaya kopyalandı') + ': ' + t.name);
   }
   let taps = [];
-  function tap() {
-    const now = performance.now(); taps = taps.filter(t => now - t < 3000); taps.push(now);
-    if (taps.length >= 3) { const d = (taps[taps.length - 1] - taps[0]) / (taps.length - 1); OS.project.bpm = Math.round(60000 / d * 10) / 10; ui.updateTransportUI(); RG.g.all().forEach(x => x.inst.tempoChanged && x.inst.tempoChanged()); RG.render(); }
-  }
 
   // ---------------- Akort cihazı ----------------
   const hist = [];

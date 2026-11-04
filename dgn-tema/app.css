@@ -575,4 +575,6 @@ html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent
 .dev-row > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dev-row.hit { background: var(--acc); color: #06130f; }
 .dev-row.pending { border-color: #ff9a3c; color: #ff9a3c; }
+.lim-led { font: 700 10px Consolas, monospace; padding: 2px 5px; border-radius: 3px; background: #2a3038; color: #6c7584; }
+.lim-led.on { background: #ef4444; color: #fff; }
 .dev-chip { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

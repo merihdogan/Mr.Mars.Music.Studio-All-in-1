@@ -1,6 +1,19 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+['Bas Takası', 'Bass Swap', 'Bass-Tausch', 'Cambio de bajos', 'Échange de basses', 'Basbyte', 'Смена баса'],
+['Filtre Süpürme', 'Filter Sweep', 'Filter-Sweep', 'Barrido de filtro', 'Balayage de filtre', 'Filtersvep', 'Свип фильтра'],
+['Geçiş tarifi', 'Transition recipe', 'Übergangsrezept', 'Receta de transición', 'Recette de transition', 'Övergångsrecept', 'Рецепт перехода'],
+['Vuruşa başlat', 'Start on beat', 'Auf den Beat starten', 'Iniciar en el pulso', 'Démarrer sur le temps', 'Starta på slaget', 'Старт на долю'],
+['PLAY, çalan deckin bir sonraki vuruşunda ve kendi vuruşundan başlar', 'PLAY starts on the playing deck’s next beat, from its own beat', 'PLAY startet auf dem nächsten Beat des laufenden Decks, ab dem eigenen Beat', 'PLAY empieza en el siguiente pulso del deck que suena, desde su propio pulso', 'PLAY démarre au temps suivant du deck en lecture, depuis son propre temps', 'PLAY startar på den spelande deckens nästa slag, från sitt eget slag', 'PLAY начинается на следующей доле играющего дека, со своей доли'],
+['Seviye eşitle', 'Match levels', 'Pegel angleichen', 'Igualar niveles', 'Égaliser les niveaux', 'Utjämna nivåer', 'Выравнивать уровни'],
+['Parçaların ses seviyesini birbirine yaklaştırır', 'Brings the loudness of tracks closer together', 'Gleicht die Lautheit der Titel an', 'Acerca el volumen de las pistas', 'Rapproche le volume des titres', 'För låtarnas ljudnivå närmare varandra', 'Сближает громкость треков'],
+['Ses sınırlayıcı çalışıyor; seviyeyi kısın', 'The limiter is working; turn the level down', 'Der Limiter arbeitet; Pegel senken', 'El limitador está actuando; baje el nivel', 'Le limiteur agit ; baissez le niveau', 'Begränsaren arbetar; sänk nivån', 'Работает лимитер; уменьшите уровень'],
+['Kayıt düğmesine basmadan önceki son 30 dakikayı indirir', 'Downloads the last 30 minutes, even without pressing record', 'Lädt die letzten 30 Minuten herunter, auch ohne Aufnahme', 'Descarga los últimos 30 minutos, aunque no haya grabado', 'Télécharge les 30 dernières minutes, même sans enregistrer', 'Laddar ned de senaste 30 minuterna, även utan inspelning', 'Скачивает последние 30 минут, даже без записи'],
+['Son 30 dk', 'Last 30 min', 'Letzte 30 Min', 'Últimos 30 min', '30 dernières min', 'Senaste 30 min', 'Последние 30 мин'],
+['Henüz kaydedilecek bir şey yok', 'Nothing to save yet', 'Noch nichts zu speichern', 'Aún no hay nada que guardar', 'Rien à enregistrer pour l’instant', 'Inget att spara ännu', 'Пока нечего сохранять'],
+['Uyuma göre', 'By best match', 'Nach Passung', 'Por compatibilidad', 'Par compatibilité', 'Efter bäst matchning', 'По совместимости'],
+['Ekranda bir kontrole tıklayın, sonra cihazda ilgili kontrole dokunun', 'Click a control on screen, then touch the matching control on your device', 'Klicken Sie ein Element am Bildschirm an und berühren Sie dann das passende am Gerät', 'Haga clic en un control en pantalla y toque el correspondiente en el dispositivo', 'Cliquez sur une commande à l’écran, puis touchez celle de l’appareil', 'Klicka på en kontroll på skärmen och rör sedan motsvarande på enheten', 'Щёлкните элемент на экране, затем коснитесь соответствующего на устройстве'],
 ['Beat jump düğmesi', 'Beat jump knob', 'Beat-Jump-Regler', 'Mando de beat jump', 'Bouton de beat jump', 'Beat jump-ratt', 'Ручка beat jump'],
 ['Hızlı arama (jog)', 'Fast search (jog)', 'Schnellsuche (Jog)', 'Búsqueda rápida (jog)', 'Recherche rapide (jog)', 'Snabbsökning (jog)', 'Быстрый поиск (джог)'],
 ['Jog dokunma (SHIFT)', 'Jog touch (SHIFT)', 'Jog-Berührung (SHIFT)', 'Toque del jog (SHIFT)', 'Toucher du jog (SHIFT)', 'Jog-beröring (SHIFT)', 'Касание джога (SHIFT)'],
