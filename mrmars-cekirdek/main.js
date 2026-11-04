@@ -395,6 +395,7 @@
 
     $('about-btn').onclick = about;
     $('manual-btn').onclick = ui.openManual;
+    $('phone-btn').onclick = () => OS.phone.open();
     splash('Eklentiler yükleniyor…', 0.45);
     await ui.plugins.loadFolder();
     await ui.plugins.loadStored();

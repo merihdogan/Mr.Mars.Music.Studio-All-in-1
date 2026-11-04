@@ -84,6 +84,10 @@ Yeni gitarlar: Yeniden Çal ve enstrüman menüsünde Elektro Gitarlar (25 ton: 
               Davul Makinesi'nde Türk ve Orta Doğu perküsyonları da vardır (65-86. notalar):
               darbuka, bendir, def, erbane, riq, kudüm, davul, nakkare, parmak zili, kaşık,
               çarpara, tombak, daf ve mazhar; seviyesi Doğu Perküsyonu düğmesiyle ayarlanır.
+Telefona Gönder: Üst çubuktaki düğme, her sekmede çalışır. Projeyi, döngü bölgesini veya son DJ
+              mixini MP3, WAV ya da MP4 olarak aynı Wi-Fi üzerinden doğrudan telefona gönderir; hiçbir
+              yere yüklenmez. Bilgisayardaki QR kodu telefonla okutun, telefonda çıkan kodu bilgisayarın
+              kamerasına gösterin. Alma sayfasını açmak için telefonda bir kez internet gerekir.
 Yeni cihazlar: Efekt menüsünde Yaratıcı grubu (Zarf Filtre, Plak, Parlatıcı, De-esser,
               Armonizör, Ritim Kapısı, Vokoder); enstrüman menüsünde Kayıtlı Davul Seti.
 Mikser      : Efekt yuvaları, send (FX kanalı), pan, fader, seviye göstergesi, master.

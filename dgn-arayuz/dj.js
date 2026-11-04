@@ -1062,6 +1062,8 @@
     MEM.mr.start(MEM.slice);
   };
   MEM.trim = () => { const max = Math.ceil(MEM_MIN * 60000 / MEM.slice); while (MEM.chunks.length > max) MEM.chunks.splice(1, 1); }; // ilk parça dosya başlığını taşır
+  // Bellekteki mixi Blob olarak verir (Telefona Gönder kullanır)
+  MEM.blob = () => new Promise(res => { const f = () => { MEM.mr.removeEventListener('dataavailable', f); res(new Blob(MEM.chunks, { type: MEM.type })); }; MEM.mr.addEventListener('dataavailable', f); MEM.mr.requestData(); });
   MEM.save = () => {
     if (!MEM.mr) { U.toast(OS.t('Henüz kaydedilecek bir şey yok')); return; }
     const finish = () => { MEM.mr.removeEventListener('dataavailable', finish); U.download(new Blob(MEM.chunks, { type: MEM.type }), 'dj-set-bellek-' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.webm'); };

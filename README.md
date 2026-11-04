@@ -70,6 +70,10 @@ New guitars   : Electric Guitars (25 tones: single-coil, humbucker, hollow body,
                The Drum Machine also has Turkish and Middle Eastern percussion (notes 65-86):
                darbuka, bendir, def, erbane, riq, kudüm, davul, nakkare, finger cymbals, spoons,
                çarpara, tombak, daf and mazhar, with an Eastern Percussion level knob.
+Send to Phone: top bar button, in every tab. Sends the project, the loop region or the latest
+               DJ mix to a phone as MP3, WAV or MP4 directly over the same Wi-Fi, with no upload.
+               Scan the computer's QR code with the phone, then show the phone's code to the
+               computer's camera. The phone needs internet once to open the receive page.
 New devices: Creative effects (Envelope Filter, Vinyl, Exciter, De-esser, Harmonizer,
 Trance Gate, Vocoder) in the effect menu; Recorded Drum Kit in the instrument menu.
 Mixer        : Insert slots, sends (FX channels), pan, fader, meters, master.

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10141a">
+<meta name="referrer" content="no-referrer">
+<title>Mr. Mars Music Studio</title>
+<style>
+  :root { color-scheme: dark; --bg: #10141a; --card: #1b222b; --fg: #e8edf2; --mut: #9aa7b4; --acc: #4fd1c5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.45 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 16px; padding-bottom: 40px; }
+  main { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 19px; margin: 4px 0; color: var(--acc); text-align: center; }
+  .card { background: var(--card); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .muted { color: var(--mut); font-size: 14px; }
+  #qr { width: 100%; max-width: 420px; height: auto; background: #fff; border-radius: 8px; align-self: center; image-rendering: pixelated; }
+  .bar { height: 8px; background: #0b0f14; border-radius: 4px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--acc); }
+  button, a.btn { font: inherit; background: #2a3440; color: var(--fg); border: 0; border-radius: 8px; padding: 12px; text-align: center; text-decoration: none; display: block; width: 100%; }
+  .primary { background: var(--acc) !important; color: #06201d !important; font-weight: 600; }
+  audio, video { width: 100%; border-radius: 8px; background: #000; }
+  .row { display: flex; gap: 8px; } .row > * { flex: 1; }
+  .name { font-weight: 600; word-break: break-word; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Mr. Mars Music Studio</h1>
+  <div class="card" id="pairing">
+    <div id="msg"></div>
+    <canvas id="qr" hidden></canvas>
+    <button id="copy" hidden></button>
+  </div>
+  <div class="card" id="progress" hidden>
+    <div id="pname" class="name"></div>
+    <div class="bar"><i id="pbar"></i></div>
+    <div id="ptext" class="muted"></div>
+  </div>
+  <div id="files"></div>
+</main>
+<script src="mrmars-cekirdek/qr.js"></script>
+<script src="mrmars-cekirdek/telefon-baglanti.js"></script>
+<script>
+(function () {
+  // [tr, en, de, es, fr, sv, ru]
+  const T = {
+    open: ['Bu sayfayı bilgisayardaki Telefona Gönder penceresinin QR koduyla açın.', 'Open this page with the QR code in the Send to Phone window on your computer.', 'Öffnen Sie diese Seite mit dem QR-Code im Fenster „An Telefon senden“ am Computer.', 'Abra esta página con el código QR de la ventana Enviar al teléfono del ordenador.', 'Ouvrez cette page avec le code QR de la fenêtre Envoyer au téléphone de l’ordinateur.', 'Öppna sidan med QR-koden i fönstret Skicka till telefon på datorn.', 'Откройте эту страницу через QR-код в окне «Отправить на телефон» на компьютере.'],
+    prep: ['Bağlantı hazırlanıyor…', 'Preparing the connection…', 'Verbindung wird vorbereitet…', 'Preparando la conexión…', 'Préparation de la connexion…', 'Förbereder anslutningen…', 'Подготовка подключения…'],
+    show: ['Bu kodu bilgisayarın kamerasına gösterin. Telefon ve bilgisayar aynı Wi-Fi ağında olmalı.', 'Show this code to the computer’s camera. The phone and computer must be on the same Wi-Fi.', 'Zeigen Sie diesen Code der Kamera des Computers. Telefon und Computer müssen im selben WLAN sein.', 'Muestre este código a la cámara del ordenador. Ambos deben estar en la misma Wi-Fi.', 'Montrez ce code à la caméra de l’ordinateur. Les deux appareils doivent être sur le même Wi-Fi.', 'Visa koden för datorns kamera. Telefon och dator måste vara på samma Wi-Fi.', 'Покажите этот код камере компьютера. Телефон и компьютер должны быть в одной сети Wi-Fi.'],
+    copy: ['Bilgisayarda kamera yoksa kodu kopyala', 'No camera on the computer? Copy the code', 'Keine Kamera am Computer? Code kopieren', '¿Sin cámara en el ordenador? Copiar el código', 'Pas de caméra sur l’ordinateur ? Copier le code', 'Ingen kamera på datorn? Kopiera koden', 'Нет камеры на компьютере? Скопировать код'],
+    copied: ['Kod kopyalandı', 'Code copied', 'Code kopiert', 'Código copiado', 'Code copié', 'Koden kopierad', 'Код скопирован'],
+    conn: ['Bağlandı. Müzik bekleniyor…', 'Connected. Waiting for music…', 'Verbunden. Warte auf Musik…', 'Conectado. Esperando música…', 'Connecté. En attente de musique…', 'Ansluten. Väntar på musik…', 'Подключено. Ожидание музыки…'],
+    fail: ['Bağlanılamadı. İki cihazın aynı Wi-Fi ağında olduğundan emin olun, sonra yeni kod alın.', 'Could not connect. Check both devices are on the same Wi-Fi, then get a new code.', 'Keine Verbindung. Prüfen Sie, ob beide im selben WLAN sind, und holen Sie einen neuen Code.', 'No se pudo conectar. Compruebe que ambos estén en la misma Wi-Fi y genere un código nuevo.', 'Connexion impossible. Vérifiez le même Wi-Fi puis générez un nouveau code.', 'Kunde inte ansluta. Kontrollera samma Wi-Fi och hämta en ny kod.', 'Не удалось подключиться. Проверьте одну сеть Wi-Fi и получите новый код.'],
+    closed: ['Bağlantı kapandı. Aldığınız dosyalar bu sayfada duruyor.', 'Connection closed. Received files stay on this page.', 'Verbindung beendet. Empfangene Dateien bleiben auf dieser Seite.', 'Conexión cerrada. Los archivos recibidos siguen en esta página.', 'Connexion fermée. Les fichiers reçus restent sur cette page.', 'Anslutningen stängd. Mottagna filer finns kvar här.', 'Соединение закрыто. Полученные файлы остаются на этой странице.'],
+    save: ['Kaydet', 'Save', 'Speichern', 'Guardar', 'Enregistrer', 'Spara', 'Сохранить'],
+    share: ['Paylaş', 'Share', 'Teilen', 'Compartir', 'Partager', 'Dela', 'Поделиться'],
+    badfile: ['Dosya bozuk geldi, yeniden gönderin.', 'The file arrived damaged. Send it again.', 'Die Datei ist beschädigt. Bitte erneut senden.', 'El archivo llegó dañado. Envíelo de nuevo.', 'Le fichier est arrivé endommagé. Renvoyez-le.', 'Filen kom fram skadad. Skicka igen.', 'Файл повреждён. Отправьте ещё раз.'],
+    badcode: ['Kod geçersiz. Bilgisayarda yeni kod alın.', 'Invalid code. Get a new code on the computer.', 'Ungültiger Code. Neuen Code am Computer holen.', 'Código no válido. Genere uno nuevo en el ordenador.', 'Code invalide. Générez-en un nouveau.', 'Ogiltig kod. Hämta en ny på datorn.', 'Неверный код. Получите новый на компьютере.'],
+    leave: ['Telefon ekranını açık tutun ve bu sayfadan çıkmayın.', 'Keep the screen on and stay on this page.', 'Lassen Sie den Bildschirm an und bleiben Sie auf dieser Seite.', 'Mantenga la pantalla encendida y permanezca en esta página.', 'Gardez l’écran allumé et restez sur cette page.', 'Håll skärmen tänd och stanna på sidan.', 'Не выключайте экран и не покидайте страницу.'],
+  };
+  const LANGS = ['tr', 'en', 'de', 'es', 'fr', 'sv', 'ru'];
+  const li = Math.max(0, LANGS.indexOf((navigator.language || 'en').slice(0, 2).toLowerCase()) < 0 ? 1 : LANGS.indexOf((navigator.language || 'en').slice(0, 2).toLowerCase()));
+  document.documentElement.lang = LANGS[li];
+  const t = k => T[k][li], $ = id => document.getElementById(id);
+  const msg = s => { $('msg').textContent = s; };
+  const mb = n => (n / 1048576).toFixed(1) + ' MB';
+
+  function addFile(blob, meta) {
+    const url = URL.createObjectURL(blob), isVid = /^video/.test(meta.type), player = document.createElement(isVid ? 'video' : 'audio');
+    player.controls = true; player.src = url; player.playsInline = true; player.preload = 'metadata';
+    const card = document.createElement('div'); card.className = 'card'; card.style.marginBottom = '12px';
+    const name = document.createElement('div'); name.className = 'name'; name.textContent = meta.name;
+    const size = document.createElement('div'); size.className = 'muted'; size.textContent = mb(meta.size);
+    const row = document.createElement('div'); row.className = 'row';
+    const save = document.createElement('a'); save.className = 'btn primary'; save.href = url; save.download = meta.name; save.textContent = t('save'); row.appendChild(save);
+    const file = new File([blob], meta.name, { type: meta.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { const sh = document.createElement('button'); sh.textContent = t('share'); sh.onclick = () => navigator.share({ files: [file] }).catch(() => { }); row.appendChild(sh); }
+    card.append(name, player, size, row); $('files').prepend(card);
+    window.__received = window.__received || []; window.__received.push({ name: meta.name, size: meta.size, type: meta.type, blob });
+  }
+
+  async function start() {
+    const m = /[#&]o=([^&]+)/.exec(location.hash);
+    if (!m) { msg(t('open')); return; }
+    history.replaceState(null, '', location.pathname); // Kod adres geçmişinde kalmasın
+    msg(t('prep'));
+    let link;
+    try { link = await OSLink.createAnswer(m[1]); } catch (e) { console.error(e); msg(t('badcode')); return; }
+    window.__answer = link.code;
+    OSQR.draw($('qr'), link.code, 840); $('qr').hidden = false;
+    msg(t('show'));
+    const copy = $('copy'); copy.hidden = false; copy.textContent = t('copy');
+    copy.onclick = async () => { try { await navigator.clipboard.writeText(link.code); copy.textContent = t('copied'); } catch (e) { prompt('', link.code); } };
+    const pc = link.pc, failT = setTimeout(() => { if (pc.connectionState !== 'connected') msg(t('fail')); }, 120000);
+    pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed') msg(t('fail')); };
+    pc.ondatachannel = ({ channel: dc }) => {
+      const opened = () => { clearTimeout(failT); $('qr').hidden = true; copy.hidden = true; msg(t('conn')); window.__state = 'open'; };
+      dc.readyState === 'open' ? opened() : dc.addEventListener('open', opened);
+      dc.addEventListener('close', () => { $('progress').hidden = true; msg(t('closed')); });
+      OSLink.receiver(dc, {
+        status: s => { $('progress').hidden = false; $('pname').textContent = ''; $('ptext').textContent = s.text; $('pbar').style.width = '0'; },
+        start: f => { $('progress').hidden = false; $('pname').textContent = f.name; $('ptext').textContent = mb(f.size) + ' · ' + t('leave'); },
+        progress: k => { $('pbar').style.width = Math.round(k * 100) + '%'; },
+        done: (blob, meta) => { $('progress').hidden = true; msg(t('conn')); addFile(blob, meta); },
+        error: () => { $('progress').hidden = true; msg(t('badfile')); window.__state = 'badfile'; },
+      });
+    };
+  }
+  start();
+})();
+</script>
+</body>
+</html>

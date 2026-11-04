@@ -1,8 +1,8 @@
 /* Mr. Mars Music Studio · MRH DGN — çevrimdışı önbellek
  * Dosya listesi index.html'den okunur, yeni dosya için liste tutmak gerekmez.
  * Önbellekten hemen açılır, internet varsa arka planda güncellenir (sonraki açılışta geçerli olur). */
-const CACHE = 'mrmars-v15';
-const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js', 'mrh-cihazlar/ornek-davul.js', 'User Manual_en_english.html',
+const CACHE = 'mrmars-v16';
+const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js', 'mrh-cihazlar/ornek-davul.js', 'telefon.html', 'mrmars-cekirdek/mp3kod.js', 'mrmars-cekirdek/qroku.js', 'User Manual_en_english.html',
   'mrmars-gorseller/icon-128.png', 'mrmars-gorseller/icon-256.png', 'mrmars-gorseller/icon-512.png', 'mrmars-gorseller/logo-1024.png', 'mrmars-gorseller/logo-512.png'];
 
 self.addEventListener('install', e => {
