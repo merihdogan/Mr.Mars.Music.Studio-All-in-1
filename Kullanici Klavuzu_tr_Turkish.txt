@@ -70,6 +70,10 @@ Aranjman    : Ses ve MIDI parçaları, kayıt (take / comping), klip düzenleme 
 Session     : Parça × sahne klip ızgarası; klipler nicelemeyle başlar, sahneler tek tuşla.
 Desen Rafı  : Adım sıralayıcı: 16/32/64 adım, vurgu / hayalet nota, swing, rastgele,
               desenleri aranjmana MIDI klip olarak yazma.
+              Altyapılar düğmesi: 23 hazır tür (davul, bas, akor) düzenlenebilir MIDI
+              parçaları olarak eklenir; ton ve uzunluk (4, 8, 16 ölçü) seçilir.
+Yeni cihazlar: Efekt menüsünde Yaratıcı grubu (Zarf Filtre, Plak, Parlatıcı, De-esser,
+              Armonizör, Ritim Kapısı, Vokoder); enstrüman menüsünde Kayıtlı Davul Seti.
 Mikser      : Efekt yuvaları, send (FX kanalı), pan, fader, seviye göstergesi, master.
 Mini Araçlar: XY synth pedi, XY efekt pedi (filtre, delay, reverb, flanger, phaser,
               bit ezici, perde, gater, beat repeat), MIDI araçları (transpoze, ölçek,
@@ -107,6 +111,8 @@ DJ MİKSER AYRINTILARI
   (bölüm başları otomatik bulunur), Scratch (8 hazır kalıp).
 - Sampler: sınırsız banka, bankada 16 ped; Aç/Kapa, Stutter, Basılı tut, Döngü, Unmute
   tetikleme; çıkış master veya bir deck; master'dan ya da deck'ten 4/8/16/32 vuruş pede kayıt.
+  Banka listesinde hazır bankalar: DJ Efektleri (yükseliş, darbe, korna, siren, lazer...)
+  ve Kayıtlı Davullar (gerçek kayıtlar, kamu malı).
 - Kütüphane: ID3 etiketleri ve kapak otomatik okunur, parça bilgisi düzenleme, puan, kulaklıktan
   ön dinleme, seçili deck'in tonuyla uyumlu parçaları süzme.
 - Set kaydı: WAV veya WebM (Opus). Video Motoru: decke yüklenen video, kapak, görselleştirici,

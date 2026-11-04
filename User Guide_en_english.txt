@@ -68,6 +68,10 @@ Arrange      : Audio and MIDI tracks, recording (takes / comping), clip editing 
 Session      : Track × scene clip grid; quantized clip launch, one-click scenes.
 Pattern Rack : Step sequencer: 16/32/64 steps, accent / ghost notes, swing, random,
                write patterns to the arrangement as MIDI clips.
+               Backings button: 23 ready genres (drums, bass, chords) as editable
+               MIDI tracks; choose key and length (4, 8 or 16 bars).
+New devices: Creative effects (Envelope Filter, Vinyl, Exciter, De-esser, Harmonizer,
+Trance Gate, Vocoder) in the effect menu; Recorded Drum Kit in the instrument menu.
 Mixer        : Insert slots, sends (FX channels), pan, fader, meters, master.
 Mini Tools   : XY synth pad, XY effect pad (filter, delay, reverb, flanger, phaser,
                bitcrusher, pitch, gater, beat repeat), MIDI tools (transpose, scale,
@@ -104,6 +108,8 @@ DJ MIXER DETAILS
   starts found automatically), Scratch (8 ready patterns).
 - Sampler: unlimited banks, 16 pads per bank; On/Off, Stutter, Hold, Loop and Unmute triggers;
   output to master or a deck; record 4/8/16/32 beats to a pad from master or a deck.
+  Ready banks in the bank list: DJ Effects (riser, impact, air horn, siren, laser...) and
+  Recorded Drums (real recordings, public domain).
 - Library: ID3 tags and covers read automatically, track info editing, rating, headphone
   prelisten, filter by keys compatible with the selected deck.
 - Set recording: WAV or WebM (Opus). Video Engine: deck video, cover, visualizer, camera,

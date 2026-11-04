@@ -41,6 +41,7 @@
       el('button', { class: 'btn sm', onclick: () => { Pp.loop = { on: true, start: patStart(), end: patStart() + CR.steps * STEP }; T.setPosition(patStart()); ui.updateTransportUI(); T.play(); } }, '▶ Deseni döngüde çal'),
       el('button', { class: 'btn sm', onclick: copyPattern }, 'Deseni sonraki ölçüye kopyala'),
       el('span', { class: 'spacer' }),
+      el('button', { class: 'btn sm primary', onclick: () => OS.backings.open() }, '🎼 Altyapılar'),
       el('button', { class: 'btn sm', onclick: e => ui.pluginMenu(e.clientX, e.clientY, 'instrument', id => { ui.arrange.addTrack('instrument', id); CR.render(); }) }, '+ Kanal (enstrüman)'),
     ));
     const grid = el('div', { class: 'rack' });

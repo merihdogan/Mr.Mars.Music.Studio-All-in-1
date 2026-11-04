@@ -56,6 +56,10 @@ Arrange      : Audio and MIDI tracks, recording (takes / comping), clip editing 
 Session      : Track × scene clip grid; quantized clip launch, one-click scenes.
 Pattern Rack : Step sequencer: 16/32/64 steps, accent / ghost notes, swing, random,
                write patterns to the arrangement as MIDI clips.
+               Backings button: 23 ready genres (drums, bass, chords) as editable
+               MIDI tracks; choose key and length (4, 8 or 16 bars).
+New devices: Creative effects (Envelope Filter, Vinyl, Exciter, De-esser, Harmonizer,
+Trance Gate, Vocoder) in the effect menu; Recorded Drum Kit in the instrument menu.
 Mixer        : Insert slots, sends (FX channels), pan, fader, meters, master.
 Mini Tools   : XY synth pad, XY effect pad (filter, delay, reverb, flanger, phaser,
                bitcrusher, pitch, gater, beat repeat), MIDI tools (transpose, scale,

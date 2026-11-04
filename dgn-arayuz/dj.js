@@ -448,6 +448,7 @@
     const pads = { out, banks: [blankBank('Banka 1')], bank: 0, get list() { return this.banks[this.bank].list; } };
     const persist = () => OS.store.put('kv', 'djpads', { banks: pads.banks.map(b => ({ name: b.name, pads: b.list.map(p => p.buffer ? { name: p.name, data: p.data, mode: p.mode } : null) })) }).catch(() => { });
     pads.persist = persist;
+    pads.newBank = n => { pads.banks.push(blankBank(n)); pads.bank = pads.banks.length - 1; persist(); };
     OS.store.get('kv', 'djpads').then(saved => {
       if (!saved) return;
       const bs = Array.isArray(saved) ? [{ name: 'Banka 1', pads: saved }] : saved.banks; // eski biçim tek bankaydı
@@ -930,8 +931,8 @@
     const P = () => DJ.pads;
     DJ.renderPads = () => {
       box.innerHTML = '';
-      const bankSel = el('select', { onchange: e => { if (e.target.value === '+') { U.prompt(OS.t('Yeni banka adı'), 'Banka ' + (P().banks.length + 1)).then(n => { if (n) { P().banks.push(blankBank(n)); P().bank = P().banks.length - 1; P().persist(); } DJ.renderPads(); }); return; } P().bank = +e.target.value; DJ.renderPads(); } },
-        P().banks.map((b, i) => el('option', { value: i, selected: i === P().bank }, b.name)), el('option', { value: '+' }, OS.t('+ Yeni banka…')));
+      const bankSel = el('select', { onchange: e => { if (e.target.value === 'fx' || e.target.value === 'kit') { U.toast(OS.t('Hazır banka yükleniyor…')); DJ.sounds.addBank(e.target.value).catch(err => { console.warn(err); U.toast(OS.t('Davul sesleri yüklenemedi')); }).then(() => DJ.renderPads()); return; } if (e.target.value === '+') { U.prompt(OS.t('Yeni banka adı'), 'Banka ' + (P().banks.length + 1)).then(n => { if (n) { P().banks.push(blankBank(n)); P().bank = P().banks.length - 1; P().persist(); } DJ.renderPads(); }); return; } P().bank = +e.target.value; DJ.renderPads(); } },
+        P().banks.map((b, i) => el('option', { value: i, selected: i === P().bank }, b.name)), el('option', { value: 'fx' }, OS.t('Hazır: DJ Efektleri')), el('option', { value: 'kit' }, OS.t('Hazır: Kayıtlı Davullar')), el('option', { value: '+' }, OS.t('+ Yeni banka…')));
       const outSel = el('select', { title: OS.t('Sampler çıkışı'), onchange: e => P().setOut(e.target.value) }, [['master', 'Master'], ...DJ.decks.slice(0, settings.count).map(d => [d.L, 'Deck ' + d.L])].map(([v, l]) => el('option', { value: v, selected: v === (P().outTo || 'master') }, l)));
       const srcSel = el('select', { title: OS.t('Kayıt kaynağı') }, [['master', 'Master'], ...DJ.decks.slice(0, settings.count).map(d => [d.L, 'Deck ' + d.L])].map(([v, l]) => el('option', { value: v }, l)));
       const lenSel = el('select', { title: OS.t('Kayıt uzunluğu') }, [4, 8, 16, 32].map(n => el('option', { value: n }, n + ' ' + OS.t('vuruş'))));

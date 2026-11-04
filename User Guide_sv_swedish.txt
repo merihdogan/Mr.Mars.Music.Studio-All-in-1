@@ -55,6 +55,9 @@ Arrangemang    : ljud- och MIDI-spår, inspelning (tagningar), klippredigering, 
                  Högerklick på ljudklipp: dela i stems, anpassa till tempo, tonhöjd.
 Session        : rutnät spår × scen, kvantiserad klippstart.
 Pattern Rack   : stegsekvenser (16/32/64 steg, accent, swing), skrivs till arrangemanget.
+                 Knappen Komp: 23 färdiga genrer (trummor, bas, ackord) som redigerbara MIDI-spår.
+Nya enheter    : effektgruppen Kreativa (Envelopefilter, Vinyl, Exciter, De-esser, Harmonizer,
+                 Trance Gate, Vocoder) och instrumentet Inspelat trumset.
 Mixer          : effektplatser, sends, panorering, fader, mätare, master.
 Mini Tools     : XY-synth, XY-effekter, MIDI-verktyg (transponering, skala, ackord,
                  arpeggiator), looper, 4x4-pads.
@@ -78,6 +81,7 @@ DJ-MIXERN I DETALJ
 - Padsidor: Hot Cue 1-8 och 9-16, Loop Roll, Slicer, Beat Jump, loopar (1/32-128), Cue Loop,
   Key Cue, stems, Stem + FX, manuell och sparad loop, Remix-punkter, Scratch (8 mönster).
 - Sampler: banker, 16 pads, lägena On/Off, Stutter, Hold, Loop, Unmute, inspelning 4-32 slag.
+  Förvalsbanker i banklistan: DJ-effekter och Inspelade trummor (verkliga inspelningar, allmän egendom).
 - Bibliotek: ID3-taggar och omslag, betyg, förlyssning, filter för passande tonarter.
 - Inspelning WAV eller WebM. Video: deckvideo, omslag, visualiserare, kamera, bildspel, utfönster.
 - Controller Center: MIDI / HID-enheter, signalmonitor, mappningsguide, profiler, jog-format,
