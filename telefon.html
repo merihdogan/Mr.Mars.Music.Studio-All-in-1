@@ -14,7 +14,6 @@
   h1 { font-size: 19px; margin: 4px 0; color: var(--acc); text-align: center; }
   .card { background: var(--card); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
   .muted { color: var(--mut); font-size: 14px; }
-  #qr { width: 100%; max-width: 420px; height: auto; background: #fff; border-radius: 8px; align-self: center; image-rendering: pixelated; }
   .bar { height: 8px; background: #0b0f14; border-radius: 4px; overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--acc); }
   button, a.btn { font: inherit; background: #2a3440; color: var(--fg); border: 0; border-radius: 8px; padding: 12px; text-align: center; text-decoration: none; display: block; width: 100%; }
@@ -30,8 +29,7 @@
   <h1>Mr. Mars Music Studio</h1>
   <div class="card" id="pairing">
     <div id="msg"></div>
-    <canvas id="qr" hidden></canvas>
-    <button id="copy" hidden></button>
+    <div id="fmt" class="row" hidden></div>
   </div>
   <div class="card" id="progress" hidden>
     <div id="pname" class="name"></div>
@@ -40,7 +38,6 @@
   </div>
   <div id="files"></div>
 </main>
-<script src="mrmars-cekirdek/qr.js"></script>
 <script src="mrmars-cekirdek/telefon-baglanti.js"></script>
 <script>
 (function () {
@@ -48,11 +45,11 @@
   const T = {
     open: ['Bu sayfayı bilgisayardaki Telefona Gönder penceresinin QR koduyla açın.', 'Open this page with the QR code in the Send to Phone window on your computer.', 'Öffnen Sie diese Seite mit dem QR-Code im Fenster „An Telefon senden“ am Computer.', 'Abra esta página con el código QR de la ventana Enviar al teléfono del ordenador.', 'Ouvrez cette page avec le code QR de la fenêtre Envoyer au téléphone de l’ordinateur.', 'Öppna sidan med QR-koden i fönstret Skicka till telefon på datorn.', 'Откройте эту страницу через QR-код в окне «Отправить на телефон» на компьютере.'],
     prep: ['Bağlantı hazırlanıyor…', 'Preparing the connection…', 'Verbindung wird vorbereitet…', 'Preparando la conexión…', 'Préparation de la connexion…', 'Förbereder anslutningen…', 'Подготовка подключения…'],
-    show: ['Bu kodu bilgisayarın kamerasına gösterin. Telefon ve bilgisayar aynı Wi-Fi ağında olmalı.', 'Show this code to the computer’s camera. The phone and computer must be on the same Wi-Fi.', 'Zeigen Sie diesen Code der Kamera des Computers. Telefon und Computer müssen im selben WLAN sein.', 'Muestre este código a la cámara del ordenador. Ambos deben estar en la misma Wi-Fi.', 'Montrez ce code à la caméra de l’ordinateur. Les deux appareils doivent être sur le même Wi-Fi.', 'Visa koden för datorns kamera. Telefon och dator måste vara på samma Wi-Fi.', 'Покажите этот код камере компьютера. Телефон и компьютер должны быть в одной сети Wi-Fi.'],
-    copy: ['Bilgisayarda kamera yoksa kodu kopyala', 'No camera on the computer? Copy the code', 'Keine Kamera am Computer? Code kopieren', '¿Sin cámara en el ordenador? Copiar el código', 'Pas de caméra sur l’ordinateur ? Copier le code', 'Ingen kamera på datorn? Kopiera koden', 'Нет камеры на компьютере? Скопировать код'],
-    copied: ['Kod kopyalandı', 'Code copied', 'Code kopiert', 'Código copiado', 'Code copié', 'Koden kopierad', 'Код скопирован'],
+    more: ['Başka biçimde al:', 'Get it in another format:', 'In anderem Format holen:', 'Obtener en otro formato:', 'Recevoir dans un autre format :', 'Hämta i annat format:', 'Получить в другом формате:'],
+    relay: ['Bağlantı servislerine ulaşılamıyor. İnternet bağlantısını kontrol edin.', 'Cannot reach the connection services. Check your internet connection.', 'Verbindungsdienste nicht erreichbar. Prüfen Sie die Internetverbindung.', 'No se puede acceder a los servicios de conexión. Compruebe su Internet.', 'Services de connexion inaccessibles. Vérifiez votre connexion Internet.', 'Kan inte nå anslutningstjänsterna. Kontrollera internet.', 'Сервисы подключения недоступны. Проверьте интернет.'],
+    pc: ['Bilgisayar yanıt vermedi. Telefona Gönder penceresi açık mı?', 'The computer did not answer. Is the Send to Phone window open?', 'Der Computer antwortet nicht. Ist das Fenster „An Telefon senden“ geöffnet?', 'El ordenador no responde. ¿Está abierta la ventana Enviar al teléfono?', 'L’ordinateur ne répond pas. La fenêtre Envoyer au téléphone est-elle ouverte ?', 'Datorn svarar inte. Är fönstret Skicka till telefon öppet?', 'Компьютер не отвечает. Открыто ли окно «Отправить на телефон»?'],
     conn: ['Bağlandı. Müzik bekleniyor…', 'Connected. Waiting for music…', 'Verbunden. Warte auf Musik…', 'Conectado. Esperando música…', 'Connecté. En attente de musique…', 'Ansluten. Väntar på musik…', 'Подключено. Ожидание музыки…'],
-    fail: ['Bağlanılamadı. İki cihazın aynı Wi-Fi ağında olduğundan emin olun, sonra yeni kod alın.', 'Could not connect. Check both devices are on the same Wi-Fi, then get a new code.', 'Keine Verbindung. Prüfen Sie, ob beide im selben WLAN sind, und holen Sie einen neuen Code.', 'No se pudo conectar. Compruebe que ambos estén en la misma Wi-Fi y genere un código nuevo.', 'Connexion impossible. Vérifiez le même Wi-Fi puis générez un nouveau code.', 'Kunde inte ansluta. Kontrollera samma Wi-Fi och hämta en ny kod.', 'Не удалось подключиться. Проверьте одну сеть Wi-Fi и получите новый код.'],
+    fail: ['Doğrudan bağlantı kurulamadı. Telefonu bilgisayarla aynı Wi-Fi ağına alıp kodu yeniden okutun.', 'Could not connect directly. Put the phone on the same Wi-Fi as the computer and scan again.', 'Keine direkte Verbindung. Verbinden Sie das Telefon mit demselben WLAN und scannen Sie erneut.', 'No se pudo conectar directamente. Ponga el teléfono en la misma Wi-Fi y vuelva a escanear.', 'Connexion directe impossible. Mettez le téléphone sur le même Wi-Fi et scannez à nouveau.', 'Kunde inte ansluta direkt. Anslut telefonen till samma Wi-Fi och skanna igen.', 'Прямое подключение не удалось. Подключите телефон к той же сети Wi-Fi и отсканируйте снова.'],
     closed: ['Bağlantı kapandı. Aldığınız dosyalar bu sayfada duruyor.', 'Connection closed. Received files stay on this page.', 'Verbindung beendet. Empfangene Dateien bleiben auf dieser Seite.', 'Conexión cerrada. Los archivos recibidos siguen en esta página.', 'Connexion fermée. Les fichiers reçus restent sur cette page.', 'Anslutningen stängd. Mottagna filer finns kvar här.', 'Соединение закрыто. Полученные файлы остаются на этой странице.'],
     save: ['Kaydet', 'Save', 'Speichern', 'Guardar', 'Enregistrer', 'Spara', 'Сохранить'],
     share: ['Paylaş', 'Share', 'Teilen', 'Compartir', 'Partager', 'Dela', 'Поделиться'],
@@ -81,32 +78,45 @@
     window.__received = window.__received || []; window.__received.push({ name: meta.name, size: meta.size, type: meta.type, blob });
   }
 
+  const formats = dc => {
+    const box = $('fmt'); box.innerHTML = ''; box.hidden = false;
+    const lab = document.createElement('div'); lab.className = 'muted'; lab.textContent = t('more'); lab.style.flex = '0 0 100%'; box.style.flexWrap = 'wrap'; box.appendChild(lab);
+    ['mp3', 'wav', 'mp4'].forEach(f => { const b = document.createElement('button'); b.textContent = f.toUpperCase(); b.style.flex = '1'; b.onclick = () => { try { dc.send(JSON.stringify({ kind: 'request', format: f })); } catch (e) { } }; box.appendChild(b); });
+  };
   async function start() {
-    const m = /[#&]o=([^&]+)/.exec(location.hash);
+    const m = /[#&]r=([^&]+)&k=([^&]+)/.exec(location.hash);
     if (!m) { msg(t('open')); return; }
-    history.replaceState(null, '', location.pathname); // Kod adres geçmişinde kalmasın
+    history.replaceState(null, '', location.pathname); // Anahtar adres geçmişinde kalmasın
     msg(t('prep'));
-    let link;
-    try { link = await OSLink.createAnswer(m[1]); } catch (e) { console.error(e); msg(t('badcode')); return; }
-    window.__answer = link.code;
-    OSQR.draw($('qr'), link.code, 840); $('qr').hidden = false;
-    msg(t('show'));
-    const copy = $('copy'); copy.hidden = false; copy.textContent = t('copy');
-    copy.onclick = async () => { try { await navigator.clipboard.writeText(link.code); copy.textContent = t('copied'); } catch (e) { prompt('', link.code); } };
-    const pc = link.pc, failT = setTimeout(() => { if (pc.connectionState !== 'connected') msg(t('fail')); }, 120000);
-    pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed') msg(t('fail')); };
-    pc.ondatachannel = ({ channel: dc }) => {
-      const opened = () => { clearTimeout(failT); $('qr').hidden = true; copy.hidden = true; msg(t('conn')); window.__state = 'open'; };
-      dc.readyState === 'open' ? opened() : dc.addEventListener('open', opened);
-      dc.addEventListener('close', () => { $('progress').hidden = true; msg(t('closed')); });
-      OSLink.receiver(dc, {
-        status: s => { $('progress').hidden = false; $('pname').textContent = ''; $('ptext').textContent = s.text; $('pbar').style.width = '0'; },
-        start: f => { $('progress').hidden = false; $('pname').textContent = f.name; $('ptext').textContent = mb(f.size) + ' · ' + t('leave'); },
-        progress: k => { $('pbar').style.width = Math.round(k * 100) + '%'; },
-        done: (blob, meta) => { $('progress').hidden = true; msg(t('conn')); addFile(blob, meta); },
-        error: () => { $('progress').hidden = true; msg(t('badfile')); window.__state = 'badfile'; },
-      });
-    };
+    const me = 'ph' + OSLink.rand(6);
+    let answered = false, relayUp = false, hello, relay;
+    const noPc = setTimeout(() => { if (!answered) msg(relayUp ? t('pc') : t('relay')); }, 25000);
+    relay = await OSLink.relay(m[1], m[2], me, async x => {
+      if (x.t !== 'offer' || answered) return;
+      answered = true; clearInterval(hello); clearTimeout(noPc);
+      const link = await OSLink.createAnswer(x.desc), pc = link.pc;
+      window.__answered = true;
+      const failT = setTimeout(() => { if (pc.connectionState !== 'connected') msg(t('fail')); }, 30000);
+      pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed') msg(t('fail')); };
+      pc.ondatachannel = ({ channel: dc }) => {
+        const opened = () => { clearTimeout(failT); msg(t('conn')); formats(dc); window.__state = 'open'; relay.close(); };
+        dc.readyState === 'open' ? opened() : dc.addEventListener('open', opened);
+        dc.addEventListener('close', () => { $('progress').hidden = true; $('fmt').hidden = true; msg(t('closed')); });
+        window.__dc = dc;
+        OSLink.receiver(dc, {
+          status: s => { $('progress').hidden = false; $('pname').textContent = ''; $('ptext').textContent = s.text; $('pbar').style.width = '0'; },
+          start: f => { $('progress').hidden = false; $('pname').textContent = f.name; $('ptext').textContent = mb(f.size) + ' · ' + t('leave'); },
+          progress: k => { $('pbar').style.width = Math.round(k * 100) + '%'; },
+          done: (blob, meta) => { $('progress').hidden = true; msg(t('conn')); addFile(blob, meta); },
+          error: () => { $('progress').hidden = true; msg(t('badfile')); window.__state = 'badfile'; },
+          remoteError: e => { $('progress').hidden = true; msg(e.text); },
+        });
+      };
+      relay.send({ t: 'answer', to: x.from, desc: link.desc });
+    }, n => { relayUp = n > 0; if (n && !answered) relay && relay.send({ t: 'hello' }); });
+    const send = () => relay.send({ t: 'hello' });
+    send(); hello = setInterval(send, 2000);
+    setTimeout(() => clearInterval(hello), 60000);
   }
   start();
 })();

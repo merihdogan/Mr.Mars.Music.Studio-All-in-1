@@ -64,8 +64,8 @@ Nya gitarrer   : Elgitarrer (25 klanger), Elbasar (9 klanger) och Bandlös elgit
                  Trummaskinen har också turkiskt och mellanösternskt slagverk (toner 65-86):
                  darbuka, bendir, def, riq, kudüm, davul, tombak, daf m.fl.
 Skicka till telefon: knapp i övre fältet. Skickar projektet, loopen eller senaste DJ-mixen som
-                 MP3, WAV eller MP4 direkt över samma Wi-Fi, utan uppladdning. Skanna datorns QR-kod
-                 med telefonen och visa telefonens kod för datorns kamera.
+                 MP3, WAV eller MP4. Skanna QR-koden med telefonen så kommer musiken direkt, utan
+                 uppladdning. Båda enheterna behöver internet för att ansluta.
 Nya enheter    : effektgruppen Kreativa (Envelopefilter, Vinyl, Exciter, De-esser, Harmonizer,
                  Trance Gate, Vocoder) och instrumentet Inspelat trumset.
 Mixer          : effektplatser, sends, panorering, fader, mätare, master.

@@ -5,7 +5,7 @@
   const PAGE = 'https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1/telefon.html';
   const P = OS.phone = { base: null, link: null, stream: null };
   const pageUrl = () => P.base || (/^https?:$/.test(location.protocol) ? new URL('telefon.html', location.href).href : PAGE);
-  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const wait = ms => new Promise(r => { if (ms) { setTimeout(r, ms); return; } const c = new MessageChannel(); c.port1.onmessage = () => r(); c.port2.postMessage(0); });
   const addScript = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('script ' + src)); document.head.appendChild(s); });
   const once = {}; const lazy = src => (once[src] = once[src] || addScript(src));
   const safe = s => String(s || 'mix').replace(/[\\/:*?"<>|]/g, '_').trim() || 'mix';
@@ -162,118 +162,102 @@
     return muxMp4(v, a, ab.duration, name);
   }
 
-  // ---------------- Dosyayı hazırla ----------------
-  P.makeFile = async function (source, format, prog) {
+  // ---------------- Dosyayı hazırla: aynı kaynak ve biçim bir kez üretilir ----------------
+  const cache = new Map();
+  P.clearCache = () => cache.clear();
+  P.makeFile = function (source, format, prog) {
     prog = prog || (() => { });
-    const { buffer, name } = await getAudio(source);
-    if (format === 'wav') return new File([U.encodeWav([buffer.getChannelData(0), buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : buffer.getChannelData(0)], buffer.sampleRate, 16)], name + '.wav', { type: 'audio/wav' });
-    if (format === 'mp4') return toMp4(buffer, name, prog);
-    return toMp3(buffer, name, 192, prog);
+    const key = source + ':' + format;
+    if (source !== 'dj' && cache.has(key)) return cache.get(key);
+    const job = (async () => {
+      const { buffer, name } = await getAudio(source);
+      if (format === 'wav') return new File([U.encodeWav([buffer.getChannelData(0), buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : buffer.getChannelData(0)], buffer.sampleRate, 16)], name + '.wav', { type: 'audio/wav' });
+      if (format === 'mp4') return toMp4(buffer, name, prog);
+      return toMp3(buffer, name, 192, prog);
+    })();
+    if (source !== 'dj') { cache.set(key, job); job.catch(() => cache.delete(key)); }
+    return job;
   };
 
-  // ---------------- Kamera ve QR okuma ----------------
-  async function decodeCanvas(cv) {
-    await lazy('mrmars-cekirdek/qroku.js');
-    const g = cv.getContext('2d', { willReadFrequently: true }), im = g.getImageData(0, 0, cv.width, cv.height), r = window.jsQR(im.data, im.width, im.height, { inversionAttempts: 'dontInvert' });
-    return r ? r.data : null;
-  }
-  P.decodeImage = async function (src) {
-    const img = new Image(); img.src = src; await img.decode();
-    const cv = document.createElement('canvas'); cv.width = img.naturalWidth; cv.height = img.naturalHeight; cv.getContext('2d').drawImage(img, 0, 0);
-    return decodeCanvas(cv);
-  };
-  function stopCamera() {
-    if (P.scanTimer) { clearTimeout(P.scanTimer); P.scanTimer = null; }
-    if (P.stream) { P.stream.getTracks().forEach(t => t.stop()); P.stream = null; }
-  }
-  // Telefonun gösterdiği kodu okuyup bağlantıyı tamamlar
-  async function runCamera(video, onCode, onFail) {
-    try {
-      P.stream = P.testStream || await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 } }, audio: false });
-    } catch (e) { onFail(e); return; }
-    video.srcObject = P.stream; video.muted = true; video.playsInline = true;
-    try { await video.play(); } catch (e) { }
-    const cv = document.createElement('canvas');
-    const tick = async () => {
-      if (!P.stream) return;
-      if (video.videoWidth) {
-        cv.width = video.videoWidth; cv.height = video.videoHeight; cv.getContext('2d', { willReadFrequently: true }).drawImage(video, 0, 0);
-        const code = await decodeCanvas(cv);
-        if (code && code.startsWith(Link.PREFIX)) { onCode(code); return; }
+  // ---------------- Eşleşme: tek QR, telefon okutunca bağlantı kendiliğinden kurulur ----------------
+  P.peers = [];
+  const openPeers = () => P.peers.filter(p => p.dc.readyState === 'open');
+  P.isOpen = () => openPeers().length > 0;
+  P.disconnect = () => { if (P.relay) P.relay.close(); P.relay = null; P.session = null; P.peers.forEach(p => { try { p.pc.close(); } catch (e) { } }); P.peers = []; };
+  const sayAll = m => openPeers().forEach(p => { try { p.dc.send(JSON.stringify(m)); } catch (e) { } });
+  // Sırayla gönderir: telefon başka biçim isterse bir önceki bitince başlar
+  function sendTo(peer, source, format) {
+    peer.queue = (peer.queue || Promise.resolve()).then(async () => {
+      const ui = P.onStatus || (() => { }), say = (t, k) => ui(t, k);
+      try {
+        say(OS.t('Hazırlanıyor…'), 0);
+        peer.dc.send(JSON.stringify({ kind: 'status', text: OS.t('Hazırlanıyor…') }));
+        const file = await P.makeFile(source, format, k => say(OS.t('Hazırlanıyor…'), k));
+        say(OS.t('Gönderiliyor…'), 0);
+        await Link.sendFile(peer.dc, file, file.name, k => say(OS.t('Gönderiliyor…'), k));
+        say(OS.t('Gönderildi') + ': ' + file.name + ' · ' + (file.size / 1048576).toFixed(1) + ' MB', 1);
+      } catch (e) {
+        console.error(e); say(OS.t('Gönderilemedi') + ': ' + e.message);
+        try { peer.dc.send(JSON.stringify({ kind: 'error', text: e.message })); } catch (err) { }
       }
-      P.scanTimer = setTimeout(tick, 180);
-    };
-    tick();
+    });
+    return peer.queue;
   }
-
-  // ---------------- Bağlantı ----------------
-  P.isOpen = () => !!(P.link && P.link.dc.readyState === 'open');
-  P.disconnect = () => { stopCamera(); if (P.link) { try { P.link.pc.close(); } catch (e) { } } P.link = null; };
-  P.connect = async function () {
-    P.disconnect();
-    const l = await Link.createOffer([]);
-    P.link = l; l.url = pageUrl() + '#o=' + l.code;
-    return l;
-  };
-  P.accept = code => Link.acceptAnswer(P.link.pc, code);
-  P.send = async function (source, format, onStatus) {
-    const dc = P.link.dc, say = (txt, k) => { onStatus(txt, k); try { dc.send(JSON.stringify({ kind: 'status', text: txt })); } catch (e) { } };
-    say(OS.t('Hazırlanıyor…'), 0);
-    const file = await P.makeFile(source, format, k => onStatus(OS.t('Hazırlanıyor…'), k));
-    onStatus(OS.t('Gönderiliyor…'), 0);
-    await Link.sendFile(dc, file, file.name, k => onStatus(OS.t('Gönderiliyor…'), k));
-    return file;
+  P.sendAll = (source, format) => Promise.all(openPeers().map(p => sendTo(p, source, format)));
+  P.startSession = async function (getChoice) {
+    if (P.session) { P.session.getChoice = getChoice; return P.session; }
+    const room = Link.rand(12), key = Link.rand(32), s = P.session = { room, key, getChoice, url: pageUrl() + '#r=' + room + '&k=' + key };
+    const say = (t, k) => (P.onStatus || (() => { }))(t, k);
+    P.relay = await Link.relay(room, key, 'pc', async m => {
+      if (m.t === 'hello') {
+        if (P.peers.some(p => p.id === m.from)) return;
+        say(OS.t('Bağlanıyor…'));
+        const l = await Link.createOffer(), peer = { id: m.from, pc: l.pc, dc: l.dc };
+        P.peers.push(peer);
+        l.dc.addEventListener('open', () => { say(OS.t('Telefon bağlandı')); P.onPeers && P.onPeers(); const c = P.session.getChoice(); sendTo(peer, c.source, c.format); });
+        l.dc.addEventListener('close', () => { P.peers = P.peers.filter(p => p !== peer); P.onPeers && P.onPeers(); });
+        l.dc.addEventListener('message', e => { if (typeof e.data !== 'string') return; const q = JSON.parse(e.data); if (q.kind === 'request') { const c = P.session.getChoice(); sendTo(peer, c.source, q.format); } });
+        l.pc.addEventListener('connectionstatechange', () => { if (l.pc.connectionState === 'failed') say(OS.t('Doğrudan bağlantı kurulamadı. Telefonu bilgisayarla aynı Wi-Fi ağına alın.')); });
+        P.relay.send({ t: 'offer', to: m.from, desc: l.desc });
+      } else if (m.t === 'answer') {
+        const peer = P.peers.find(p => p.id === m.from);
+        if (peer && !peer.pc.currentRemoteDescription) await peer.pc.setRemoteDescription(m.desc);
+      }
+    }, n => { s.relays = n; P.onRelays && P.onRelays(n); });
+    return s;
   };
 
   // ---------------- Pencere ----------------
-  const mb = n => (n / 1048576).toFixed(1) + ' MB';
   P.open = function () {
-    const view = (document.querySelector('#tabs button.active') || {}).dataset; const isDj = view && view.view === 'dj';
+    const view = (document.querySelector('#tabs button.active') || {}).dataset, isDj = view && view.view === 'dj';
+    P.clearCache();
     const srcSel = el('select', null, el('option', { value: 'dj', selected: isDj }, OS.t('DJ Mixer: son mix (en çok 30 dk)')), el('option', { value: 'project', selected: !isDj }, OS.t('Proje: tüm şarkı')), el('option', { value: 'loop' }, OS.t('Proje: yalnız döngü bölgesi')));
     const fmtSel = el('select', null, el('option', { value: 'mp3' }, 'MP3 (192 kbps)'), el('option', { value: 'wav' }, 'WAV (16-bit)'), el('option', { value: 'mp4' }, OS.t('MP4 (video kapaklı)')));
-    const status = el('div', { class: 'muted', style: 'min-height:1.4em' }), bar = el('div', { style: 'height:6px;width:0;background:var(--acc);border-radius:3px;transition:width .15s' }), barBox = el('div', { style: 'height:6px;background:var(--bg);border-radius:3px;overflow:hidden' }, bar);
-    const qr = el('canvas', { style: 'width:min(340px,70vw);height:auto;background:#fff;border-radius:6px;display:none;image-rendering:pixelated' }), video = el('video', { style: 'width:300px;height:300px;object-fit:cover;background:#000;border-radius:6px;display:none' });
-    const stepA = el('div', { style: 'display:none;flex-direction:column;align-items:center;gap:6px' }, el('b', null, OS.t('1. Bu kodu telefonun kamerasıyla okutun')), qr);
-    const stepB = el('div', { style: 'display:none;flex-direction:column;align-items:center;gap:6px' }, el('b', null, OS.t('2. Telefonda çıkan kodu bu kameraya gösterin')), video);
-    const paste = el('input', { class: 'inp', placeholder: OS.t('Kamera yoksa telefondaki kodu buraya yapıştırın'), style: 'width:100%', onchange: () => useCode(paste.value.trim()) });
-    const pasteRow = el('div', { style: 'display:none' }, paste);
+    const choice = () => ({ source: srcSel.value, format: fmtSel.value });
+    const status = el('div', { class: 'muted', style: 'min-height:1.4em;text-align:center' }), bar = el('div', { style: 'height:6px;width:0;background:var(--acc);border-radius:3px;transition:width .15s' }), barBox = el('div', { style: 'height:6px;background:var(--bg);border-radius:3px;overflow:hidden' }, bar);
+    const qr = el('canvas', { style: 'width:min(340px,70vw);height:auto;background:#fff;border-radius:6px;image-rendering:pixelated;align-self:center' });
     const set = (txt, k) => { status.textContent = txt; bar.style.width = k == null ? '0' : Math.round(k * 100) + '%'; };
-    const hint = el('p', { class: 'muted', style: 'margin:0' }, OS.t('Dosya sunucuya yüklenmez, doğrudan telefona gider. Telefon ve bilgisayar aynı Wi-Fi ağında olmalı.'));
-    let sending = false;
-    const sendNow = async () => {
-      if (sending) return; sending = true; sendBtn.disabled = true;
-      try { const f = await P.send(srcSel.value, fmtSel.value, set); set(OS.t('Gönderildi') + ': ' + f.name + ' · ' + mb(f.size), 1); }
-      catch (e) { console.error(e); set(OS.t('Gönderilemedi') + ': ' + e.message); }
-      sending = false; sendBtn.disabled = false;
-    };
-    const sendBtn = el('button', { class: 'btn primary', onclick: () => (P.isOpen() ? sendNow() : pair()) }, OS.t('QR kodu göster'));
-    const onOpen = () => { stopCamera(); stepA.style.display = stepB.style.display = pasteRow.style.display = 'none'; hint.style.display = 'none'; sendBtn.textContent = OS.t('Telefona gönder'); set(OS.t('Telefon bağlandı')); sendNow(); };
-    const useCode = async code => {
-      if (!code) return;
-      stopCamera(); set(OS.t('Bağlanıyor…'));
-      try { await P.accept(code); } catch (e) { console.error(e); set(OS.t('Kod okunamadı, yeniden deneyin')); return; }
-      P.connectTimer = setTimeout(() => { if (!P.isOpen()) set(OS.t('Bağlanılamadı. Telefon ve bilgisayarın aynı Wi-Fi ağında olduğundan emin olun.')); }, 15000);
-    };
-    async function pair() {
-      sendBtn.disabled = true; set(OS.t('Bağlantı hazırlanıyor…'));
-      try {
-        const l = await P.connect();
-        window.OSQR.draw(qr, l.url, 460); qr.style.display = 'block';
-        stepA.style.display = stepB.style.display = 'flex'; pasteRow.style.display = 'block';
-        l.dc.addEventListener('open', () => { clearTimeout(P.connectTimer); onOpen(); });
-        l.dc.addEventListener('close', () => { sendBtn.textContent = OS.t('QR kodu göster'); set(OS.t('Bağlantı kapandı')); });
-        video.style.display = 'block';
-        runCamera(video, useCode, () => { video.style.display = 'none'; set(OS.t('Kamera açılamadı. Telefondaki kodu aşağıya yapıştırın.')); });
-        set(OS.t('Telefon bekleniyor…'));
-      } catch (e) { console.error(e); set(OS.t('Gönderilemedi') + ': ' + e.message); }
-      sendBtn.disabled = false;
-    }
-    const body = el('div', { style: 'display:flex;flex-direction:column;gap:10px;width:min(660px,86vw)' },
-      el('div', { class: 'row' }, el('label', { class: 'field' }, OS.t('Kaynak'), srcSel), el('label', { class: 'field' }, OS.t('Biçim'), fmtSel)),
-      el('div', { style: 'display:flex;flex-wrap:wrap;justify-content:center;gap:16px' }, stepA, stepB), pasteRow, barBox, status, hint);
-    if (P.isOpen()) { sendBtn.textContent = OS.t('Telefona gönder'); hint.style.display = 'none'; set(OS.t('Telefon bağlı')); }
-    const m = U.modal(OS.t('Telefona Gönder'), body, [{ label: 'Kapat', onclick: () => { stopCamera(); } }]);
+    const sendBtn = el('button', { class: 'btn primary', disabled: !P.isOpen(), onclick: () => { const c = choice(); P.sendAll(c.source, c.format); } }, OS.t('Telefona gönder'));
+    P.onStatus = set;
+    P.onPeers = () => { sendBtn.disabled = !P.isOpen(); };
+    P.onRelays = n => { if (!P.isOpen() && status.dataset.wait) set(n ? OS.t('Telefon kamerasıyla okutun. Müzik hemen gelir.') : OS.t('Bağlantı servislerine ulaşılamıyor. İnternet bağlantısını kontrol edin.')); };
+    // Şarkı önceden hazırlanır: telefon okutunca hemen gider
+    const prepare = () => { const c = choice(); if (c.source !== 'dj') P.makeFile(c.source, c.format).catch(e => set(e.message)); };
+    const onChange = () => { P.clearCache(); prepare(); };
+    srcSel.onchange = onChange; fmtSel.onchange = prepare;
+    const body = el('div', { style: 'display:flex;flex-direction:column;gap:10px;width:min(520px,86vw)' },
+      el('div', { class: 'row', style: 'justify-content:center' }, el('label', { class: 'field' }, OS.t('Kaynak'), srcSel), el('label', { class: 'field' }, OS.t('Biçim'), fmtSel)),
+      qr, status, barBox,
+      el('p', { class: 'muted', style: 'margin:0;text-align:center' }, OS.t('Müzik sunucuya yüklenmez, doğrudan telefona gider. Bağlantı kurulurken yalnız şifreli bağlantı bilgisi aracı servisten geçer.')));
+    const m = U.modal(OS.t('Telefona Gönder'), body, [{ label: 'Kapat' }]);
     m.box.querySelector('.modal-buttons').appendChild(sendBtn);
-    P._dialog = { pair, useCode, sendNow, srcSel, fmtSel, status, sendBtn, qr };
+    status.dataset.wait = '1';
+    set(OS.t('Bağlantı hazırlanıyor…'));
+    P.startSession(choice).then(s => {
+      window.OSQR.draw(qr, s.url, 460);
+      set(P.isOpen() ? OS.t('Telefon bağlı') : OS.t('Telefon kamerasıyla okutun. Müzik hemen gelir.'));
+    }).catch(e => { console.error(e); set(OS.t('Gönderilemedi') + ': ' + e.message); });
+    prepare();
+    P._dialog = { srcSel, fmtSel, status, sendBtn, qr };
   };
 })(window.OS);
