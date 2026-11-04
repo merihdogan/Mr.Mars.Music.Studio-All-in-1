@@ -69,8 +69,92 @@
     { name: 'Analog Poli Pad', group: 'Synth', eng: 'synth', wave: 'sawtooth', det: 14, cut: 2, att: 0.6, rel: 2 },
     { name: 'Elektrik Piyano Yumuşak', group: 'Tuşlu', eng: 'fm', ratio: 1, index: 2.5, idec: 1.2, dec: 3, sus: 0.1, rel: 0.5, trem: 4.5 },
     { name: 'Brass Section', group: 'Üflemeli', eng: 'wind', harm: 'rich', richExp: 0.65, breath: 0.02, vib: [5.5, 6], att: 0.05, lpMul: 3, brass: 1, ens: 3, form: [[1200, 4, 1.5]] },
+    // ---- Elektro gitar: manyetik konumu + manyetik rezonansı + amfi + kabin ----
+    // pick: pena konumu, pu: manyetik konumları (tel boyuna oran), t60: sönme süresi, damp: tiz kaybı, bright: pena sertliği
+    { name: 'E.Gitar · Tek Bobin Sap (Temiz)', group: 'Elektro Gitar', eng: 'gtr', lvl: 1.2, pick: 0.2, pu: [0.25], t60: 3.2, damp: 0.16, bright: 0.6, pre: [[3800, 5, 2]], body: [[120, -2, 1], [2600, 2, 1]], hp: 80, lp: 7500, comp: 1, roomAdd: 0.06 },
+    { name: 'E.Gitar · Tek Bobin Ara (Funk)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.91, pick: 0.14, pu: [0.25, 0.1], t60: 1.6, damp: 0.1, bright: 0.85, pre: [[4300, 6, 2]], body: [[220, -4, 1], [1800, 3, 1]], hp: 130, lp: 9000, comp: 1 },
+    { name: 'E.Gitar · Tek Bobin Köprü (Twang)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.9, pick: 0.11, pu: [0.085], t60: 2.4, damp: 0.08, bright: 0.9, pre: [[4800, 7, 2.5]], body: [[1500, 3, 1], [3200, 3, 1.5]], hp: 140, lp: 9500, comp: 1 },
+    { name: 'E.Gitar · Tek Bobin Blues (Overdrive)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.27, pick: 0.16, pu: [0.22], t60: 3.6, damp: 0.14, bright: 0.7, pre: [[3600, 4, 2]], dist: { hp: 200, g: 3, type: 'tube', k: 1.6, out: 0.7 }, body: [[900, 4, 0.8], [3000, 2, 1.5]], hp: 90, lp: 5200, pvib: [5.2, 12, 0.35] },
+    { name: 'E.Gitar · Surf (Reverb + Tremolo)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.72, pick: 0.09, pu: [0.085], t60: 2.2, damp: 0.08, bright: 0.85, pre: [[4600, 6, 2]], body: [[1300, 2, 1]], hp: 150, lp: 8500, ampTrem: { rate: 5.2, depth: 0.28 }, roomAdd: 0.55 },
+    { name: 'E.Gitar · Rockabilly (Slap Eko)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.53, pick: 0.12, pu: [0.25, 0.09], t60: 1.8, damp: 0.1, bright: 0.8, pre: [[3800, 5, 2]], dist: { hp: 120, g: 1.4, type: 'tube', k: 1, out: 0.95 }, body: [[1400, 3, 1]], hp: 110, lp: 7000, slap: { ms: 115, fb: 0.15, mix: 0.4 } },
+    { name: 'E.Gitar · 80’ler Temiz (Chorus)', group: 'Elektro Gitar', eng: 'gtr', lvl: 1.03, pick: 0.14, pu: [0.25, 0.1], t60: 2.8, damp: 0.1, bright: 0.8, pre: [[4200, 5, 2]], body: [[300, -3, 1], [2400, 3, 1]], hp: 120, lp: 9500, comp: 1, chorus: { rate: 0.8, depth: 0.0035, mix: 0.6 }, roomAdd: 0.15 },
+    { name: 'E.Gitar · Caz Gövdeli (Çift Bobin Sap)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.45, pick: 0.3, pu: [0.24, 0.27], t60: 2.4, damp: 0.34, bright: 0.32, pre: [[1900, 3, 1]], body: [[180, 3, 1.5], [420, 2, 1.5], [3000, -5, 1]], hp: 70, lp: 3200 },
+    { name: 'E.Gitar · Yarı Gövdeli Blues', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.29, pick: 0.2, pu: [0.21, 0.24], t60: 3, damp: 0.2, bright: 0.55, pre: [[2400, 3, 1.2]], dist: { hp: 150, g: 2.4, type: 'tube', k: 1.5, out: 0.72 }, body: [[220, 2, 1.5], [1000, 3, 0.8]], hp: 85, lp: 4400, pvib: [5, 12, 0.35] },
+    { name: 'E.Gitar · Çift Bobin Temiz', group: 'Elektro Gitar', eng: 'gtr', lvl: 1.03, pick: 0.2, pu: [0.21, 0.24], t60: 3.4, damp: 0.2, bright: 0.55, pre: [[2500, 4, 1.2]], body: [[400, 1, 1], [1800, 1, 1]], hp: 80, lp: 6000, comp: 1, roomAdd: 0.06 },
+    { name: 'E.Gitar · Klasik Rock (Crunch)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.3, pick: 0.13, pu: [0.09, 0.125], t60: 3.8, damp: 0.13, bright: 0.75, pre: [[2600, 4, 1.2]], dist: { hp: 220, g: 5, type: 'tube', k: 2.2, g2: 1.5, k2: 1.3, out: 0.5 }, body: [[1100, 4, 0.8], [2800, 3, 1.5]], hp: 90, lp: 4800 },
+    { name: 'E.Gitar · Hard Rock (Yüksek Gain)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.4, pick: 0.11, pu: [0.09, 0.125], t60: 4.8, damp: 0.12, bright: 0.8, pre: [[2500, 4, 1.2]], dist: { hp: 320, g: 9, type: 'asym', k: 3, g2: 3, k2: 2, out: 0.33 }, body: [[900, 3, 0.8], [2800, 5, 1.2]], hp: 90, lp: 4500 },
+    { name: 'E.Gitar · Solo Lead (Uzun Sustain)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.43, pick: 0.15, pu: [0.21, 0.24], t60: 6, damp: 0.14, bright: 0.7, pre: [[2300, 4, 1]], dist: { hp: 280, g: 10, type: 'tube', k: 3, g2: 3, k2: 2, out: 0.3 }, body: [[1000, 5, 0.7], [2400, 3, 1.2]], hp: 110, lp: 4600, pvib: [5.4, 22, 0.3], slap: { ms: 360, fb: 0.32, mix: 0.24 }, roomAdd: 0.2 },
+    { name: 'E.Gitar · Modern Metal Ritim', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.73, pick: 0.09, pu: [0.08, 0.115], t60: 5, damp: 0.08, bright: 0.95, palm: 1, pre: [[3000, 5, 1.3]], dist: { hp: 650, g: 14, type: 'asym', k: 4, g2: 3, k2: 2.4, out: 0.26 }, body: [[110, 5, 1.6], [500, -6, 0.9], [2900, 5, 1.3]], hp: 75, lp: 5200 },
+    { name: 'E.Gitar · 60’lar Fuzz', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.44, pick: 0.15, pu: [0.25], t60: 4.2, damp: 0.16, bright: 0.7, pre: [[3400, 3, 1.5]], dist: { hp: 90, g: 12, type: 'fuzz', k: 4, out: 0.34 }, body: [[700, 3, 0.8]], hp: 80, lp: 3800, pvib: [5, 14, 0.4] },
+    { name: 'E.Gitar · Elektro-Akustik (Piezo)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.8, pick: 0.17, t60: 2.6, damp: 0.1, bright: 0.85, noise: 0.25, body: [[110, 5, 2], [220, 3, 2], [2800, 4, 1], [6000, 3, 1]], hp: 70, lp: 13000, comp: 1, roomAdd: 0.1 },
+    // ---- Perdesiz elektro gitar: yumuşak basış, perdeler arası kayma, geniş titreşim ve makam perdeleri ----
+    // scoop: basışta alttan gelme (cent), pvib: titreşim [Hz, cent, gecikme]
+    { name: 'Perdesiz E.Gitar · Temiz', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 1.06, fret: 1, pick: 0.2, pu: [0.24], t60: 2.8, damp: 0.24, bright: 0.45, noise: 0.04, scoop: 22, pvib: [5, 20, 0.28], pre: [[2800, 3, 1.5]], body: [[260, 2, 1.5], [1100, 2, 1.2]], hp: 75, lp: 5500, comp: 1, roomAdd: 0.14 },
+    { name: 'Perdesiz E.Gitar · Ud Tınısı', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 1.26, fret: 1, course: 2, pick: 0.1, pu: [0.2], t60: 1.7, damp: 0.3, bright: 0.5, noise: 0.08, scoop: 16, pvib: [5.5, 16, 0.3], pre: [[1600, 3, 1.2]], body: [[110, 4, 2], [280, 4, 2], [1100, 2, 1.5]], hp: 70, lp: 4200, comp: 1, roomAdd: 0.1 },
+    { name: 'Perdesiz E.Gitar · Saz Tınısı', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 1.05, fret: 1, course: 2, pick: 0.08, pu: [0.1], t60: 1.9, damp: 0.1, bright: 0.85, noise: 0.1, scoop: 12, pvib: [6, 16, 0.3], pre: [[3600, 5, 2]], body: [[350, 3, 3], [1200, 4, 2], [3500, 3, 2]], hp: 130, lp: 8500, comp: 1, roomAdd: 0.08 },
+    { name: 'Perdesiz E.Gitar · Yumuşak Caz', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 0.48, fret: 1, pick: 0.3, pu: [0.26], t60: 2.6, damp: 0.42, bright: 0.28, noise: 0.02, scoop: 28, pvib: [4.6, 24, 0.35], pre: [[1500, 2, 1]], body: [[190, 3, 1.5], [2800, -5, 1]], hp: 65, lp: 2800, roomAdd: 0.2 },
+    { name: 'Perdesiz E.Gitar · Anadolu Rock (Overdrive)', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 0.31, fret: 1, pick: 0.13, pu: [0.11, 0.14], t60: 3.8, damp: 0.16, bright: 0.68, noise: 0.05, scoop: 20, pvib: [5.4, 22, 0.25], pre: [[2500, 4, 1.2]], dist: { hp: 220, g: 5, type: 'tube', k: 2.2, g2: 1.4, k2: 1.3, out: 0.5 }, body: [[1000, 4, 0.8], [2600, 3, 1.5]], hp: 95, lp: 4600, roomAdd: 0.12 },
+    { name: 'Perdesiz E.Gitar · Distorsiyon Solo', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 0.42, fret: 1, pick: 0.15, pu: [0.21, 0.24], t60: 6, damp: 0.16, bright: 0.65, noise: 0.03, scoop: 26, pvib: [5.2, 30, 0.22], pre: [[2300, 4, 1]], dist: { hp: 280, g: 10, type: 'tube', k: 3, g2: 3, k2: 2, out: 0.3 }, body: [[1000, 5, 0.7], [2300, 3, 1.2]], hp: 110, lp: 4300, slap: { ms: 340, fb: 0.28, mix: 0.2 }, roomAdd: 0.22 },
+    { name: 'Perdesiz E.Gitar · Ney Tınısı (Kabarma)', group: 'Perdesiz Elektro Gitar (Türk)', eng: 'gtr', lvl: 0.84, fret: 1, pick: 0.22, pu: [0.25], t60: 7, damp: 0.34, bright: 0.3, noise: 0, scoop: 30, swell: 0.22, pvib: [4.5, 22, 0.4], pre: [[1400, 2, 1]], body: [[700, 3, 1.5]], hp: 120, lp: 3600, comp: 1, roomAdd: 0.3 },
+    // ---- Türk çalgıları ekleri (listenin sonuna eklenir) ----
+    { name: 'Kaval', group: 'Türk Çalgıları', eng: 'wind', harm: [1, 0.32, 0.14, 0.06, 0.03], breath: 0.42, vib: [4.8, 10], att: 0.07, lpMul: 6, form: [[1000, 3, 2]] },
+    { name: 'Mey', group: 'Türk Çalgıları', eng: 'wind', harm: 'rich', richExp: 0.95, breath: 0.03, vib: [5, 12], att: 0.06, lpMul: 5, form: [[420, 6, 2], [1050, 5, 2.5]] },
+    { name: 'Sipsi', group: 'Türk Çalgıları', eng: 'wind', harm: [1, 0.08, 0.8, 0.08, 0.55, 0.06, 0.38, 0.05, 0.22], breath: 0.07, vib: [6.5, 18], att: 0.015, lpMul: 14, form: [[2400, 6, 2.5]], oct: 1 },
+    { name: 'Tulum', group: 'Türk Çalgıları', eng: 'wind', harm: 'rich', richExp: 0.55, breath: 0.04, vib: [6, 3], att: 0.012, lpMul: 16, form: [[1500, 7, 2], [3000, 5, 2]], ens: 2 },
+    { name: 'Kabak Kemane', group: 'Türk Çalgıları', eng: 'bow', vib: [5.5, 30], att: 0.05, body: [[500, 6, 3], [1500, 5, 2.5], [3000, 3, 2]], lpMul: 12, noise: 0.05 },
+    { name: 'Santur', group: 'Türk Çalgıları', eng: 'pluck', lvl: 0.85, bright: 0.98, decay: 0.9995, body: [[250, -3, 1], [2800, 4, 1.5], [6000, 7, 1.5]], lp: 15000, hp: 180, course: 4 },
+    { name: 'Elektro Bağlama', group: 'Türk Çalgıları', eng: 'gtr', lvl: 1.1, course: 3, pick: 0.07, pu: [0.1], t60: 2.2, damp: 0.07, bright: 0.95, noise: 0.12, pre: [[3400, 6, 2]], body: [[350, 3, 3], [1400, 3, 2], [3000, 4, 2]], hp: 140, lp: 9000, comp: 1, roomAdd: 0.12 },
+    // ---- Yaylılar: elektrik keman, Avrupa halk yaylıları ve metal sesleri. drone: sabit tel, rasp: tekerlek vızıltısı, symp: rezonans telleri ----
+    { name: 'Elektrik Keman (Temiz)', group: 'Yaylı', eng: 'bow', lvl: 1, vib: [5.5, 16], att: 0.05, body: [[600, 2, 1], [2800, 3, 1.5]], lpMul: 16, hp: 180, comp: 1, noise: 0.01, roomAdd: 0.1 },
+    { name: 'Elektrik Keman (Metal)', group: 'Yaylı', eng: 'bow', lvl: 0.34, vib: [5.6, 20], att: 0.02, dist: { hp: 300, g: 6, type: 'tube', k: 2.5, g2: 2, k2: 1.6, out: 0.4 }, body: [[1200, 4, 1], [2600, 3, 1.5]], hp: 200, lp: 5000, lpMul: 12, slap: { ms: 340, fb: 0.25, mix: 0.18 } },
+    { name: 'Folk Metal Keman', group: 'Yaylı', eng: 'bow', lvl: 0.29, vib: [6, 14], att: 0.03, ens: 2, dist: { hp: 200, g: 1.6, type: 'tube', k: 1.2, out: 0.8 }, body: [[290, 5, 2], [1000, 3, 1.5], [2600, 6, 2]], lpMul: 18, noise: 0.03, lp: 9000 },
+    { name: 'Metal Çello (Distorsiyon)', group: 'Yaylı', eng: 'bow', lvl: 0.39, oct: -1, vib: [5, 14], att: 0.04, dist: { hp: 120, g: 8, type: 'tube', k: 3, g2: 2, k2: 1.6, out: 0.35 }, body: [[120, 4, 1.5], [600, 2, 1], [2200, 3, 1.5]], hp: 60, lp: 4200, lpMul: 10 },
+    { name: 'Senfonik Metal Yaylıları', group: 'Yaylı', eng: 'bow', lvl: 1.23, ens: 3, vib: [5, 10], att: 0.03, body: [[250, 3, 1.5], [2500, 4, 1.5]], lpMul: 12, comp: 1, roomAdd: 0.3 },
+    { name: 'Hurdy Gurdy', group: 'Yaylı', eng: 'bow', lvl: 0.44, ens: 2, vib: [5, 0], att: 0.02, drone: [48, 55], rasp: { rate: 7, amt: 0.09 }, body: [[800, 6, 2.5], [1700, 5, 2.5], [3200, 4, 2]], lpMul: 14, noise: 0.02 },
+    { name: 'Elektro Hurdy Gurdy (Metal)', group: 'Yaylı', eng: 'bow', lvl: 0.35, ens: 2, vib: [5, 0], att: 0.015, drone: [48, 55], rasp: { rate: 7, amt: 0.09 }, dist: { hp: 250, g: 6, type: 'tube', k: 2.6, g2: 2, k2: 1.6, out: 0.4 }, body: [[900, 5, 1.5], [2400, 4, 1.5]], hp: 120, lp: 5000, lpMul: 12 },
+    { name: 'Nyckelharpa', group: 'Yaylı', eng: 'bow', lvl: 0.43, vib: [5.2, 10], att: 0.05, symp: [62, 67, 69, 74, 79], body: [[350, 4, 2], [1300, 4, 2], [2800, 5, 2]], lpMul: 14, roomAdd: 0.06 },
+    { name: 'Hardanger Kemanı', group: 'Yaylı', eng: 'bow', lvl: 0.35, vib: [5.6, 12], att: 0.05, drone: [62], symp: [69, 74, 76, 78, 81], body: [[310, 5, 2], [1100, 3, 1.5], [3000, 6, 2]], lpMul: 18 },
+    { name: 'Jouhikko', group: 'Yaylı', eng: 'bow', lvl: 0.36, vib: [4.5, 6], att: 0.08, drone: [50], body: [[240, 6, 2.5], [800, 4, 2]], lpMul: 7, noise: 0.09 },
+    { name: 'Gusle', group: 'Yaylı', eng: 'bow', lvl: 0.49, vib: [6, 25], att: 0.04, body: [[400, 7, 3], [1600, 5, 3]], lpMul: 9, noise: 0.12 },
+    { name: 'Crwth', group: 'Yaylı', eng: 'bow', lvl: 0.4, vib: [5, 8], att: 0.06, drone: [55], body: [[300, 5, 2], [1200, 4, 2]], lpMul: 10, noise: 0.05 },
+    // ---- Elektro gitar: Avrupa metal sesleri ----
+    { name: 'E.Gitar · İsveç Death (Testere)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.47, pick: 0.09, pu: [0.08, 0.115], t60: 5, damp: 0.08, bright: 0.95, palm: 1, pre: [[3000, 5, 1.3]], dist: { hp: 120, g: 16, type: 'fuzz', k: 5, g2: 3, k2: 3, out: 0.25 }, body: [[110, 5, 1.5], [1100, 10, 1.2], [3200, -4, 1.5], [7000, 8, 1.5]], hp: 70, lp: 9000 },
+    { name: 'E.Gitar · Göteborg Melodik Death', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.59, pick: 0.1, pu: [0.08, 0.115], t60: 5, damp: 0.09, bright: 0.9, palm: 1, pre: [[2800, 5, 1.3]], dist: { hp: 500, g: 12, type: 'asym', k: 3.5, g2: 3, k2: 2, out: 0.3 }, body: [[120, 3, 1.5], [700, -3, 1], [2600, 5, 1.2]], hp: 80, lp: 5600, pvib: [5.4, 16, 0.3], slap: { ms: 300, fb: 0.2, mix: 0.12 } },
+    { name: 'E.Gitar · Norveç Black Metal', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.63, pick: 0.08, pu: [0.08], t60: 4, damp: 0.06, bright: 0.98, pre: [[3400, 5, 1.5]], dist: { hp: 380, g: 14, type: 'fuzz', k: 4, g2: 2, k2: 2, out: 0.28 }, body: [[250, -6, 1], [3000, 6, 1.2], [6000, 5, 1.5]], hp: 160, lp: 7500, roomAdd: 0.25 },
+    { name: 'E.Gitar · İngiliz Heavy Metal', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.31, pick: 0.12, pu: [0.09, 0.125], t60: 4.5, damp: 0.12, bright: 0.8, pre: [[2600, 4, 1.2]], dist: { hp: 250, g: 6, type: 'tube', k: 2.6, g2: 1.8, k2: 1.6, out: 0.42 }, body: [[900, 5, 0.8], [2700, 3, 1.4]], hp: 90, lp: 4600, pvib: [5.4, 14, 0.3] },
+    { name: 'E.Gitar · Alman Thrash', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.64, pick: 0.09, pu: [0.08, 0.115], t60: 4.5, damp: 0.08, bright: 0.95, palm: 1, pre: [[3000, 5, 1.3]], dist: { hp: 600, g: 13, type: 'asym', k: 4, g2: 2.5, k2: 2.4, out: 0.28 }, body: [[100, 4, 1.6], [450, -7, 0.9], [3000, 6, 1.2]], hp: 75, lp: 5200 },
+    { name: 'E.Gitar · Alman Power Metal (Solo)', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.43, pick: 0.14, pu: [0.21, 0.24], t60: 6, damp: 0.13, bright: 0.72, pre: [[2400, 4, 1]], dist: { hp: 300, g: 11, type: 'tube', k: 3, g2: 3, k2: 2, out: 0.3 }, body: [[1000, 5, 0.7], [2500, 4, 1.2]], hp: 110, lp: 4800, pvib: [5.6, 24, 0.25], slap: { ms: 380, fb: 0.34, mix: 0.26 }, roomAdd: 0.22 },
+    { name: 'E.Gitar · Neue Deutsche Härte', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.61, pick: 0.09, pu: [0.08, 0.115], t60: 4, damp: 0.09, bright: 0.85, palm: 1, pre: [[2600, 4, 1.3]], dist: { hp: 420, g: 12, type: 'asym', k: 3.5, g2: 2, k2: 2, out: 0.3 }, body: [[90, 6, 1.4], [350, 3, 1.2], [800, -5, 1], [3000, 2, 1.5]], hp: 65, lp: 3800 },
+    { name: 'E.Gitar · İngiliz Doom', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.49, pick: 0.2, pu: [0.21, 0.24], t60: 7, damp: 0.22, bright: 0.55, pre: [[2000, 3, 1]], dist: { hp: 70, g: 12, type: 'fuzz', k: 4, out: 0.3 }, body: [[100, 6, 1.2], [600, 3, 0.8], [2500, -3, 1]], hp: 55, lp: 3000, roomAdd: 0.2 },
+    { name: 'E.Gitar · Viking / Pagan Metal', group: 'Elektro Gitar', eng: 'gtr', lvl: 0.39, pick: 0.13, pu: [0.09, 0.125], t60: 5, damp: 0.12, bright: 0.78, pre: [[2500, 4, 1.2]], dist: { hp: 300, g: 8, type: 'tube', k: 3, g2: 2, k2: 1.8, out: 0.35 }, body: [[900, 3, 0.8], [2400, 4, 1.2]], hp: 90, lp: 4800, chorus: { rate: 0.5, depth: 0.003, mix: 0.5 }, roomAdd: 0.3 },
+    // ---- Elektro bas: low, bozulmamış alt frekansın karışıma eklenen miktarı ----
+    { name: 'E.Bas · Parmak (Temiz)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.75, oct: -1, pick: 0.25, pu: [0.22], t60: 3.6, damp: 0.24, bright: 0.45, noise: 0.02, pre: [[900, 3, 1]], body: [[80, 4, 1.4], [700, 2, 1]], hp: 35, lp: 3800, comp: 1 },
+    { name: 'E.Bas · Pena (Temiz)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.75, oct: -1, pick: 0.09, pu: [0.16], t60: 3, damp: 0.12, bright: 0.8, noise: 0.05, pre: [[1600, 4, 1.2]], body: [[90, 3, 1.4], [1200, 3, 1.2]], hp: 40, lp: 5000, comp: 1 },
+    { name: 'E.Bas · Klasik Heavy Metal (Galop)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.39, oct: -1, pick: 0.09, pu: [0.13], t60: 3.2, damp: 0.1, bright: 0.9, dist: { hp: 200, g: 2.4, type: 'tube', k: 1.6, out: 0.6, low: 0.55 }, body: [[90, 3, 1.4], [1300, 4, 1]], hp: 40, lp: 5000 },
+    { name: 'E.Bas · Thrash (Sert Pena)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.61, oct: -1, pick: 0.07, pu: [0.11], t60: 2.6, damp: 0.06, bright: 0.98, palm: 1, pre: [[2400, 6, 1.5]], dist: { hp: 400, g: 5, type: 'asym', k: 3, out: 0.35, low: 0.7 }, body: [[2500, 6, 1.5]], hp: 40, lp: 6500 },
+    { name: 'E.Bas · Death Metal (Distorsiyon)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.6, oct: -1, pick: 0.09, pu: [0.12], t60: 3, damp: 0.09, bright: 0.9, palm: 1, dist: { hp: 300, g: 10, type: 'fuzz', k: 4, out: 0.25, low: 0.7 }, body: [[100, 3, 1.4], [1000, 5, 1]], hp: 38, lp: 4500 },
+    { name: 'E.Bas · Black Metal (İnce)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.81, oct: -1, pick: 0.08, pu: [0.1], t60: 2.6, damp: 0.08, bright: 0.92, dist: { hp: 450, g: 8, type: 'fuzz', k: 3.5, out: 0.25, low: 0.25 }, body: [[3000, 4, 1.5]], hp: 90, lp: 6000 },
+    { name: 'E.Bas · Doom (Fuzz)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.37, oct: -1, pick: 0.22, pu: [0.22], t60: 6, damp: 0.2, bright: 0.55, dist: { hp: 60, g: 10, type: 'fuzz', k: 4, out: 0.3, low: 0.4 }, body: [[70, 5, 1.3], [500, 2, 0.8]], hp: 35, lp: 2500 },
+    { name: 'E.Bas · Pagan / Folk Metal', group: 'Elektro Bas', eng: 'gtr', lvl: 0.36, oct: -1, pick: 0.14, pu: [0.18], t60: 3.6, damp: 0.16, bright: 0.68, dist: { hp: 150, g: 3, type: 'tube', k: 2, out: 0.5, low: 0.5 }, body: [[100, 3, 1.4], [800, 2, 1]], hp: 38, lp: 3800, roomAdd: 0.1 },
+    { name: 'E.Bas · Modern Metal (Beş Telli)', group: 'Elektro Bas', eng: 'gtr', lvl: 0.76, oct: -1, pick: 0.08, pu: [0.1], t60: 3, damp: 0.07, bright: 0.95, palm: 1, pre: [[2500, 5, 1.4]], dist: { hp: 350, g: 6, type: 'asym', k: 3, out: 0.3, low: 0.8 }, body: [[60, 5, 1.3], [400, -4, 1], [2800, 5, 1.4]], hp: 30, lp: 6000 },
+    // ---- Viking çalgıları: arkeolojik buluntulardan bilinen çalgı türlerinin yaklaşık modelleri ----
+    { name: 'Tagelharpa', group: 'Viking', eng: 'bow', lvl: 0.59, vib: [4.5, 5], att: 0.1, drone: [45, 52], body: [[210, 7, 2.5], [620, 4, 2], [1500, 2, 2]], lpMul: 6, noise: 0.1 },
+    { name: 'Viking Liri', group: 'Viking', eng: 'pluck', lvl: 1.12, bright: 0.38, decay: 0.9975, body: [[140, 5, 2], [420, 4, 2], [1200, 1, 1.5]], lp: 3600, hp: 70 },
+    { name: 'Kravik Liri', group: 'Viking', eng: 'pluck', lvl: 0.5, bright: 0.88, decay: 0.998, body: [[220, 3, 2.5], [900, 3, 2], [2800, 7, 1.5], [4500, 5, 1.5]], lp: 11000, hp: 140, buzz: 0.15 },
+    { name: 'Bukkehorn', group: 'Viking', eng: 'wind', lvl: 1.04, harm: 'rich', richExp: 0.9, breath: 0.1, vib: [5, 4], att: 0.05, lpMul: 3, brass: 0.8, form: [[850, 6, 2.5], [2000, 3, 2]] },
+    { name: 'Lur', group: 'Viking', eng: 'wind', lvl: 1.14, harm: 'rich', richExp: 0.8, breath: 0.05, vib: [4.5, 3], att: 0.1, lpMul: 3, brass: 0.7, form: [[500, 5, 1.5], [1300, 3, 1.5]] },
+    { name: 'Savaş Borusu', group: 'Viking', eng: 'wind', lvl: 2.34, oct: -1, ens: 2, harm: 'rich', richExp: 0.65, breath: 0.04, vib: [4, 3], att: 0.14, lpMul: 3, brass: 1, growl: 0.2, form: [[320, 6, 1.5], [900, 4, 1.5]], roomAdd: 0.35 },
+    { name: 'Kemik Flüt', group: 'Viking', eng: 'wind', lvl: 0.67, harm: [1, 0.2, 0.22, 0.05, 0.04], breath: 0.5, vib: [5.5, 14], att: 0.05, lpMul: 7, form: [[2400, 5, 2]], oct: 1 },
+    { name: 'Viking Pan Flütü', group: 'Viking', eng: 'wind', lvl: 0.67, harm: [1, 0.12, 0.25, 0.03, 0.06], breath: 0.6, vib: [4.6, 7], att: 0.08, lpMul: 5, form: [[1400, 3, 1.5]], roomAdd: 0.15 },
+    { name: 'Söğüt Flütü', group: 'Viking', eng: 'wind', lvl: 0.85, harm: [1, 0.5, 0.3, 0.18, 0.1, 0.06], breath: 0.3, vib: [5, 3], att: 0.03, lpMul: 8, form: [[1800, 3, 2]] },
+    { name: 'Ağız Arpı', group: 'Viking', eng: 'wind', lvl: 1.82, harm: 'rich', richExp: 0.55, breath: 0, vib: [5, 0], att: 0.004, lpMul: 5, brass: 1, form: [[700, 9, 6], [1700, 8, 6], [3000, 5, 5]] },
+    { name: 'Viking Çerçeve Davulu', group: 'Viking', eng: 'fm', lvl: 0.58, ratio: 1.5, index: 0.5, idec: 0.06, dec: 0.6, sus: 0, rel: 0.2, drop: 1.5, dropT: 0.04, hammer: 0.3, oct: -2 },
   ];
   OS.LIBRARY = M;
+  // Çalgı başına makam: tüm projeyi değiştirmeden yalnız bu parçayı komalı çaldırır
+  const MAKAMS = ['Rast', 'Uşşak', 'Hüseyni', 'Hicaz', 'Hicazkar', 'Nihavend', 'Kürdi', 'Saba', 'Segah', 'Hüzzam', 'Karcığar', 'Nikriz', 'Muhayyer', 'Bayati Araban', 'Hümayun'];
+  const MAKAM_SYS = 'Türk Makamları (53 koma)', NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  OS.LIBRARY_MAKAMS = ['Genel akort'].concat(MAKAMS);
 
   R({
     id: 'inst.library', name: 'Enstrüman Kütüphanesi', type: 'instrument', category: 'Enstrüman',
@@ -82,14 +166,19 @@
       { id: 'transpose', name: 'Oktav', min: -2, max: 2, def: 0, step: 1 },
       { id: 'room', name: 'Oda', min: 0, max: 1, def: 0.15 },
       { id: 'vol', name: 'Ses', min: -40, max: 6, def: -6, unit: 'dB' },
+      { id: 'makam', name: 'Makam', type: 'choice', options: ['Genel akort'].concat(MAKAMS), min: 0, max: MAKAMS.length, def: 0 },
+      { id: 'tonic', name: 'Makam tonu', type: 'choice', options: NOTES, min: 0, max: 11, def: 9 },
+      { id: 'glide', name: 'Kayma (perdesiz)', min: 0, max: 0.4, def: 0.07, unit: 's' },
     ],
     create(ctx) {
       const out = ctx.createGain(), post = ctx.createGain(), dryG = ctx.createGain(), wetG = ctx.createGain(), conv = ctx.createConvolver();
       conv.buffer = U.makeReverbIR(ctx, 1.6, 3, 0.5);
       post.connect(dryG); post.connect(conv); conv.connect(wetG); dryG.connect(out); wetG.connect(out);
       const voiceBus = ctx.createGain();
-      const p = { model: 0, tone: 0, expr: 1, sustain: 1, transpose: 0, room: 0.15 };
-      let chain = [];
+      const p = { model: 0, tone: 0, expr: 1, sustain: 1, transpose: 0, room: 0.15, makam: 0, tonic: 9, glide: 0.07 };
+      let chain = [], mods = [], last = null;
+      const pitch = nn => { const i = Math.round(p.makam) - 1, deg = i >= 0 && OS.tuning && (OS.tuning.SYSTEMS[MAKAM_SYS] || {})[MAKAMS[i]]; return deg ? OS.tuning.freqIn(nn, deg, Math.round(p.tonic)) : U.midiToFreq(nn); };
+      const roomMix = () => { const v = U.clamp(p.room + (m().roomAdd || 0), 0, 1); wetG.gain.value = v * 0.6; dryG.gain.value = 1 - v * 0.3; };
       const noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); { const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
       const voices = [], ksCache = new Map(), waves = new Map();
       const m = () => M[Math.round(p.model)];
@@ -99,15 +188,48 @@
         try { voiceBus.disconnect(); } catch (e) { }
         chain.forEach(n => { try { n.disconnect(); } catch (e) { } });
         chain = [];
+        mods.forEach(o => { try { o.stop(); } catch (e) { } }); mods = [];
         const md = m();
         const add = n => { (chain.length ? chain[chain.length - 1] : voiceBus).connect(n); chain.push(n); return n; };
         if (md.hp) { const f = add(ctx.createBiquadFilter()); f.type = 'highpass'; f.frequency.value = md.hp; }
+        const peak = ([f, g, q]) => { const b = add(ctx.createBiquadFilter()); b.type = 'peaking'; b.frequency.value = f; b.gain.value = g; b.Q.value = q; };
+        (md.pre || []).forEach(peak); // manyetiğin kendi rezonansı amfiden önce gelir
+        if (md.comp) { const c = add(ctx.createDynamicsCompressor()); c.threshold.value = -26; c.ratio.value = 3; c.attack.value = 0.008; c.release.value = 0.18; c.knee.value = 12; const g = add(ctx.createGain()); g.gain.value = 0.72; }
+        if (md.dist) {
+          const d = md.dist, tap = chain.length ? chain[chain.length - 1] : voiceBus, h = add(ctx.createBiquadFilter()); h.type = 'highpass'; h.frequency.value = d.hp || 100;
+          const stage = (gain, type, k) => { const g = add(ctx.createGain()); g.gain.value = gain; const ws = add(ctx.createWaveShaper()); ws.curve = U.curve(type, k); ws.oversample = '4x'; };
+          stage(d.g, d.type, d.k);
+          if (d.g2) { const l = add(ctx.createBiquadFilter()); l.type = 'lowpass'; l.frequency.value = 6500; stage(d.g2, 'soft', d.k2); }
+          const dc = add(ctx.createBiquadFilter()); dc.type = 'highpass'; dc.frequency.value = 30;
+          const g = add(ctx.createGain()); g.gain.value = d.out;
+          if (d.low) { const f = ctx.createBiquadFilter(), lg = ctx.createGain(), merge = ctx.createGain(); f.type = 'lowpass'; f.frequency.value = 180; lg.gain.value = d.low; tap.connect(f); f.connect(lg); lg.connect(merge); g.connect(merge); chain.push(f, lg, merge); }
+        }
         if (md.drive) { const g = add(ctx.createGain()); g.gain.value = md.drive; const ws = add(ctx.createWaveShaper()); ws.curve = U.curve('asym', 3); ws.oversample = '4x'; const g2 = add(ctx.createGain()); g2.gain.value = 0.25; }
         (md.body || []).concat(md.form || []).forEach(([f, g, q]) => { const b = add(ctx.createBiquadFilter()); b.type = 'peaking'; b.frequency.value = f; b.gain.value = g; b.Q.value = q; });
+        if (md.symp) {
+          // Döngü gecikmesi tarayıcıda 128 örnekten kısa olamaz: tiz teller için periyodun katı kullanılır
+          const a = add(ctx.createGain()), z = ctx.createGain(); a.connect(z); const parts = [];
+          md.symp.forEach(n => { const f = 440 * Math.pow(2, (n - 69) / 12), d = ctx.createDelay(0.1), inp = ctx.createGain(), lp = ctx.createBiquadFilter(), fb = ctx.createGain(), w = ctx.createGain(); d.delayTime.value = Math.ceil(0.0032 * f) / f; inp.gain.value = 0.1; lp.type = 'lowpass'; lp.frequency.value = 6000; lp.Q.value = -3.01; fb.gain.value = 0.97; w.gain.value = 0.35; a.connect(inp); inp.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); d.connect(w); w.connect(z); parts.push(d, inp, lp, fb, w); });
+          chain.push(...parts, z);
+        }
         const tl = add(ctx.createBiquadFilter()); tl.type = 'highshelf'; tl.frequency.value = 2500; tl.gain.value = p.tone * 9;
         if (md.lp) { const f = add(ctx.createBiquadFilter()); f.type = 'lowpass'; f.frequency.value = md.lp * (1 + p.tone * 0.4); }
+        if (md.dist) { const f = add(ctx.createBiquadFilter()); f.type = 'lowpass'; f.frequency.value = md.lp * 1.25 * (1 + p.tone * 0.4); } // kabin: 12 dB yerine 24 dB eğim
+        const side = () => { const a = add(ctx.createGain()), z = ctx.createGain(); a.connect(z); return { a, z }; };
+        if (md.chorus) {
+          const { a, z } = side(), d = ctx.createDelay(0.05), w = ctx.createGain(), o = ctx.createOscillator(), og = ctx.createGain();
+          d.delayTime.value = 0.012; o.frequency.value = md.chorus.rate; og.gain.value = md.chorus.depth; w.gain.value = md.chorus.mix;
+          o.connect(og); og.connect(d.delayTime); a.connect(d); d.connect(w); w.connect(z); o.start(); mods.push(o); chain.push(d, w, og, z);
+        }
+        if (md.ampTrem) { const g = add(ctx.createGain()), o = ctx.createOscillator(), og = ctx.createGain(); g.gain.value = 1 - md.ampTrem.depth; o.frequency.value = md.ampTrem.rate; og.gain.value = md.ampTrem.depth; o.connect(og); og.connect(g.gain); o.start(); mods.push(o); }
+        if (md.slap) {
+          const { a, z } = side(), d = ctx.createDelay(1), fb = ctx.createGain(), w = ctx.createGain();
+          d.delayTime.value = md.slap.ms / 1000; fb.gain.value = md.slap.fb; w.gain.value = md.slap.mix;
+          a.connect(d); d.connect(fb); fb.connect(d); d.connect(w); w.connect(z); chain.push(d, fb, w, z);
+        }
+        if (md.lvl) { const g = add(ctx.createGain()); g.gain.value = md.lvl; }
         (chain.length ? chain[chain.length - 1] : voiceBus).connect(post);
-        ksCache.clear();
+        ksCache.clear(); last = null; roomMix();
       }
 
       function pluckBuf(f, md, vel) {
@@ -115,20 +237,50 @@
         if (ksCache.has(key)) return ksCache.get(key);
         const sr = ctx.sampleRate, dec = Math.min(0.99995, 1 - (1 - md.decay) / p.sustain), len = Math.floor(sr * Math.min(6, 1.2 + 3 * p.sustain));
         const buf = ctx.createBuffer(1, len, sr), d = buf.getChannelData(0);
-        const P = sr / f, N = Math.max(2, Math.floor(P)), frac = P - N, line = new Float32Array(N + 1);
+        // Döngü gecikmesi tam periyot olmalı: hat (N + 1 - kesir okuma) + filtre (1 - damp)
+        const damp = 0.35 + md.bright * 0.6, P = sr / f - (1 - damp), N = Math.max(2, Math.floor(P)), frac = P - N, line = new Float32Array(N + 1);
         const br = U.clamp(md.bright * (0.7 + vel * 0.4), 0.05, 0.99);
         let lp = 0; for (let i = 0; i <= N; i++) { lp += br * ((Math.random() * 2 - 1) - lp); line[i] = lp; }
         // çekme noktası etkisi: hat içinde tarak filtre
         const pick = Math.max(1, Math.floor(N * 0.13)); for (let i = N; i >= pick; i--) line[i] -= 0.5 * line[i - pick];
-        const damp = 0.35 + md.bright * 0.6;
         let idx = 0, prev = 0;
         for (let i = 0; i < len; i++) {
-          const a = line[idx], b = line[(idx + 1) % (N + 1)], s = a * (1 - frac) + b * frac;
+          const a = line[idx], b = line[(idx + 1) % (N + 1)], s = a * frac + b * (1 - frac);
           let y = dec * (damp * s + (1 - damp) * prev); prev = s;
           if (md.buzz) { const th = 0.25 * (1 - md.buzz); if (y > th) y = th + (y - th) * 0.4; else if (y < -th) y = -th + (y + th) * 0.4; } // perde teması (cızıltı)
           d[i] = s; line[idx] = y; idx = (idx + 1) % (N + 1);
         }
         if (ksCache.size > 300) ksCache.clear();
+        ksCache.set(key, buf); return buf;
+      }
+      // Elektro gitar teli: hat gecikmesi tam perdeye ayarlanır, kaynak pena atımı, çıkış manyetik konumu
+      function gtrBuf(f, md, v) {
+        const pm = md.palm && v < 0.55, key = 'g' + Math.round(f * 100) + ':' + p.sustain + ':' + Math.round(v * 4);
+        if (ksCache.has(key)) return ksCache.get(key);
+        const sr = ctx.sampleRate, P = sr / f, t60 = (md.t60 || 3) * p.sustain * Math.pow(110 / f, 0.4) * (pm ? 0.09 : 1);
+        const len = Math.ceil(sr * U.clamp(t60 * 1.25, 0.25, 7)), s = U.clamp((md.damp || 0.2) * Math.pow(220 / f, 0.5) * (pm ? 2.2 : 1), 0.01, 0.5);
+        const L = P - s, D = Math.max(2, Math.floor(L)), fr = L - D, size = D + 2, g = Math.pow(10, -3 * (P / sr) / t60);
+        // Telin hızı: pena noktasında dikdörtgen atım (harmonikler sin(nπβ)/n), üstüne az miktar sürtünme
+        const beta = md.pick || 0.15, wid = Math.max(1, Math.round(beta * D)), exc = new Float32Array(D), a = U.clamp((md.bright || 0.6) * (0.45 + v * 0.75) * (pm ? 0.4 : 1), 0.05, 0.98), nz = md.noise != null ? md.noise : 0.12;
+        for (let i = 0; i < D; i++) exc[i] = (i < wid ? 1 - wid / D : -wid / D) + (Math.random() * 2 - 1) * nz;
+        let lp = 0; for (let pass = 0; pass < 2; pass++) for (let i = 0; i < D; i++) { lp += a * (exc[i] - lp); exc[i] = lp; }
+        let mean = 0; for (let i = 0; i < D; i++) mean += exc[i]; mean /= D; for (let i = 0; i < D; i++) exc[i] -= mean;
+        const x = new Float32Array(len), line = new Float32Array(size);
+        let w = 0, prev = 0;
+        for (let i = 0; i < len; i++) {
+          const c = i < D ? exc[i] : line[(w - D + size) % size] * (1 - fr) + line[(w - D - 1 + size + size) % size] * fr;
+          line[w] = g * ((1 - s) * c + s * prev); prev = c; w = (w + 1) % size; x[i] = c;
+        }
+        const buf = ctx.createBuffer(1, len, sr), d = buf.getChannelData(0), pus = md.pu || [];
+        let pk = 0;
+        for (let i = 0; i < len; i++) {
+          let y = x[i];
+          if (pus.length) { y = 0; for (let k = 0; k < pus.length; k++) { const j = i - Math.max(1, Math.round(pus[k] * P)); y += x[i] - (j >= 0 ? x[j] : 0); } y /= pus.length; }
+          d[i] = y; if (Math.abs(y) > pk) pk = Math.abs(y);
+        }
+        const nrm = pk ? 0.9 / pk : 1, fade = Math.floor(sr * 0.01);
+        for (let i = 0; i < len; i++) d[i] *= nrm * (i > len - fade ? (len - i) / fade : 1);
+        if (ksCache.size > 120) ksCache.clear();
         ksCache.set(key, buf); return buf;
       }
       function wave(md) {
@@ -142,10 +294,32 @@
       function noteOn(n, vel, t) {
         t = Math.max(t || 0, ctx.currentTime);
         const md = m(), v = (vel == null ? 100 : vel) / 127;
-        const nn = n + 12 * (p.transpose + (md.oct || 0)), f = U.midiToFreq(nn);
+        const nn = n + 12 * (p.transpose + (md.oct || 0)), f = pitch(nn);
         const amp = ctx.createGain(); amp.connect(voiceBus);
         const src = [], vc = { n, amp, src, released: false, start: t, md };
-        if (md.eng === 'pluck') {
+        if (md.eng === 'gtr') {
+          // Perdesiz: önceki notaya bitişikse parmak kayarak gelir ve eski nota susar; akorda kayma olmaz
+          let from = 0, slide = false;
+          if (md.fret && last && p.glide > 0 && t - last.start > 0.04 && last.f !== f && (last.off == null || (last.off - t < 0.15 && t - last.off < 0.12))) {
+            const iv = 1200 * Math.log2(last.f / f);
+            if (Math.abs(iv) <= 900) { from = iv; slide = true; off(last.vc, t, 0.03); }
+          }
+          const buf = gtrBuf(f, md, v), courses = md.course || 1;
+          let vg = null;
+          if (md.pvib) { const o = ctx.createOscillator(); vg = ctx.createGain(); o.frequency.value = md.pvib[0]; o.connect(vg); vg.gain.setValueAtTime(0, t + md.pvib[2]); vg.gain.linearRampToValueAtTime(md.pvib[1] * p.expr, t + md.pvib[2] + 0.35); o.start(t); src.push(o); }
+          for (let c = 0; c < courses; c++) {
+            const s = ctx.createBufferSource(), g = ctx.createGain(), base = (c - (courses - 1) / 2) * 3;
+            s.buffer = buf; g.gain.value = 0.9 / Math.sqrt(courses); s.connect(g); g.connect(amp);
+            const start = slide ? from : -(md.scoop || 0) * (0.6 + 0.4 * v);
+            s.detune.setValueAtTime(base + start, t); s.detune.linearRampToValueAtTime(base, t + (slide ? p.glide : 0.055));
+            if (vg) vg.connect(s.detune);
+            s.start(t + c * 0.007); src.unshift(s);
+          }
+          const lvl = (0.55 + v * 0.65) * (slide ? 0.8 : 1);
+          if (md.swell) { amp.gain.setValueAtTime(0.0001, t); amp.gain.linearRampToValueAtTime(lvl, t + md.swell); } else amp.gain.setValueAtTime(lvl, t);
+          vc.auto = buf.duration;
+          last = { f, start: t, vc, off: null };
+        } else if (md.eng === 'pluck') {
           const courses = md.course || 1;
           for (let c = 0; c < courses; c++) {
             const s = ctx.createBufferSource(), g = ctx.createGain();
@@ -167,6 +341,11 @@
             og.gain.value = 0.5 / ens; o.connect(og); og.connect(lp); o.start(t); src.push(o);
           }
           if (md.brass) { lp.frequency.setValueAtTime(f * 1.2, t); lp.frequency.linearRampToValueAtTime(Math.min(16000, f * 9 * (0.5 + v)), t + 0.06); lp.frequency.setTargetAtTime(f * 5 * (0.5 + v), t + 0.08, 0.2); }
+          if (md.drone) {
+            const dl = ctx.createBiquadFilter(); dl.type = 'lowpass'; dl.frequency.value = 2200; dl.connect(amp);
+            md.drone.forEach(d => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sawtooth'; o.frequency.value = pitch(d); g.gain.value = 0.16; o.connect(g); g.connect(dl); o.start(t); src.push(o); });
+            if (md.rasp) { const o = ctx.createOscillator(), l = ctx.createOscillator(), bp = ctx.createBiquadFilter(), g = ctx.createGain(), lg = ctx.createGain(); o.type = 'sawtooth'; o.frequency.value = pitch(md.drone[0]) * 4; l.type = 'square'; l.frequency.value = md.rasp.rate; bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 1.5; g.gain.value = md.rasp.amt; lg.gain.value = md.rasp.amt; l.connect(lg); lg.connect(g.gain); o.connect(bp); bp.connect(g); g.connect(amp); o.start(t); l.start(t); src.push(o, l); }
+          }
           const br = md.breath || md.noise || (md.eng === 'bow' ? 0.02 : 0);
           if (br) {
             const ns = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), ng = ctx.createGain();
@@ -217,21 +396,39 @@
         g.setTargetAtTime(0, t, Math.max(0.01, r / 4));
         vc.src.forEach(s => { try { s.stop(t + r * 1.6 + 0.05); } catch (e) { } });
       }
-      const relOf = md => md.eng === 'pluck' ? 0.25 * p.sustain : md.eng === 'fm' ? (md.rel || 0.4) : md.eng === 'organ' ? 0.08 : md.rel || 0.18;
+      const relOf = md => md.eng === 'gtr' ? 0.1 : md.eng === 'pluck' ? 0.25 * p.sustain : md.eng === 'fm' ? (md.rel || 0.4) : md.eng === 'organ' ? 0.08 : md.rel || 0.18;
       buildPost();
       return {
         output: out,
         set(id, v) {
           const prev = p[id]; p[id] = v;
           if (id === 'vol') out.gain.value = U.dbToGain(v);
-          if (id === 'room') { wetG.gain.value = v * 0.6; dryG.gain.value = 1 - v * 0.3; }
+          if (id === 'room') roomMix();
           if ((id === 'model' && Math.round(prev) !== Math.round(v)) || id === 'tone') buildPost();
           if (id === 'sustain') ksCache.clear();
         },
         noteOn,
-        noteOff(n, t) { t = Math.max(t || 0, ctx.currentTime); const vc = voices.find(x => x.n === n && !x.released && x.start <= t + 0.001); if (vc) off(vc, t, relOf(vc.md)); },
-        allOff() { voices.forEach(v => off(v, ctx.currentTime, 0.03)); },
+        noteOff(n, t) { t = Math.max(t || 0, ctx.currentTime); const vc = voices.find(x => x.n === n && !x.released && x.start <= t + 0.001); if (last && last.vc === vc) last.off = t; if (vc) off(vc, t, relOf(vc.md)); },
+        allOff() { voices.forEach(v => off(v, ctx.currentTime, 0.03)); last = null; },
+        dispose() { mods.forEach(o => { try { o.stop(); } catch (e) { } }); },
       };
     },
   });
+
+  // Enstrüman menüsünde doğrudan görünen gitar cihazları: aynı motor, yalnız kendi modelleri
+  const base = OS.plugins.get('inst.library');
+  function family(id, name, group, over) {
+    const idx = M.map((x, i) => x.group === group ? i : -1).filter(i => i >= 0);
+    R({
+      id, name, type: 'instrument', category: 'Enstrüman',
+      params: base.params.map(q => q.id === 'model' ? Object.assign({}, q, { options: idx.map(i => M[i].name), max: idx.length - 1, def: 0 }) : (over[q.id] != null ? Object.assign({}, q, { def: over[q.id] }) : q)),
+      create(ctx) { const i = base.create(ctx); return Object.assign({}, i, { set(k, v) { i.set(k, k === 'model' ? idx[U.clamp(Math.round(v), 0, idx.length - 1)] : v); } }); },
+    });
+  }
+  family('inst.egtr', 'Elektro Gitarlar', 'Elektro Gitar', {});
+  family('inst.fretless', 'Perdesiz Elektro Gitar (Türk)', 'Perdesiz Elektro Gitar (Türk)', { makam: 1 + MAKAMS.indexOf('Hicaz'), room: 0.2 });
+  family('inst.turkish', 'Türk Çalgıları', 'Türk Çalgıları', { makam: 1 + MAKAMS.indexOf('Hicaz'), room: 0.2 });
+  family('inst.ebass', 'Elektro Baslar', 'Elektro Bas', {});
+  family('inst.strings', 'Yaylı Çalgılar', 'Yaylı', {});
+  family('inst.viking', 'Viking Çalgıları', 'Viking', { room: 0.3 });
 })(window.OS);

@@ -2,7 +2,7 @@
    nota / tab / riff / MIDI / XML çıktısı al */
 (function (OS) {
   const U = OS.U, el = U.el, ui = OS.ui, E = OS.engine, TR = OS.transcribe;
-  const RI = ui.reinstrument = { model: 0, mode: 'melody', sens: 0.5, quant: 0.25, voices: 4, tempoMode: 'auto' };
+  const RI = ui.reinstrument = { model: 0, makam: 0, tonic: 9, mode: 'melody', sens: 0.5, quant: 0.25, voices: 4, tempoMode: 'auto' };
   let root, st = { file: null, buf: null, res: null, name: '' }, preview = null;
 
   RI.init = function () { root = document.getElementById('view-reinst'); };
@@ -12,11 +12,14 @@
     const s = el('select', { class: cls || 'inst-select', onchange: () => onchange(+s.value) });
     const groups = {};
     OS.LIBRARY.forEach((m, i) => (groups[m.group] = groups[m.group] || []).push([i, m.name]));
-    Object.keys(groups).forEach(g => s.appendChild(el('optgroup', { label: g }, groups[g].map(([i, n]) => el('option', { value: i, selected: i === value }, n)))));
+    Object.keys(groups).forEach(g => s.appendChild(el('optgroup', { label: OS.t(g) }, groups[g].map(([i, n]) => el('option', { value: i, selected: i === value }, n)))));
     return s;
   };
 
   const instName = () => OS.LIBRARY[RI.model].name;
+  const instValues = () => ({ model: RI.model, makam: RI.makam, tonic: RI.tonic });
+  // Makam seçimi yalnız komalı çalınabilen çalgılarda görünür
+  const canMakam = () => /Türk/.test(OS.LIBRARY[RI.model].group);
   const sig = () => OS.project.sig;
 
   RI.render = function () {
@@ -24,7 +27,9 @@
     root.innerHTML = '';
     const top = el('div', { class: 'reinst-top' },
       el('span', { class: 'reinst-label' }, 'Çalgı'),
-      RI.instrumentSelect(RI.model, v => { RI.model = v; if (preview) startPreview(); }, 'inst-select big'),
+      RI.instrumentSelect(RI.model, v => { const was = canMakam(); RI.model = v; if (preview) startPreview(); if (was !== canMakam()) RI.render(); }, 'inst-select big'),
+      canMakam() ? el('label', { class: 'field' }, 'Makam', sel(OS.LIBRARY_MAKAMS.map((n, i) => [i, n]), RI.makam, v => { RI.makam = +v; if (preview) startPreview(); })) : null,
+      canMakam() ? el('label', { class: 'field' }, 'Makam tonu', sel(OS.tuning.NOTE.map((n, i) => [i, n]), RI.tonic, v => { RI.tonic = +v; if (preview) startPreview(); })) : null,
       el('button', { class: 'btn primary', onclick: () => startPreview() }, '▶ Bu çalgıyla dinle'),
       el('button', { class: 'btn', onclick: () => playOriginal() }, '▶ Orijinali dinle'),
       el('button', { class: 'btn', onclick: stopPreview }, '■ Durdur'),
@@ -158,7 +163,7 @@
     const notes = notesOverride || (st.res && st.res.notes);
     if (!notes || !notes.length) { U.toast(OS.t('Önce müziği notaya çevirin')); return; }
     stopPreview(); E.resume();
-    const dev = new OS.Device(E.ctx, 'inst.library', { values: { model: RI.model } });
+    const dev = new OS.Device(E.ctx, 'inst.library', { values: instValues() });
     dev.out.connect(E.monitorBus);
     const spb = 60 / (st.res ? st.res.bpm : OS.project.bpm), t0 = E.ctx.currentTime + 0.1;
     // çok sayıda notayı parça parça zamanla
@@ -185,7 +190,7 @@
     OS.history.push();
     const P = OS.project;
     if (RI.tempoMode === 'auto' && st.buf) P.bpm = Math.round(r.bpm * 10) / 10;
-    const t = OS.makeTrack('instrument', instName(), { instrument: 'inst.library', values: { model: RI.model } });
+    const t = OS.makeTrack('instrument', instName(), { instrument: 'inst.library', values: instValues() });
     const len = Math.ceil(Math.max(...r.notes.map(n => n.s + n.l)) / P.sig[0]) * P.sig[0];
     t.clips.push({ id: U.uid(), start: 0, length: len, name: safe(st.name), notes: r.notes.map(n => Object.assign({}, n)) });
     const at = P.tracks.filter(x => x.type !== 'fx').length;
@@ -206,7 +211,7 @@
     if (!t) { U.toast(OS.t('Önce Aranjman’da bir enstrüman (MIDI) parçası seçin')); return; }
     OS.history.push();
     if (t.instrument) t.instrument.dispose();
-    t.instrument = OS.newDevice('inst.library', { model: RI.model });
+    t.instrument = OS.newDevice('inst.library', instValues());
     const s = E.nodes.get(t.id); if (s) s.instrument = null;
     t.name = instName();
     E.syncTrack(t); ui.changed(); ui.renderInspector();

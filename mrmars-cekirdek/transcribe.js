@@ -208,7 +208,12 @@
   // Enstrüman adından genel MIDI programı (dışa aktarılan MIDI başka programlarda doğru çalgıyla açılsın)
   TR.gmProgram = name => {
     const m = { 'Akustik Gitar': 25, 'Klasik Gitar (Naylon)': 24, 'Elektro Gitar (Temiz)': 27, 'Elektro Gitar (Distorsiyon)': 30, 'Bas Gitar': 33, 'Bağlama / Saz': 104, 'Cura': 104, 'Ud': 104, 'Kanun': 107, 'Cümbüş': 105, 'Mandolin': 25, 'Banjo': 105, 'Arp (Harp)': 46, 'Sitar': 104, 'Klavsen': 6, 'Flüt': 73, 'Ney': 77, 'Klarnet': 71, 'Klarnet (Türk / Sol)': 71, 'Obua': 68, 'Saksafon (Alto)': 65, 'Saksafon (Tenor)': 66, 'Trompet': 56, 'Trombon': 57, 'Korno': 60, 'Zurna': 111, 'Mızıka': 22, 'Keman': 40, 'Viyola': 41, 'Çello': 42, 'Kontrbas (Yay)': 43, 'Kemençe': 110, 'Yaylı Grubu (Orkestra)': 48, 'Piyano': 0, 'Elektrik Piyano': 4, 'Org': 16, 'Akordeon': 21, 'Marimba': 12, 'Vibrafon': 11, 'Müzik Kutusu / Çelesta': 10, 'Çan': 14, 'Synth Lead': 81, 'Synth Pad': 89, 'Koro (Aah)': 52 };
-    return m[name] != null ? m[name] : 0;
+    if (m[name] != null) return m[name];
+    if (/^E\.Bas/.test(name)) return /Distorsiyon|Fuzz|Metal|Thrash/.test(name) ? 35 : /Parmak/.test(name) ? 33 : 34;
+    const more = { 'Tagelharpa': 110, 'Viking Liri': 46, 'Kravik Liri': 46, 'Bukkehorn': 60, 'Lur': 60, 'Savaş Borusu': 58, 'Kemik Flüt': 72, 'Viking Pan Flütü': 75, 'Söğüt Flütü': 77, 'Ağız Arpı': 16, 'Viking Çerçeve Davulu': 116, 'Elektrik Keman (Temiz)': 40, 'Elektrik Keman (Metal)': 40, 'Folk Metal Keman': 110, 'Metal Çello (Distorsiyon)': 42, 'Senfonik Metal Yaylıları': 48, 'Hurdy Gurdy': 110, 'Elektro Hurdy Gurdy (Metal)': 110, 'Nyckelharpa': 110, 'Hardanger Kemanı': 110, 'Jouhikko': 110, 'Gusle': 110, 'Crwth': 110, 'Kaval': 75, 'Mey': 68, 'Sipsi': 71, 'Tulum': 109, 'Kabak Kemane': 110, 'Santur': 15, 'Elektro Bağlama': 27 };
+    if (more[name] != null) return more[name];
+    if (/^(E\.Gitar|Perdesiz E\.Gitar)/.test(name)) return /Distorsiyon|Yüksek Gain|Metal|Lead|Fuzz|Death|Thrash|Doom|Härte/.test(name) ? 30 : /Overdrive|Crunch|Blues/.test(name) ? 29 : /Caz/.test(name) ? 26 : /Akustik/.test(name) ? 25 : 27;
+    return 0;
   };
 
   // ---------------- Ölçülere bölme (nota ve tab için) ----------------

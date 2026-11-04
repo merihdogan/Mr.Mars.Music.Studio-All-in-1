@@ -72,6 +72,15 @@ Desen Rafı  : Adım sıralayıcı: 16/32/64 adım, vurgu / hayalet nota, swing,
               desenleri aranjmana MIDI klip olarak yazma.
               Altyapılar düğmesi: 23 hazır tür (davul, bas, akor) düzenlenebilir MIDI
               parçaları olarak eklenir; ton ve uzunluk (4, 8, 16 ölçü) seçilir.
+Yeni gitarlar: Yeniden Çal ve enstrüman menüsünde Elektro Gitarlar (25 ton: tek bobin,
+              çift bobin, caz gövdeli, crunch, yüksek gain, palm mute'lu metal, fuzz, surf,
+              Avrupa metal sesleri...), Elektro Baslar (9 ton)
+              ve Perdesiz Elektro Gitar (Türk, 7 ton). Perdesiz sesler notalar arasında kayar,
+              geniş titreşim yapar; parça başına makam ve makam tonu seçilir.
+              Türk Çalgıları (20) ve Yaylı Çalgılar (17; elektrik keman, hurdy gurdy, nyckelharpa
+              ve diğer Avrupa kemanları) da enstrüman menüsünde yer alır.
+              Viking Çalgıları (11): tagelharpa, lirler, borular, flütler, ağız arpı, çerçeve davul.
+              Davul Makinesi'nde darbuka da vardır (65, 66, 67. notalar).
 Yeni cihazlar: Efekt menüsünde Yaratıcı grubu (Zarf Filtre, Plak, Parlatıcı, De-esser,
               Armonizör, Ritim Kapısı, Vokoder); enstrüman menüsünde Kayıtlı Davul Seti.
 Mikser      : Efekt yuvaları, send (FX kanalı), pan, fader, seviye göstergesi, master.
@@ -79,7 +88,7 @@ Mini Araçlar: XY synth pedi, XY efekt pedi (filtre, delay, reverb, flanger, pha
               bit ezici, perde, gater, beat repeat), MIDI araçları (transpoze, ölçek,
               akor, arpej, velocity eğrisi), 2 kanallı looper, 4x4 ped (note repeat).
 Yeniden Çal : Müzik dosyasını (MP3, WAV, OGG, FLAC, M4A, MP4 / WebM veya MIDI) notaya
-              çevirir ve seçtiğiniz çalgıyla (44 çalgı: gitarlar, bağlama, cura, ud,
+              çevirir ve seçtiğiniz çalgıyla (129 çalgı: gitarlar, bağlama, cura, ud,
               kanun, ney, klarnet, zurna, kemençe, yaylılar, piyano, synth...) yeniden
               çalar. Çıktılar: nota (yazdır / PDF / SVG), XML, MIDI, gitar ve bas
               tabı, Do-Re-Mi listesi, tekrar eden riff'ler.

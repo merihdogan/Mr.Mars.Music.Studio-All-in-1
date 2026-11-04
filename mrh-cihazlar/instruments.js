@@ -111,7 +111,7 @@
   // ---------------- DAVUL MAKİNESİ ----------------
   const DRUM_MAP = {
     35: 'Kick 2', 36: 'Kick', 37: 'Rim', 38: 'Snare', 39: 'Clap', 40: 'Snare 2', 41: 'Tom Alçak 2', 42: 'Hi-Hat Kapalı', 43: 'Tom Alçak',
-    44: 'Hi-Hat Pedal', 45: 'Tom Orta', 46: 'Hi-Hat Açık', 47: 'Tom Orta 2', 48: 'Tom Yüksek', 49: 'Crash', 50: 'Tom Yüksek 2', 51: 'Ride', 54: 'Tef', 56: 'Cowbell', 57: 'Crash 2',
+    44: 'Hi-Hat Pedal', 45: 'Tom Orta', 46: 'Hi-Hat Açık', 47: 'Tom Orta 2', 48: 'Tom Yüksek', 49: 'Crash', 50: 'Tom Yüksek 2', 51: 'Ride', 54: 'Tef', 56: 'Cowbell', 57: 'Crash 2', 65: 'Darbuka Düm', 66: 'Darbuka Tek', 67: 'Darbuka Ka',
   };
   OS.DRUM_MAP = DRUM_MAP;
   R({
@@ -195,6 +195,9 @@
             break;
           }
           case 54: lvl(p.cym); noise(t, 0.15, 'highpass', 9000, 1, 0.5, bus); break;
+          case 65: lvl(p.toms); tone(t, 'sine', 150 * T, 95 * T, 0.03, 0.45 * D, 1, bus); tone(t, 'triangle', 230 * T, 145 * T, 0.02, 0.18 * D, 0.25, bus); noise(t, 0.05, 'bandpass', 700, 1.2, 0.1, bus); break;
+          case 66: lvl(p.toms); noise(t, 0.05 * D, 'bandpass', 4200, 2, 0.8, bus); tone(t, 'sine', 880 * T, 720 * T, 0.02, 0.06, 0.35, bus); break;
+          case 67: lvl(p.toms); noise(t, 0.035 * D, 'bandpass', 3000, 2.5, 0.6, bus); break;
           case 56: lvl(p.toms); tone(t, 'square', 540 * T, 0, 0, 0.25, 0.25, bus); tone(t, 'square', 800 * T, 0, 0, 0.25, 0.25, bus); break;
           default: {
             // haritada olmayan nota: perdeli darbe

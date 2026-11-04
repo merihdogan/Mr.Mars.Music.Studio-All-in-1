@@ -86,6 +86,14 @@
     const tonicHz = T.a4 * Math.pow(2, (T.tonic + 60 - 69) / 12);
     return tonicHz * Math.pow(2, T.cents(n) / 1200);
   };
+  // Tek çalgı için makam: genel akortu değiştirmez. Makamda karşılığı olmayan tuş 12-TET kalır.
+  T.freqIn = function (n, deg, tonic) {
+    const rel = n - tonic - 60, o = Math.floor(rel / 12), semi = ((rel % 12) + 12) % 12, c12 = semi * 100;
+    let best = c12, bd = 1e9;
+    deg.concat([1200]).forEach(c => { const d = Math.abs(c - c12); if (d < bd) { bd = d; best = c; } });
+    if (bd > 60) best = c12;
+    return T.a4 * Math.pow(2, (tonic + 60 - 69) / 12) * Math.pow(2, (o * 1200 + best) / 1200);
+  };
   // Tonik ve dizinin yarım tona yuvarlanmış hâli (MIDI araçları / piyano rulosu ölçek kilidi için)
   T.semitoneSet = () => [...new Set(T.degrees().map(c => Math.round(c / 100) % 12))].sort((a, b) => a - b);
   T.describe = () => T.mode === 'scl' && T.scl ? T.scl.name : NOTE[T.tonic] + ' ' + T.scale;
