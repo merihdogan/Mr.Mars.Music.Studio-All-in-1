@@ -58,16 +58,18 @@ Pattern Rack   : stegsekvenser (16/32/64 steg, accent, swing), skrivs till arran
                  Knappen Komp: 23 färdiga genrer (trummor, bas, ackord) som redigerbara MIDI-spår.
 Nya gitarrer   : Elgitarrer (25 klanger), Elbasar (9 klanger) och Bandlös elgitarr (turkisk, 7 klanger) i Re-Play och
                  instrumentmenyn; glid, bred vibrato, maqam och grundton per spår.
-                 Turkiska instrument (20) och Stråkinstrument (17) finns också i instrumentmenyn.
+                 Turkiska instrument (20) och Stråkinstrument (16) finns också i instrumentmenyn.
                  Vikingainstrument (11): tagelharpa, lyror, horn, flöjter, munharpa, ramtrumma.
-                 Trummaskinen har också darbuka (toner 65, 66, 67).
+                 Varje instrument finns i en lista; gamla projekt spelar borttagna ljud som förut.
+                 Trummaskinen har också turkiskt och mellanösternskt slagverk (toner 65-86):
+                 darbuka, bendir, def, riq, kudüm, davul, tombak, daf m.fl.
 Nya enheter    : effektgruppen Kreativa (Envelopefilter, Vinyl, Exciter, De-esser, Harmonizer,
                  Trance Gate, Vocoder) och instrumentet Inspelat trumset.
 Mixer          : effektplatser, sends, panorering, fader, mätare, master.
 Mini Tools     : XY-synth, XY-effekter, MIDI-verktyg (transponering, skala, ackord,
                  arpeggiator), looper, 4x4-pads.
 Re-Play        : gör om en musikfil till noter och spelar den med valt instrument
-                 (129 instrument); export av noter, XML, MIDI, tabulatur och riff.
+                 (125 instrument); export av noter, XML, MIDI, tabulatur och riff.
 Amp Rack       : live gitarr / bas: stämapparat, pedaler, förstärkare, högtalarlåda (2
                  mikrofoner, egen IR), signaldelning, DI, modulatorer, liveförval.
 DJ-mixer       : 2 eller 4 decks; BPM och tonart, SYNC, KEY LOCK, hot cues, loopar,

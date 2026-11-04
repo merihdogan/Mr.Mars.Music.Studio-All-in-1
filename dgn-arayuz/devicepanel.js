@@ -48,7 +48,7 @@
     const v = dev.values[p.id];
     let ctl;
     if (p.type === 'choice') {
-      const s = el('select', { onchange: () => { dev.setParam(p.id, +s.value); OS.auto.touchDevice(dev, p.id, +s.value); } }, p.options.map((o, i) => el('option', { value: i, selected: Math.round(v) === i }, o)));
+      const s = el('select', { onchange: () => { dev.setParam(p.id, +s.value); OS.auto.touchDevice(dev, p.id, +s.value); } }, p.options.map((o, i) => (p.hide && p.hide.includes(i) && Math.round(v) !== i) ? null : el('option', { value: i, selected: Math.round(v) === i }, o)).filter(Boolean));
       ctl = el('label', { class: 'choice' }, el('span', null, p.name), s);
       ctl.setValue = x => s.value = Math.round(x);
     } else if (p.type === 'bool') {

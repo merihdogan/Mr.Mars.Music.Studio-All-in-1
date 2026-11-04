@@ -150,7 +150,12 @@
     { name: 'Ağız Arpı', group: 'Viking', eng: 'wind', lvl: 1.82, harm: 'rich', richExp: 0.55, breath: 0, vib: [5, 0], att: 0.004, lpMul: 5, brass: 1, form: [[700, 9, 6], [1700, 8, 6], [3000, 5, 5]] },
     { name: 'Viking Çerçeve Davulu', group: 'Viking', eng: 'fm', lvl: 0.58, ratio: 1.5, index: 0.5, idec: 0.06, dec: 0.6, sus: 0, rel: 0.2, drop: 1.5, dropT: 0.04, hammer: 0.3, oct: -2 },
   ];
+  // Aynı çalgı iki yerde olmasın: yerini başka model alanlar listelerden çıkar, eski projelerde çalmaya devam eder
+  const SAME = ['Elektro Gitar (Temiz)', 'Elektro Gitar (Distorsiyon)', 'Bas Gitar', 'Jouhikko'];
+  M.forEach(m => { if (SAME.includes(m.name)) m.hidden = true; });
   OS.LIBRARY = M;
+  // Kendi menü cihazı olan gruplar Enstrüman Kütüphanesi'nde tekrar görünmez
+  const OWN = ['Elektro Gitar', 'Elektro Bas', 'Perdesiz Elektro Gitar (Türk)', 'Türk Çalgıları', 'Yaylı', 'Viking'];
   // Çalgı başına makam: tüm projeyi değiştirmeden yalnız bu parçayı komalı çaldırır
   const MAKAMS = ['Rast', 'Uşşak', 'Hüseyni', 'Hicaz', 'Hicazkar', 'Nihavend', 'Kürdi', 'Saba', 'Segah', 'Hüzzam', 'Karcığar', 'Nikriz', 'Muhayyer', 'Bayati Araban', 'Hümayun'];
   const MAKAM_SYS = 'Türk Makamları (53 koma)', NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -159,7 +164,7 @@
   R({
     id: 'inst.library', name: 'Enstrüman Kütüphanesi', type: 'instrument', category: 'Enstrüman',
     params: [
-      { id: 'model', name: 'Enstrüman', type: 'choice', options: M.map(m => m.name), min: 0, max: M.length - 1, def: 0 },
+      { id: 'model', name: 'Enstrüman', type: 'choice', options: M.map(m => m.name), hide: M.map((m, i) => (m.hidden || OWN.includes(m.group)) ? i : -1).filter(i => i >= 0), min: 0, max: M.length - 1, def: 0 },
       { id: 'tone', name: 'Ton', min: -1, max: 1, def: 0 },
       { id: 'expr', name: 'İfade (vibrato)', min: 0, max: 2, def: 1 },
       { id: 'sustain', name: 'Uzunluk', min: 0.3, max: 2, def: 1 },
@@ -421,7 +426,7 @@
     const idx = M.map((x, i) => x.group === group ? i : -1).filter(i => i >= 0);
     R({
       id, name, type: 'instrument', category: 'Enstrüman',
-      params: base.params.map(q => q.id === 'model' ? Object.assign({}, q, { options: idx.map(i => M[i].name), max: idx.length - 1, def: 0 }) : (over[q.id] != null ? Object.assign({}, q, { def: over[q.id] }) : q)),
+      params: base.params.map(q => q.id === 'model' ? Object.assign({}, q, { options: idx.map(i => M[i].name), hide: idx.map((i, k) => M[i].hidden ? k : -1).filter(k => k >= 0), max: idx.length - 1, def: 0 }) : (over[q.id] != null ? Object.assign({}, q, { def: over[q.id] }) : q)),
       create(ctx) { const i = base.create(ctx); return Object.assign({}, i, { set(k, v) { i.set(k, k === 'model' ? idx[U.clamp(Math.round(v), 0, idx.length - 1)] : v); } }); },
     });
   }

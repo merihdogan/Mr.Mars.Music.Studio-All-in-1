@@ -8,9 +8,11 @@
     52: 'Konuşan Davul ↑', 53: 'Konuşan Davul ↓', 54: 'Log Drum', 55: 'Darbuka Düm', 56: 'Darbuka Tek', 57: 'Darbuka Ka', 58: 'Bendir',
     59: 'Erbane', 60: 'Def / Riq', 61: 'Tabla Na', 62: 'Tabla Tin', 63: 'Tabla Ge', 64: 'Afro El Çırpma', 65: 'Parmak Şıklatma', 66: 'Udu',
   };
-  OS.WORLD_MAP = MAP;
+  OS.WORLD_MAP = MAP; // Doğu·Batı·Afro kalıpları tam listeyi kullanır
+  // Davul Makinesi'nde ve Enstrüman Kütüphanesi'nde olanlar bu cihazın listesinde tekrar görünmez, eski notalar çalar
+  const LIST = {}; Object.keys(MAP).forEach(n => { if (n < 52 || n > 60) LIST[n] = MAP[n]; });
   R({
-    id: 'inst.worldperc', name: 'Dünya Perküsyonu (Afro / Doğu)', type: 'instrument', category: 'Enstrüman', drumMap: MAP,
+    id: 'inst.worldperc', name: 'Dünya Perküsyonu (Afro / Hint)', type: 'instrument', category: 'Enstrüman', drumMap: LIST,
     params: [
       { id: 'tune', name: 'Akort', min: -12, max: 12, def: 0, unit: 'st' },
       { id: 'decay', name: 'Uzunluk', min: 0.3, max: 2.5, def: 1 },

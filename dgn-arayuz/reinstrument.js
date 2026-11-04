@@ -11,7 +11,7 @@
   RI.instrumentSelect = function (value, onchange, cls) {
     const s = el('select', { class: cls || 'inst-select', onchange: () => onchange(+s.value) });
     const groups = {};
-    OS.LIBRARY.forEach((m, i) => (groups[m.group] = groups[m.group] || []).push([i, m.name]));
+    OS.LIBRARY.forEach((m, i) => { if (!m.hidden || i === value) (groups[m.group] = groups[m.group] || []).push([i, m.name]); });
     Object.keys(groups).forEach(g => s.appendChild(el('optgroup', { label: OS.t(g) }, groups[g].map(([i, n]) => el('option', { value: i, selected: i === value }, n)))));
     return s;
   };

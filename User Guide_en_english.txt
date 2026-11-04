@@ -75,10 +75,13 @@ New guitars   : Electric Guitars (25 tones: single-coil, humbucker, hollow body,
                Electric Basses (9 tones) and Fretless Electric Guitar
                (Turkish) (7 tones) in Re-Play and the instrument menu. Fretless tones slide
                between notes and have wide vibrato; choose a maqam and tonic per track.
-               Turkish Instruments (20) and Bowed Strings (17, with electric violin, hurdy-gurdy,
+               Turkish Instruments (20) and Bowed Strings (16, with electric violin, hurdy-gurdy,
                nyckelharpa and other European fiddles) are in the instrument menu too.
                Viking Instruments (11): tagelharpa, lyres, horns, flutes, jaw harp, frame drum.
-               The Drum Machine also has darbuka (notes 65, 66, 67).
+               Each instrument appears in one list. Old projects keep playing any sound moved or removed from a list.
+               The Drum Machine also has Turkish and Middle Eastern percussion (notes 65-86):
+               darbuka, bendir, def, erbane, riq, kudüm, davul, nakkare, finger cymbals, spoons,
+               çarpara, tombak, daf and mazhar, with an Eastern Percussion level knob.
 New devices: Creative effects (Envelope Filter, Vinyl, Exciter, De-esser, Harmonizer,
 Trance Gate, Vocoder) in the effect menu; Recorded Drum Kit in the instrument menu.
 Mixer        : Insert slots, sends (FX channels), pan, fader, meters, master.
@@ -86,7 +89,7 @@ Mini Tools   : XY synth pad, XY effect pad (filter, delay, reverb, flanger, phas
                bitcrusher, pitch, gater, beat repeat), MIDI tools (transpose, scale,
                chord, arpeggiator, velocity curve), 2-channel looper, 4x4 pads (note repeat).
 Re-Play      : Turns a music file (MP3, WAV, OGG, FLAC, M4A, MP4 / WebM or MIDI) into notes
-               and plays it back with the instrument you choose (129 instruments: guitars,
+               and plays it back with the instrument you choose (125 instruments: guitars,
                bağlama, cura, oud, kanun, ney, clarinet, zurna, kemençe, strings, piano,
                synth...). Outputs: score (print / PDF / SVG), XML, MIDI, guitar and bass
                tab, Do-Re-Mi list, repeating riffs.

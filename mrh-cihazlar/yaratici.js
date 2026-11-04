@@ -216,8 +216,9 @@
   // ---------------- Kayıtlı davul seti: sesler ayrı dosyadan, ilk gerektiğinde yüklenir ----------------
   const KIT_MAP = {
     35: 'Kick 2', 36: 'Kick', 37: 'Rim', 38: 'Snare', 39: 'Clap', 40: 'Snare 2', 41: 'Tom Alçak 2', 42: 'Hi-Hat Kapalı', 43: 'Tom Alçak', 44: 'Hi-Hat Pedal', 45: 'Tom Orta', 46: 'Hi-Hat Açık', 47: 'Tom Orta 2', 48: 'Tom Yüksek',
-    49: 'Crash', 51: 'Ride', 52: 'China', 54: 'Tambur', 55: 'Splash', 56: 'Cowbell', 60: 'Bongo Yüksek', 61: 'Bongo Alçak', 62: 'Djembe', 63: 'Darbuka', 64: 'Konga', 69: 'Cabasa', 70: 'Shaker', 75: 'Clave', 76: 'Tahta Blok', 81: 'Üçgen',
+    49: 'Crash', 51: 'Ride', 52: 'China', 54: 'Tambur', 55: 'Splash', 56: 'Cowbell', 69: 'Cabasa', 76: 'Tahta Blok', 81: 'Üçgen',
   };
+  // Bongo, djembe, konga, shaker ve clave Dünya Perküsyonu'nda; darbuka Davul Makinesi'nde. Eski notalar yine çalar.
   const buffers = {};
   let loading = null;
   OS.loadDrumSamples = function (ctx) {

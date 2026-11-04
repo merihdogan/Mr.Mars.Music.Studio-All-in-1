@@ -112,6 +112,8 @@
   const DRUM_MAP = {
     35: 'Kick 2', 36: 'Kick', 37: 'Rim', 38: 'Snare', 39: 'Clap', 40: 'Snare 2', 41: 'Tom Alçak 2', 42: 'Hi-Hat Kapalı', 43: 'Tom Alçak',
     44: 'Hi-Hat Pedal', 45: 'Tom Orta', 46: 'Hi-Hat Açık', 47: 'Tom Orta 2', 48: 'Tom Yüksek', 49: 'Crash', 50: 'Tom Yüksek 2', 51: 'Ride', 54: 'Tef', 56: 'Cowbell', 57: 'Crash 2', 65: 'Darbuka Düm', 66: 'Darbuka Tek', 67: 'Darbuka Ka',
+    68: 'Bendir', 69: 'Bendir Kenar', 70: 'Def', 71: 'Def Zil', 72: 'Erbane', 73: 'Riq Tek', 74: 'Riq Zil', 75: 'Kudüm Düm', 76: 'Kudüm Tek', 77: 'Davul Düm', 78: 'Davul Çubuk',
+    79: 'Nakkare', 80: 'Parmak Zili', 81: 'Kaşık', 82: 'Çarpara', 83: 'Tombak Düm', 84: 'Tombak Tek', 85: 'Daf', 86: 'Mazhar',
   };
   OS.DRUM_MAP = DRUM_MAP;
   R({
@@ -125,10 +127,11 @@
       { id: 'hats', name: 'Hi-Hat', min: -30, max: 6, def: -4, unit: 'dB' },
       { id: 'toms', name: 'Tomlar', min: -30, max: 6, def: -2, unit: 'dB' },
       { id: 'cym', name: 'Ziller', min: -30, max: 6, def: -6, unit: 'dB' },
+      { id: 'east', name: 'Doğu Perküsyonu', min: -30, max: 6, def: -2, unit: 'dB' },
       { id: 'vol', name: 'Ses', min: -40, max: 6, def: -3, unit: 'dB' },
     ],
     create(ctx) {
-      const out = ctx.createGain(), p = { kit: 0, tune: 0, decay: 1, kick: 0, snare: 0, hats: -4, toms: -2, cym: -6 };
+      const out = ctx.createGain(), p = { kit: 0, tune: 0, decay: 1, kick: 0, snare: 0, hats: -4, toms: -2, cym: -6, east: -2 };
       const nb = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate), nd = nb.getChannelData(0);
       for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
       const active = [];
@@ -151,6 +154,10 @@
         const v = vel / 127, k = Math.round(p.kit), T = tr(), D = p.decay;
         const bus = ctx.createGain(); bus.connect(out);
         const lvl = g => { bus.gain.value = U.dbToGain(g) * v; };
+        // gergi derili davul: perde düşüşü, üst mod ve vuruş gürültüsü
+        const skin = (f, drop, dec, nAmt, nF) => { tone(t, 'sine', f * drop * T, f * T, 0.03, dec, 1, bus); tone(t, 'triangle', f * 1.5 * drop * T, f * 1.5 * T, 0.02, dec * 0.4, 0.25, bus); if (nAmt) noise(t, Math.min(0.08, dec), 'bandpass', nF, 1.2, nAmt, bus); };
+        // çerçeve davulu halkaları
+        const rings = (dec, amt, c) => { for (let i = 0; i < c; i++) noise(t + i * 0.006, dec * (1 - i * 0.2), 'bandpass', 7000 + i * 1300, 4, amt * (0.5 - i * 0.1), bus); };
         switch (n) {
           case 35: case 36: {
             lvl(p.kick);
@@ -195,9 +202,28 @@
             break;
           }
           case 54: lvl(p.cym); noise(t, 0.15, 'highpass', 9000, 1, 0.5, bus); break;
-          case 65: lvl(p.toms); tone(t, 'sine', 150 * T, 95 * T, 0.03, 0.45 * D, 1, bus); tone(t, 'triangle', 230 * T, 145 * T, 0.02, 0.18 * D, 0.25, bus); noise(t, 0.05, 'bandpass', 700, 1.2, 0.1, bus); break;
-          case 66: lvl(p.toms); noise(t, 0.05 * D, 'bandpass', 4200, 2, 0.8, bus); tone(t, 'sine', 880 * T, 720 * T, 0.02, 0.06, 0.35, bus); break;
-          case 67: lvl(p.toms); noise(t, 0.035 * D, 'bandpass', 3000, 2.5, 0.6, bus); break;
+          case 65: lvl(p.east); tone(t, 'sine', 150 * T, 95 * T, 0.03, 0.45 * D, 1, bus); tone(t, 'triangle', 230 * T, 145 * T, 0.02, 0.18 * D, 0.25, bus); noise(t, 0.05, 'bandpass', 700, 1.2, 0.1, bus); break;
+          case 66: lvl(p.east); noise(t, 0.05 * D, 'bandpass', 4200, 2, 0.8, bus); tone(t, 'sine', 880 * T, 720 * T, 0.02, 0.06, 0.35, bus); break;
+          case 67: lvl(p.east); noise(t, 0.035 * D, 'bandpass', 3000, 2.5, 0.6, bus); break;
+          case 68: lvl(p.east); skin(75, 1.4, 0.7 * D, 0.05, 600); noise(t + 0.004, 0.25 * D, 'bandpass', 3500, 0.8, 0.25, bus); break; // bendir: derin deri + tel cızıltısı
+          case 69: lvl(p.east); noise(t, 0.06 * D, 'bandpass', 2400, 1.5, 0.7, bus); tone(t, 'triangle', 420 * T, 380 * T, 0.02, 0.07, 0.3, bus); noise(t + 0.004, 0.12 * D, 'bandpass', 3500, 0.8, 0.2, bus); break;
+          case 70: lvl(p.east); skin(140, 1.3, 0.35 * D, 0.2, 1200); rings(0.22 * D, 0.5, 2); break;
+          case 71: lvl(p.east); rings(0.25 * D, 1, 3); tone(t, 'sine', 420 * T, 380 * T, 0.02, 0.06, 0.15, bus); break;
+          case 72: lvl(p.east); skin(120, 1.3, 0.5 * D, 0.1, 900); rings(0.25 * D, 0.4, 2); break;
+          case 73: lvl(p.east); noise(t, 0.05 * D, 'bandpass', 3400, 2, 0.7, bus); rings(0.1 * D, 0.5, 2); break;
+          case 74: lvl(p.east); rings(0.3 * D, 1.2, 4); break;
+          case 75: lvl(p.east); skin(130, 1.25, 0.3 * D, 0.25, 1200); break;
+          case 76: lvl(p.east); tone(t, 'sine', 320 * T, 290 * T, 0.02, 0.1 * D, 0.8, bus); noise(t, 0.025, 'bandpass', 3000, 2, 0.4, bus); break;
+          case 77: lvl(p.east); skin(62, 1.8, 0.7 * D, 0.3, 1100); break; // davul: tokmak
+          case 78: lvl(p.east); noise(t, 0.08 * D, 'bandpass', 2200, 1, 0.7, bus); tone(t, 'triangle', 300 * T, 260 * T, 0.02, 0.07, 0.4, bus); break; // davul: ince çubuk
+          case 79: lvl(p.east); tone(t, 'sine', 300 * T, 240 * T, 0.03, 0.18 * D, 0.8, bus); tone(t, 'triangle', 560 * T, 480 * T, 0.02, 0.06, 0.2, bus); noise(t, 0.02, 'bandpass', 2500, 1.5, 0.35, bus); break;
+          case 80: lvl(p.east); [3100, 4700, 6900].forEach((f, i) => tone(t, 'sine', f * T, 0, 0, (0.5 - i * 0.12) * D, 0.28 - i * 0.06, bus)); break;
+          case 81: lvl(p.east); [0, 0.012].forEach(o => { noise(t + o, 0.015, 'bandpass', 3500, 3, 0.7, bus); tone(t + o, 'sine', 1500 * T, 0, 0, 0.018, 0.25, bus); }); break;
+          case 82: lvl(p.east); noise(t, 0.04 * D, 'bandpass', 5000, 4, 0.9, bus); tone(t, 'sine', 2600 * T, 0, 0, 0.06, 0.2, bus); break;
+          case 83: lvl(p.east); skin(105, 1.5, 0.4 * D, 0.1, 800); break;
+          case 84: lvl(p.east); noise(t, 0.04 * D, 'bandpass', 3800, 2, 0.8, bus); tone(t, 'sine', 760 * T, 640 * T, 0.02, 0.05, 0.35, bus); break;
+          case 85: lvl(p.east); skin(85, 1.35, 0.55 * D, 0.08, 700); noise(t + 0.006, 0.35 * D, 'bandpass', 5500, 1, 0.3, bus); break; // daf: iç halkalar
+          case 86: lvl(p.east); skin(95, 1.3, 0.5 * D, 0.1, 800); rings(0.3 * D, 0.7, 3); break;
           case 56: lvl(p.toms); tone(t, 'square', 540 * T, 0, 0, 0.25, 0.25, bus); tone(t, 'square', 800 * T, 0, 0, 0.25, 0.25, bus); break;
           default: {
             // haritada olmayan nota: perdeli darbe

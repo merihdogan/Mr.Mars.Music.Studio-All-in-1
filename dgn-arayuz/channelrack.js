@@ -49,7 +49,8 @@
     if (!tracks.length) grid.appendChild(el('div', { class: 'muted', style: 'padding:12px' }, 'Enstrüman parçası yok. “+ Kanal” ile ekleyin.'));
     tracks.forEach(t => {
       const drum = t.instrument && t.instrument.def.drumMap;
-      const rows = drum ? (CR.expanded[t.id] ? DRUM_ROWS : DRUM_ROWS.slice(0, 4)) : [t.rackNote || 60];
+      const level = CR.expanded[t.id] || 0, baseRows = DRUM_ROWS.filter(n => drum && drum[n]), allRows = drum ? baseRows.concat(Object.keys(drum).map(Number).filter(n => !baseRows.includes(n)).sort((a, b) => a - b)) : [];
+      const rows = drum ? (level === 2 ? allRows : level === 1 ? baseRows : baseRows.slice(0, 4)) : [t.rackNote || 60];
       rows.forEach((note, ri) => grid.appendChild(row(t, note, ri, drum, rows.length)));
     });
     root.appendChild(grid);
@@ -58,13 +59,13 @@
 
   function row(t, note, ri, drum, nrows) {
     const c = clipFor(t, false);
-    const name = drum ? (OS.DRUM_MAP[note] || U.noteName(note)) : t.name;
+    const name = drum ? (drum[note] || U.noteName(note)) : t.name;
     const head = el('div', { class: 'rack-head', style: { borderLeftColor: t.color } });
     if (ri === 0) {
       head.append(
         el('button', { class: 'mini m' + (t.mute ? ' on' : ''), title: 'Sessiz', onclick: () => { t.mute = !t.mute; OS.engine.updateMix(); CR.render(); } }, 'M'),
         el('button', { class: 'mini s' + (t.solo ? ' on' : ''), title: 'Solo', onclick: () => { t.solo = !t.solo; OS.engine.updateMix(); CR.render(); } }, 'S'));
-      if (drum) head.appendChild(el('button', { class: 'mini', title: 'Tüm davul satırları', onclick: () => { CR.expanded[t.id] = !CR.expanded[t.id]; CR.render(); } }, CR.expanded[t.id] ? '−' : '+'));
+      if (drum) head.appendChild(el('button', { class: 'mini', title: 'Tüm davul satırları', onclick: () => { CR.expanded[t.id] = ((CR.expanded[t.id] || 0) + 1) % 3; CR.render(); } }, (CR.expanded[t.id] || 0) === 2 ? '−' : '+'));
     } else head.append(el('span', { style: 'width:' + (drum ? 72 : 48) + 'px' }));
     head.appendChild(el('span', { class: 'rack-name', title: t.name, onclick: () => { const cc = clipFor(t, true); ui.showView('arrange'); ui.pianoRoll.open(t, cc); } }, drum ? name : t.name));
     if (!drum) {
