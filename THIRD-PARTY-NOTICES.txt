@@ -1,0 +1,19 @@
+Third-party components in Mr. Mars Music Studio All in 1
+
+The MIT license in the LICENSE file covers this project's own code. It does not
+replace the licenses of the components below.
+
+MP3 encoder
+  File:     mrmars-cekirdek/mp3kod.js
+  Software: lamejs 1.2.1 (https://github.com/zhuker/lamejs), a JavaScript port of LAME
+  LAME:     https://lame.sourceforge.net/
+  License:  GNU Lesser General Public License, version 3 (LGPL-3.0)
+  Texts:    mrmars-cekirdek/LISANS-LGPL-3.0.txt, mrmars-cekirdek/LISANS-GPL-3.0.txt,
+            mrmars-cekirdek/LISANS-lamejs.txt
+  Changes:  The library code is unchanged. Only a one-line notice was added at the top.
+  It is a separate file loaded when needed, so you can replace it with your own
+  compatible build of the library.
+
+Recorded drum samples
+  File:     mrh-cihazlar/ornek-davul.js
+  License:  CC0 1.0 Universal (public domain dedication) for the source recordings

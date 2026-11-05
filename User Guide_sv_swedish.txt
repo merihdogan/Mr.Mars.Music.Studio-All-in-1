@@ -206,3 +206,8 @@ BEGRÄNSNINGAR
 - Metal Creative-riffen genereras med regler, de är inte inspelningar; redigera dem som MIDI.
 
 Mr. Mars Music Studio All in 1 — MRH DGN
+
+Licens
+------
+Projektets egen kod har MIT-licens (se LICENSE). Tredjepartskomponenter behåller sina egna licenser,
+bland annat MP3-kodaren med LGPL-3.0 (se THIRD-PARTY-NOTICES.txt).

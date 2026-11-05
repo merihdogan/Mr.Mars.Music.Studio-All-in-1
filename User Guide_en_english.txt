@@ -293,3 +293,8 @@ KNOWN LIMITS
 - No automation on the master channel or the Amp Rack.
 
 Mr. Mars Music Studio All in 1 — MRH DGN
+
+License
+-------
+This project's own code is under the MIT License (see LICENSE). Third-party components keep
+their own licenses, including the LGPL-3.0 MP3 encoder (see THIRD-PARTY-NOTICES.txt).

@@ -301,3 +301,8 @@ BİLİNEN SINIRLAR
 - Master kanal ve Amfi Rack için otomasyon yoktur.
 
 Mr. Mars Music Studio All in 1 — MRH DGN
+
+Lisans
+------
+Projenin kendi kodu MIT lisanslıdır (LICENSE dosyası). Üçüncü taraf bileşenler kendi lisanslarıyla
+kalır; LGPL-3.0 lisanslı MP3 kodlayıcı da buna dahildir (THIRD-PARTY-NOTICES.txt dosyası).

@@ -320,7 +320,7 @@
           el('div', null, el('span', null, 'Veri klasörü'), el('b', null, 'veri\\profil'))),
         el('p', { class: 'muted' }, 'Projeler ve ayarlar uygulama klasöründeki “veri” dizininde saklanır; klasörü USB’ye kopyalayıp başka bilgisayarda kurulumsuz çalıştırabilirsiniz.'),
         el('button', { class: 'btn sm', onclick: ui.openManual }, 'Kullanım kılavuzu (İngilizce)'),
-        el('p', { class: 'muted' }, '© 2026 Mr. Mars Music Studio')));
+        el('p', { class: 'muted' }, '© 2026 Mr. Mars Music Studio'), el('p', { class: 'muted' }, 'MIT lisansı. MP3 kodlayıcı: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Ayrıntı: THIRD-PARTY-NOTICES.txt')));
     U.modal('Hakkında', box);
   }
   ui.about = about;

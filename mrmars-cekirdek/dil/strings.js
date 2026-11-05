@@ -1,6 +1,7 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+  ["MIT lisansı. MP3 kodlayıcı: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Ayrıntı: THIRD-PARTY-NOTICES.txt","MIT License. MP3 encoder: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Details: THIRD-PARTY-NOTICES.txt","MIT-Lizenz. MP3-Encoder: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Details: THIRD-PARTY-NOTICES.txt","Licencia MIT. Codificador MP3: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Detalles: THIRD-PARTY-NOTICES.txt","Licence MIT. Encodeur MP3 : LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Détails : THIRD-PARTY-NOTICES.txt","MIT-licens. MP3-kodare: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Detaljer: THIRD-PARTY-NOTICES.txt","Лицензия MIT. MP3-кодировщик: LAME / lamejs (LGPL-3.0), lame.sourceforge.net. Подробнее: THIRD-PARTY-NOTICES.txt"],
   ["Format Dönüştürücü","Format Converter","Formatkonverter","Conversor de formato","Convertisseur de format","Formatkonverterare","Конвертер форматов"],
   ["Format Dönüştürücü…","Format Converter…","Formatkonverter…","Conversor de formato…","Convertisseur de format…","Formatkonverterare…","Конвертер форматов…"],
   ["Kalite ayarı","Quality setting","Qualitätseinstellung","Ajuste de calidad","Réglage de qualité","Kvalitetsinställning","Настройка качества"],
