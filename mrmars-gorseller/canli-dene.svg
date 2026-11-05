@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="84" viewBox="0 0 520 84" role="img" aria-label="Try the live app. No install, free.">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#1f8fff"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="518" height="82" rx="41" fill="url(#g)"/>
+  <circle cx="44" cy="42" r="28" fill="#fff"/>
+  <path d="M35 27 L58 42 L35 57 Z" fill="#14202e"/>
+  <text x="86" y="39" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="27" font-weight="800" fill="#fff">TRY THE LIVE APP</text>
+  <text x="86" y="63" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#fff">Uygulamayı hemen dene · No install · Free</text>
+</svg>
