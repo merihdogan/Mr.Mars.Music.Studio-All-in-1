@@ -82,8 +82,15 @@ New guitars   : Electric Guitars (25 tones: single-coil, humbucker, hollow body,
                The Drum Machine also has Turkish and Middle Eastern percussion (notes 65-86):
                darbuka, bendir, def, erbane, riq, kudüm, davul, nakkare, finger cymbals, spoons,
                çarpara, tombak, daf and mazhar, with an Eastern Percussion level knob.
+Format Converter: Tools menu. Converts many audio or video files on this computer to WAV, AIFF,
+               FLAC, Apple Lossless, MP3, AAC, Opus or MP4 with bit depth, bitrate, sample rate and
+               channels. Trim, fades, track details and cover; download singly or as ZIP. Nothing is uploaded.
+Quality settings: in Send to Phone, Mixdown and Format Converter. Loudness target in LUFS, true peak
+               limiter, high-pass, bass, treble, stereo width, compressor, dither.
 Send to Phone: top bar button, in every tab. Sends the project, the loop region or the latest
-               DJ mix to a phone as MP3, WAV or MP4. Scan the QR code with the phone and the music
+               DJ mix to a phone. Formats: MP3 192/320, AAC M4A, MP4, and for distribution WAV 24-bit
+               44.1/48/96 kHz, WAV 16-bit, FLAC 16/24-bit and Apple Lossless. Save to computer too.
+               Scan the QR code with the phone and the music
                arrives right away, with no upload. The phone can ask for other formats too. Both
                devices need internet to connect; only encrypted connection details use a relay.
 New devices: Creative effects (Envelope Filter, Vinyl, Exciter, De-esser, Harmonizer,

@@ -1,8 +1,9 @@
 /* Mr. Mars Music Studio · MRH DGN — çevrimdışı önbellek
  * Dosya listesi index.html'den okunur, yeni dosya için liste tutmak gerekmez.
- * Önbellekten hemen açılır, internet varsa arka planda güncellenir (sonraki açılışta geçerli olur). */
-const CACHE = 'mrmars-v17';
-const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js', 'mrh-cihazlar/ornek-davul.js', 'telefon.html', 'mrmars-cekirdek/mp3kod.js', 'mrmars-cekirdek/telefon-baglanti.js', 'mrmars-cekirdek/qr.js', 'User Manual_en_english.html',
+ * Program dosyaları önce ağdan istenir, böylece yenileme hep son sürümü açar; ağ yoksa önbellek kullanılır.
+ * Görsel ve büyük dosyalar önbellekten hemen açılır, arka planda güncellenir. */
+const CACHE = 'mrmars-v20';
+const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js', 'mrh-cihazlar/ornek-davul.js', 'telefon.html', 'mrmars-cekirdek/mp3kod.js', 'mrmars-cekirdek/telefon-baglanti.js', 'mrmars-cekirdek/qr.js', 'mrmars-cekirdek/kayipsiz.js', 'User Manual_en_english.html',
   'mrmars-gorseller/icon-128.png', 'mrmars-gorseller/icon-256.png', 'mrmars-gorseller/icon-512.png', 'mrmars-gorseller/logo-1024.png', 'mrmars-gorseller/logo-512.png'];
 
 self.addEventListener('install', e => {
@@ -32,6 +33,13 @@ self.addEventListener('fetch', e => {
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const hit = await cache.match(req, { ignoreSearch: true }) || (req.mode === 'navigate' ? await cache.match('index.html') : null);
+    const isCode = req.mode === 'navigate' || /\.(html|js|css|webmanifest)$/.test(url.pathname);
+    if (isCode && !url.pathname.endsWith('ornek-davul.js')) {
+      // Tarayıcının HTTP önbelleğini de atla; ağ yavaşsa 4 sn sonra önbellekten aç
+      const fresh = fetch(url.href, { cache: 'no-cache', credentials: 'same-origin' }).then(res => { if (res.ok) cache.put(url.pathname.endsWith('/') ? 'index.html' : req, res.clone()); return res; });
+      if (!hit) return fresh;
+      return Promise.race([fresh.then(r => (r.ok ? r : hit)).catch(() => hit), new Promise(r => setTimeout(() => r(hit), 4000))]);
+    }
     const net = fetch(req).then(res => { if (res.ok) cache.put(req, res.clone()); return res; });
     if (hit) { e.waitUntil(net.catch(() => { })); return hit; }
     return net;

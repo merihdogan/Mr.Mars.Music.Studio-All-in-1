@@ -108,6 +108,7 @@
       if (typeof e.data === 'string') {
         const m = JSON.parse(e.data);
         if (m.kind === 'status') on.status && on.status(m);
+        if (m.kind === 'formats') on.formats && on.formats(m.list);
         if (m.kind === 'error') on.remoteError && on.remoteError(m);
         if (m.kind === 'file') { cur = { meta: m, parts: [], got: 0 }; on.start && on.start(m); }
         return;

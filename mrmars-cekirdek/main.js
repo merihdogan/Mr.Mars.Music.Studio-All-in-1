@@ -102,6 +102,7 @@
     ],
     lang: langMenu,
     tools: () => [
+      { label: 'Format Dönüştürücü…', onclick: () => OS.converter.open() },
       { label: 'Ses ayarları (giriş/çıkış, gecikme)…', onclick: audioSettings },
       { label: 'MIDI ayarları (Clock, controller)…', onclick: () => OS.midiClock.dialog() },
       { label: 'Klavye kısayolları', onclick: shortcutsHelp },
@@ -142,10 +143,13 @@
     const loopOnly = el('input', { type: 'checkbox' }), norm = el('input', { type: 'checkbox' }), stems = el('input', { type: 'checkbox' });
     const wantMidi = el('input', { type: 'checkbox' }), wantScore = el('input', { type: 'checkbox' }), wantTab = el('input', { type: 'checkbox' }), audioOn = el('input', { type: 'checkbox', checked: true });
     const tail = el('input', { class: 'inp', type: 'number', value: 3, min: 0, max: 30, style: 'width:70px' });
+    const outFmt = el('select', null, [['wav', 'WAV'], ['aiff', 'AIFF'], ['flac', 'FLAC'], ['alac', 'Apple Lossless (M4A)'], ['mp3', 'MP3 320 kbps'], ['aac', 'AAC (M4A)'], ['opus', 'Opus (OGG)']].map(([v, t]) => el('option', { value: v }, t)));
+    const makeOut = async (b, name) => { const Lab = OS.audioLab, q = await Lab.process(b.getChannelData(0), b.numberOfChannels > 1 ? b.getChannelData(1) : b.getChannelData(0), b.sampleRate, Lab.settings, 0), bi = +bits.value, k = outFmt.value; const f = await Lab.encode(q, { kind: k, bits: (k === 'wav' || bi !== 32) ? bi : 24, kbps: k === 'mp3' ? 320 : k === 'aac' ? 256 : 192 }, name, Object.assign({}, Lab.meta, { title: Lab.meta.title || name }), null, Lab.settings.dither); U.download(f, f.name); U.toast(f.name + ' · ' + Lab.dbStr(q.after.lufs) + ' LUFS · ' + Lab.dbStr(q.after.truePeakDb) + ' dBTP'); };
     const body = el('div', { class: 'form-grid' },
-      'Bit derinliği', bits, 'Örnekleme hızı', sr, 'Yalnızca döngü bölgesi', loopOnly, 'Normalize et', norm, 'Kuyruk (saniye)', tail, 'Her parçayı ayrı (stem)', stems,
+      'Biçim', outFmt, 'Bit derinliği', bits, 'Örnekleme hızı', sr, 'Yalnızca döngü bölgesi', loopOnly, 'Normalize et', norm, 'Kuyruk (saniye)', tail, 'Her parçayı ayrı (stem)', stems,
       'Ses (WAV)', audioOn, 'MIDI dosyaları', wantMidi, 'Nota (XML + yazdırılabilir SVG)', wantScore, 'Tab, riff ve nota listesi (TXT)', wantTab);
-    U.modal('Mixdown / Dışa Aktar', body, [{ label: 'İptal' }, {
+    const outer = el('div', { style: 'display:flex;flex-direction:column;gap:10px;width:min(640px,86vw)' }, body, OS.audioLab.panel(null));
+    U.modal('Mixdown / Dışa Aktar', outer, [{ label: 'İptal' }, {
       label: 'Dışa aktar', primary: true, onclick: () => {
         (async () => {
           const o = { sampleRate: +sr.value, loopOnly: loopOnly.checked, normalize: norm.checked, tail: +tail.value };
@@ -153,8 +157,8 @@
             if (wantMidi.checked || wantScore.checked || wantTab.checked) exportNotation({ midi: wantMidi.checked, score: wantScore.checked, tab: wantTab.checked });
             if (!audioOn.checked) { U.toast('Dışa aktarma tamamlandı'); return; }
             if (stems.checked) {
-              for (const t of OS.project.tracks.filter(t => t.clips.length)) { U.toast('Render: ' + t.name); const b = await E.render(Object.assign({ trackId: t.id }, o)); U.download(U.bufferToWav(b, +bits.value), OS.project.name + ' - ' + t.name + '.wav'); }
-            } else { U.toast('Render ediliyor…'); const b = await E.render(o); U.download(U.bufferToWav(b, +bits.value), OS.project.name + '.wav'); }
+              for (const t of OS.project.tracks.filter(t => t.clips.length)) { U.toast('Render: ' + t.name); const b = await E.render(Object.assign({ trackId: t.id }, o)); await makeOut(b, OS.project.name + ' - ' + t.name); }
+            } else { U.toast('Render ediliyor…'); const b = await E.render(o); await makeOut(b, OS.project.name); }
             U.toast('Dışa aktarma tamamlandı');
           } catch (e) { U.toast('Hata: ' + e.message); console.error(e); }
         })();

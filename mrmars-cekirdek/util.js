@@ -121,6 +121,7 @@ window.OS = window.OS || {};
   };
 
   // ---- WAV kodlayıcı ----
+  U.stamp = () => { const d = new Date(), p = v => String(v).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '-' + p(d.getHours()) + '-' + p(d.getMinutes()); };
   U.encodeWav = function (channels, sampleRate, bits = 16) {
     const nCh = channels.length, len = channels[0].length, bps = bits / 8;
     const buf = new ArrayBuffer(44 + len * nCh * bps), v = new DataView(buf);

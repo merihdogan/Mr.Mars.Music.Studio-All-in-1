@@ -971,7 +971,7 @@
       const mime = ['audio/webm;codecs=opus', 'audio/mp4'].find(m => MediaRecorder.isTypeSupported(m)) || '', isMp4 = mime.startsWith('audio/mp4');
       const mr = new MediaRecorder(dest.stream, Object.assign({ audioBitsPerSecond: 256000 }, mime ? { mimeType: mime } : {}));
       mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-      mr.onstop = () => { try { masterOut.disconnect(dest); } catch (e) { } U.download(new Blob(chunks, { type: isMp4 ? 'audio/mp4' : 'audio/webm' }), 'dj-set-' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + (isMp4 ? '.m4a' : '.webm')); };
+      mr.onstop = () => { try { masterOut.disconnect(dest); } catch (e) { } U.download(new Blob(chunks, { type: isMp4 ? 'audio/mp4' : 'audio/webm' }), 'dj-set-' + U.stamp() + (isMp4 ? '.m4a' : '.webm')); };
       mr.start(1000); recorder = { mr };
       btn.textContent = OS.t('■ Kaydı Bitir ve İndir'); btn.classList.add('on');
       return;
@@ -980,7 +980,8 @@
       recorder.sp.disconnect(); recorder.sil.disconnect();
       const tot = recorder.L.reduce((a, c) => a + c.length, 0), L = new Float32Array(tot), R = new Float32Array(tot);
       let o = 0; recorder.L.forEach((c, i) => { L.set(c, o); R.set(recorder.R[i], o); o += c.length; });
-      U.download(U.encodeWav([L, R], E.ctx.sampleRate, 16), 'dj-set-' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.wav');
+      DJ.lastRec = { L, R, sr: E.ctx.sampleRate, name: 'dj-set-' + U.stamp() };
+      U.download(U.encodeWav([L, R], E.ctx.sampleRate, 16), 'dj-set-' + U.stamp() + '.wav');
       recorder = null; btn.textContent = OS.t('● Seti Kaydet'); btn.classList.remove('on');
       return;
     }
@@ -1066,7 +1067,7 @@
   MEM.blob = () => new Promise(res => { const f = () => { MEM.mr.removeEventListener('dataavailable', f); res(new Blob(MEM.chunks, { type: MEM.type })); }; MEM.mr.addEventListener('dataavailable', f); MEM.mr.requestData(); });
   MEM.save = () => {
     if (!MEM.mr) { U.toast(OS.t('Henüz kaydedilecek bir şey yok')); return; }
-    const finish = () => { MEM.mr.removeEventListener('dataavailable', finish); U.download(new Blob(MEM.chunks, { type: MEM.type }), 'dj-set-bellek-' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.webm'); };
+    const finish = () => { MEM.mr.removeEventListener('dataavailable', finish); U.download(new Blob(MEM.chunks, { type: MEM.type }), 'dj-set-bellek-' + U.stamp() + '.webm'); };
     MEM.mr.addEventListener('dataavailable', finish); MEM.mr.requestData();
   };
 

@@ -84,8 +84,15 @@ Yeni gitarlar: Yeniden Çal ve enstrüman menüsünde Elektro Gitarlar (25 ton: 
               Davul Makinesi'nde Türk ve Orta Doğu perküsyonları da vardır (65-86. notalar):
               darbuka, bendir, def, erbane, riq, kudüm, davul, nakkare, parmak zili, kaşık,
               çarpara, tombak, daf ve mazhar; seviyesi Doğu Perküsyonu düğmesiyle ayarlanır.
+Format Dönüştürücü: Araçlar menüsü. Çok sayıda ses veya video dosyasını bu bilgisayarda WAV, AIFF, FLAC,
+              Apple Lossless, MP3, AAC, Opus ya da MP4'e çevirir; bit derinliği, bit hızı, örnekleme hızı,
+              kanallar, kesme, fade, parça bilgileri ve kapak; tek tek veya ZIP indirme. Hiçbir şey yüklenmez.
+Kalite ayarları: Telefona Gönder, Mixdown ve Format Dönüştürücü'de. LUFS hedefi, gerçek tepe sınırlayıcı,
+              alt kesim, bas, tiz, stereo genişlik, kompresör, dither.
 Telefona Gönder: Üst çubuktaki düğme, her sekmede çalışır. Projeyi, döngü bölgesini veya son DJ
-              mixini MP3, WAV ya da MP4 olarak gönderir. QR kodu telefonla okutun, müzik hemen gelir;
+              mixini gönderir. Biçimler: MP3 192/320, AAC M4A, MP4; dağıtım için WAV 24-bit 44.1/48/96 kHz,
+              WAV 16-bit, FLAC 16/24-bit ve Apple Lossless. Bilgisayara kaydetme de vardır.
+              QR kodu telefonla okutun, müzik hemen gelir;
               hiçbir yere yüklenmez. Telefondan başka biçim de istenebilir. Bağlanmak için iki cihazda
               internet gerekir; aracı servisten yalnız şifreli bağlantı bilgisi geçer.
 Yeni cihazlar: Efekt menüsünde Yaratıcı grubu (Zarf Filtre, Plak, Parlatıcı, De-esser,

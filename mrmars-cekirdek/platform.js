@@ -93,7 +93,22 @@
   // ---------------- Kurulabilir uygulama ----------------
   if (P.web && isSecureContext) {
     const link = document.createElement('link'); link.rel = 'manifest'; link.href = 'manifest.webmanifest'; document.head.appendChild(link);
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('mrmars-sw.js').catch(() => { });
+    if ('serviceWorker' in navigator) {
+      // Açık pencerede yeni sürüm yayınlanınca haber ver: çalan müzik kesilmesin diye kendiliğinden yenilemez
+      const had = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!had || document.getElementById('update-banner')) return;
+        const b = document.createElement('div'); b.id = 'update-banner';
+        b.style.cssText = 'position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:100000;background:#134e4a;color:#fff;padding:8px 12px;border-radius:8px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.5);font-size:13px';
+        const t = document.createElement('span'); t.textContent = 'Yeni sürüm hazır';
+        const r = document.createElement('button'); r.className = 'btn sm primary'; r.textContent = 'Yenile'; r.onclick = () => location.reload();
+        b.append(t, r); document.body.appendChild(b);
+      });
+      navigator.serviceWorker.register('mrmars-sw.js').then(reg => {
+        window.OS_checkUpdate = () => reg.update().catch(() => { });
+        setInterval(window.OS_checkUpdate, 3600000);
+      }).catch(() => { });
+    }
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { });
     addEventListener('beforeinstallprompt', e => { e.preventDefault(); P.installEvent = e; });
   }
