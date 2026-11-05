@@ -306,12 +306,12 @@
   OS.YAPIMCI = 'MRH DGN';
   ui.openManual = () => window.open(encodeURI('User Manual_en_english.html'), '_blank');
   function about() {
-    const feat = ['Aranjman, Session ve Desen Rafı', 'Mikser, otomasyon ve 49+ efekt / enstrüman', 'Amfi Rack: amfi, kabin, pedal, bölücü yolları', 'DJ Mikser: 4 deck, stem, Automix', 'Yeniden Çal: sesi notaya çevir, nota / tab / riff', 'Mini Araçlar: XY ped, arpej, looper'];
+    const feat = ['Üret: aranjman, Session, Desen Rafı, mikser ve 23 türde hazır altyapı', 'Çal: 125 çalgı sesi, Amfi Rack ve 50’den fazla efekt', 'Sahne: 4 deck DJ Mikser, stem, Automix ve kontrolcü tanıma', 'Doğu ve Batı: parça başına 15 Türk makamı, perdesiz elektro gitar, Viking çalgıları', 'Dönüştür: sesi notaya çevir, nota, tab ve MIDI al', 'Paylaş: QR ile telefona gönder; FLAC, Apple Lossless ve LUFS ayarları'];
     const box = el('div', { class: 'about' },
       el('img', { class: 'about-logo', src: 'mrmars-gorseller/logo-512.png', srcset: 'mrmars-gorseller/logo-512.png 1x, mrmars-gorseller/logo-1024.png 2x', alt: 'Mr. Mars Music Studio All in 1' }),
       el('div', { class: 'about-info' },
         el('div', { class: 'about-name' }, 'Mr. Mars Music Studio'), el('div', { class: 'about-sub' }, 'All in 1 • ' + ui.VERSION), el('div', { class: 'about-sub' }, 'Merih Dogan'),
-        el('p', null, 'Kurulum gerektirmeyen, internet bağlantısı olmadan çalışan, taşınabilir müzik yapım ortamı.'),
+        el('p', { style: 'font-size:15px;font-weight:600' }, 'Tarayıcında tam bir müzik stüdyosu.'), el('p', null, 'Kurulum, hesap ve ücret yok. Parçanı yap, setini çal, QR kodu okutup müziğini telefonuna al. Açık kaynak; projelerin ve dosyaların kendi bilgisayarında kalır.'),
         el('ul', null, feat.map(f => el('li', null, f))),
         el('div', { class: 'about-tech' },
           el('div', null, el('span', null, 'Ses motoru'), el('b', null, E.ctx.sampleRate + ' Hz, 32-bit float')),

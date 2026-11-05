@@ -1,3 +1,26 @@
+<p align="center"><img src="mrmars-gorseller/tanitim-kart.png" alt="Mr. Mars Music Studio All in 1" width="820"></p>
+
+<h1 align="center">A full music studio in your browser</h1>
+
+<p align="center"><b>No install. No account. No cost.</b> Make a track, mix a set and scan a QR code to get it on your phone.</p>
+
+<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1/"><b>▶ Open the app</b></a> · <a href="User%20Manual_en_english.pdf">Manual (PDF)</a> · <a href="LICENSE">MIT License</a></p>
+
+| | |
+|---|---|
+| 🎚 **Produce** | Arranger, Session, Pattern Rack, mixer and automation |
+| 🎧 **Perform** | 4-deck DJ Mixer with stems, Automix and transition recipes; ready mappings for 97 controller models |
+| 🎸 **Sound** | 125 instrument sounds, Amp Rack and 50+ effects, including European metal tones and basses |
+| 🇹🇷 **East meets West** | 15 Turkish maqams in 53-comma tuning for each track, 20 Turkish instruments, 7 fretless electric guitar tones and 22 Eastern percussion sounds |
+| 🎼 **Start fast** | 23 backing styles from House to Oriental; Re-Play turns audio into notes, tabs and MIDI |
+| 📱 **Send to phone** | One QR scan and the music goes directly to your phone, with no file upload |
+| 💿 **Release ready** | MP3, AAC, WAV, AIFF, FLAC, Apple Lossless and Opus, with LUFS targets, a true peak limiter and a batch Format Converter on your own computer |
+| 🌍 **Portable** | 7 languages, offline after the first visit, or run it from a USB folder |
+
+<p align="center"><img src="mrmars-gorseller/tanitim-dj.jpg" alt="DJ Mixer" width="49%"> <img src="mrmars-gorseller/tanitim-amfi.jpg" alt="Amp Rack" width="49%"></p>
+
+---
+
 MR. MARS MUSIC STUDIO ALL IN 1 — DGN.V.06 ·
 
 From Traditional to Universal: Limitless Performance  
