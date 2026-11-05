@@ -19,6 +19,38 @@
 
 <p align="center"><img src="mrmars-gorseller/tanitim-dj.jpg" alt="DJ Mixer" width="49%"> <img src="mrmars-gorseller/tanitim-amfi.jpg" alt="Amp Rack" width="49%"></p>
 
+## Every tab is a studio of its own
+
+| Tab | What makes it stand out |
+|---|---|
+| 🎼 **Arrange** | Audio and MIDI tracks, takes and comping, piano roll and automation lanes. Right-click a clip to split it into vocals, drums, bass and melody, fit it to the tempo or shift its pitch. |
+| 🎬 **Session** | Launch clips and whole scenes live, always on time. Build ideas on a grid, like a performance instrument. |
+| 🥁 **Pattern Rack** | Step sequencer up to 64 steps with accents, ghost notes and swing. One click writes a full backing in 23 styles, as MIDI you can edit. |
+| 🎛 **Mixer** | Insert effects, send channels, pan, faders, meters and master chain. Any tab or panel can open in its own window for a second screen. |
+| 🕹 **Mini Tools** | XY synth pad and XY effect pad with filter, bitcrusher, gater and beat repeat. Arpeggiator, chord and scale tools, a 2-channel looper and 4×4 pads. |
+| 🎵 **Re-Play** | Drop in a song or a video. Get notes, score, guitar and bass tabs, riffs and MIDI, then replay it on any of 125 instruments. |
+| 🎸 **Amp Rack** | Plug in your guitar. Amps, cabs, pedals, tuner, 2 and 3-way splitters, parallel stereo and a live mode with MIDI preset switching. |
+| 🎧 **DJ Mixer** | 2 or 4 decks, real vinyl-style scratch, slip, quantize, stems, Automix, 7 transition recipes, sampler banks and a 30-minute set memory. |
+| 📺 **DJ Video Engine** | Video decks play in sync, with visualizers, camera, slideshow and a full-screen output for a second screen. |
+| 🌍 **East·West·Afro** | 38 maqams and scales: Turkish, Arabic, African, Western and your own .scl files. Polyrhythmic sequencer for 9/8 aksak and Afro grooves, live drone, Tension macro and one-button DROP. |
+| 🤘 **Metal Creative** | Riff Factory with 8 styles and 9 tunings, Song Workshop that builds a multitrack song, 97 ready amp tones, 7/8-string guitars and 90 industrial sounds. |
+| 🧩 **Plugins** | Write your own effects and instruments in JavaScript and use them on every track. |
+
+<p align="center"><img src="mrmars-gorseller/tanitim-metal.jpg" alt="Metal Creative" width="49%"> <img src="mrmars-gorseller/tanitim-mini.jpg" alt="Mini Tools" width="49%"></p>
+
+## Türkçe tanıtım
+
+**Tarayıcında tam bir müzik stüdyosu. Kurulum yok, hesap yok, ücret yok.** Şarkını yaz, gitarını tak, setini çal, QR'ı okut ve müziğini telefonuna al.
+
+- **Aranjman:** ses ve MIDI parçaları, otomasyon, klibi vokal, davul, bas ve melodiye ayırma
+- **Session ve Desen Rafı:** canlı klip başlatma, adım sıralayıcı, tek tıkla 23 türde altyapı
+- **Yeniden Çal:** şarkıyı notaya, taba ve MIDI'ye çevir, 125 çalgıdan biriyle yeniden çal
+- **Amfi Rack:** amfi, kabin, pedal, akort aleti ve canlı sahne kipi
+- **DJ Mikser:** 4 deck, scratch, stem, Automix, geçiş tarifleri, sampler ve video motoru
+- **Doğu·Batı·Afro:** 53 komalı makamlar, 9/8 aksak ve Afro kalıpları, dem sesi ve tek tuşla DROP
+- **Metal Creative:** riff fabrikası, şarkı atölyesi, 97 hazır amfi tonu
+- **Mini Araçlar ve Eklentiler:** XY pedler, looper, arpej ve kendi eklentini yazma
+
 ---
 
 MR. MARS MUSIC STUDIO ALL IN 1 — DGN.V.06 ·
